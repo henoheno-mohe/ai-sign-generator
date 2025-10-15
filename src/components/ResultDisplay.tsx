@@ -103,7 +103,7 @@ export default function ResultDisplay({ originalImage, processedImage, isProcess
                       </p>
                     </div>
                   )}
-                  {process.env.NODE_ENV === 'development' && apiResponseInfo.api_response && (
+                  {process.env.NODE_ENV === 'development' && apiResponseInfo.api_response ? (
                     <details className="mt-2">
                       <summary className="text-xs text-gray-500 cursor-pointer">デバッグ: APIレスポンス詳細</summary>
                       <pre className="text-xs text-gray-400 mt-1 p-2 bg-white rounded border overflow-auto max-h-32">
@@ -112,7 +112,7 @@ export default function ResultDisplay({ originalImage, processedImage, isProcess
                           : String(apiResponseInfo.api_response)}
                       </pre>
                     </details>
-                  )}
+                  ) : null}
                 </div>
               )}
             </div>
