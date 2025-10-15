@@ -199,12 +199,6 @@ export async function callNanoBananaAPI(
   apiKey: string
 ): Promise<NanoBananaResponse> {
   try {
-    // モック機能を使用する場合
-    if (USE_MOCK_API) {
-      debugLog('モックAPIを使用');
-      return await mockNanoBananaAPI(imageBase64, prompt);
-    }
-    
     // プロンプトを英語に変換
     const englishPrompt = translatePromptToEnglish(prompt);
     
