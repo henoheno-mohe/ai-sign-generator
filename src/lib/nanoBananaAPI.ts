@@ -434,7 +434,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
         edited_image_url: editedBase64,
         error: undefined,
         mock_response: true,
-        ai_suggestion: aiSuggestion
+        text_response: aiSuggestion
       };
     }
     
@@ -516,7 +516,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
           edited_image_url: editedBase64,
           error: undefined,
           mock_response: true,
-          ai_suggestion: aiSuggestion
+          text_response: aiSuggestion
         });
       };
       
@@ -543,7 +543,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
             edited_image_url: fallbackImage,
             error: undefined,
             mock_response: true,
-            ai_suggestion: aiSuggestion
+            text_response: aiSuggestion
           });
         } else {
           resolve({
@@ -551,7 +551,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
             edited_image_url: `data:image/jpeg;base64,${imageBase64}`,
             error: undefined,
             mock_response: true,
-            ai_suggestion: aiSuggestion
+            text_response: aiSuggestion
           });
         }
       };
@@ -582,7 +582,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
           edited_image_url: fallbackImage,
           error: undefined,
           mock_response: true,
-          ai_suggestion: aiSuggestion
+          text_response: aiSuggestion
         };
       }
     } catch (fallbackError) {
@@ -595,7 +595,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
       edited_image_url: `data:image/jpeg;base64,${imageBase64}`,
       error: undefined,
       mock_response: true,
-      ai_suggestion: aiSuggestion
+      text_response: aiSuggestion
     };
   }
 }
