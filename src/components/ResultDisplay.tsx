@@ -11,7 +11,7 @@ interface ResultDisplayProps {
     api_response?: unknown;
     processing_method?: string;
     signboard_type?: string;
-  };
+  } | null;
 }
 
 export default function ResultDisplay({ originalImage, processedImage, isProcessing, apiResponseInfo }: ResultDisplayProps) {
