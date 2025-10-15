@@ -8,7 +8,9 @@ interface ResultDisplayProps {
     fallback_response?: boolean;
     mock_response?: boolean;
     text_response?: string;
-    api_response?: any;
+    api_response?: unknown;
+    processing_method?: string;
+    signboard_type?: string;
   };
 }
 

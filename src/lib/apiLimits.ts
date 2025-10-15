@@ -9,7 +9,7 @@ export interface RateLimitInfo {
 
 export class RateLimitManager {
   private static instance: RateLimitManager;
-  private requestQueue: Array<() => Promise<any>> = [];
+  private requestQueue: Array<() => Promise<unknown>> = [];
   private isProcessing = false;
   private lastRequestTime = 0;
   private readonly minInterval = 100; // 100ms間隔（1秒10リクエスト制限対応）
@@ -64,18 +64,22 @@ export class RateLimitManager {
 }
 
 // エラーハンドリングの改善
-export function handleApiError(error: any): string {
-  if (error.status === 429) {
-    return 'Request limit exceeded. Please try again later.';
-  } else if (error.status === 401) {
-    return 'Invalid API key. Please check your configuration.';
-  } else if (error.status === 403) {
-    return 'Insufficient API key permissions.';
-  } else if (error.status >= 500) {
-    return 'Server error occurred. Please try again later.';
-  } else {
-    return error.message || 'An unexpected error occurred.';
+export function handleApiError(error: unknown): string {
+  if (error && typeof error === 'object') {
+    const err = error as { status?: number; message?: string };
+    if (err.status === 429) {
+      return 'Request limit exceeded. Please try again later.';
+    } else if (err.status === 401) {
+      return 'Invalid API key. Please check your configuration.';
+    } else if (err.status === 403) {
+      return 'Insufficient API key permissions.';
+    } else if (err.status && err.status >= 500) {
+      return 'Server error occurred. Please try again later.';
+    } else {
+      return err.message || 'An unexpected error occurred.';
+    }
   }
+  return 'An unexpected error occurred.';
 }
 
 // リトライ機能付きAPI呼び出し

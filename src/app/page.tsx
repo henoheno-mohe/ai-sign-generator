@@ -15,7 +15,11 @@ export default function Home() {
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [apiResponseInfo, setApiResponseInfo] = useState<any>(null);
+  const [apiResponseInfo, setApiResponseInfo] = useState<{
+    text_response?: string;
+    processing_method?: string;
+    signboard_type?: string;
+  } | null>(null);
 
   const handleImageUpload = (imageUrl: string, file?: File) => {
     setUploadedImage(imageUrl);

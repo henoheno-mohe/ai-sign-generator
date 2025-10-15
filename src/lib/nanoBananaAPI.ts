@@ -9,7 +9,7 @@ export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.
 export const USE_MOCK_API = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_MOCK_API === 'true';
 
 // デバッグ用のログ関数
-function debugLog(message: string, data?: any) {
+function debugLog(message: string, data?: unknown) {
   if (process.env.NODE_ENV === 'development') {
     console.log(`[Nano Banana API] ${message}`, data);
   }
@@ -38,7 +38,7 @@ export interface NanoBananaResponse {
   text_response?: string;
   mock_response?: boolean;
   fallback_response?: boolean;
-  api_response?: any;
+  api_response?: unknown;
 }
 
 export interface SignboardInfo {
@@ -50,7 +50,7 @@ export interface SignboardInfo {
 }
 
 // 利用可能なモデル一覧を取得
-export async function getAvailableModels(apiKey: string): Promise<any> {
+export async function getAvailableModels(apiKey: string): Promise<unknown> {
   try {
     const cleanApiKey = apiKey.replace(/["'`]/g, '').replace(/[^\x00-\x7F]/g, '').trim();
     
@@ -982,7 +982,7 @@ export async function compositeSignboardImage(
       debugLog('生成された画像が文字列ではありません', generatedSignboardBase64);
       // オブジェクトの場合、edited_image_urlプロパティを取得
       if (generatedSignboardBase64 && typeof generatedSignboardBase64 === 'object' && 'edited_image_url' in generatedSignboardBase64) {
-        generatedImageUrl = (generatedSignboardBase64 as any).edited_image_url;
+        generatedImageUrl = (generatedSignboardBase64 as { edited_image_url?: string }).edited_image_url || '';
       } else {
         throw new Error('Invalid generated signboard format');
       }
