@@ -1,36 +1,242 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI看板デザインジェネレーター
 
-## Getting Started
+Google Gemini APIを使用して、建物の看板を自動でリニューアルするWebアプリケーションです。
 
-First, run the development server:
+## 概要
 
+このアプリケーションは、アップロードした建物の画像の看板部分を、ユーザーが選択した色合い、フォントスタイル、看板タイプに基づいてAIが自動的にリニューアルします。
+
+### 主な特徴
+
+- 🎨 **5つの色テーマ** - 温かみ/清潔感/高級感/親しみやすい/信頼感
+- 🔤 **5つのフォントスタイル** - モダン/クラシック/カジュアル/エレガント/パワフル
+- 💡 **5つの看板タイプ** - LEDチャンネル文字/平面看板/ネオンサイン/木製看板/モダンアクリル
+- 🤖 **Gemini 2.5 Flash Image API** - Google最新のAI画像編集技術を使用
+- 📱 **レスポンシブデザイン** - モバイル・タブレット・デスクトップ対応
+
+## セットアップ手順
+
+### 1. 依存関係のインストール
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Gemini APIキーの取得
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. [Google AI Studio](https://aistudio.google.com/app/apikey) にアクセス
+2. Googleアカウントでログイン
+3. 「Get API key」をクリック
+4. 「Create API key」を選択してAPIキーを生成
+5. 生成されたAPIキーをコピー
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+または
 
-## Learn More
+1. [Google Cloud Console](https://console.cloud.google.com/) にアクセス
+2. 新しいプロジェクトを作成（または既存のプロジェクトを選択）
+3. "APIとサービス" > "ライブラリ" で "Generative Language API" を検索して有効化
+4. "APIとサービス" > "認証情報" で "認証情報を作成" > "APIキー" を選択
+5. 作成されたAPIキーをコピー
 
-To learn more about Next.js, take a look at the following resources:
+### 3. 環境変数の設定
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+プロジェクトルートに`.env.local`ファイルを作成し、以下を追加：
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Google Gemini API キー
+NEXT_PUBLIC_NANO_BANANA_API_KEY=your_actual_api_key_here
+```
 
-## Deploy on Vercel
+### 4. 開発サーバーの起動
+```bash
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+ブラウザで`http://localhost:3000`（または表示されたポート）にアクセス
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 機能詳細
+
+### 画像アップロード
+- ✅ ドラッグ&ドロップ対応
+- ✅ ファイル選択ダイアログ対応
+- ✅ 対応形式：PNG、JPG、JPEG
+- ✅ 最大ファイルサイズ：5MB
+
+### デザイン選択
+
+#### 色テーマ（5種類）
+- **温かみのある** - オレンジ、赤、黄色系で親しみやすい印象
+- **清潔感のある** - 白、青、水色系で清潔で信頼できる印象
+- **高級感のある** - 黒、金、深い色系で上品で高級な印象
+- **親しみやすい** - 明るい色、パステル系で親しみやすく温かい印象
+- **信頼感のある** - 青、緑、落ち着いた色系で信頼できる印象
+
+#### フォントスタイル（5種類）
+- **モダン** - クリーンでミニマルな印象
+- **クラシック** - 伝統的で上品な印象
+- **カジュアル** - 親しみやすく丸みのある印象
+- **エレガント** - 細身で洗練された印象
+- **パワフル** - 力強く目立つ印象
+
+#### 看板タイプ（5種類）
+- **💡 LEDチャンネル文字** - 立体的な文字に背面からLEDで光る高級感のある看板
+- **📋 平面看板** - 従来の平らな看板デザイン
+- **✨ ネオンサイン** - ネオン管のような発光する看板
+- **🌳 木製看板** - ナチュラルで温かみのある木製デザイン
+- **🔷 モダンアクリル** - 透明・半透明のアクリル板を使用した現代的な看板
+
+### AI処理
+- ✅ Gemini 2.5 Flash Image APIによる画像編集
+- ✅ 看板の位置・サイズ・ブランド名を保持
+- ✅ 選択したテーマに基づいた自動リニューアル
+- ✅ リトライ機能（APIレート制限対応）
+- ✅ エラーハンドリング
+
+## 使用方法
+
+1. **画像をアップロード**
+   - 建物の看板が写った画像をドラッグ&ドロップまたはファイル選択
+
+2. **デザインを選択**
+   - 色合い：5つのテーマから選択
+   - フォントスタイル：5つのスタイルから選択
+   - 看板タイプ：5つのタイプから選択
+
+3. **看板をリニューアル**
+   - 「看板をリニューアル」ボタンをクリック
+   - AIが自動的に看板を編集
+
+4. **結果を確認・ダウンロード**
+   - 編集後の画像を確認
+   - 「画像をダウンロード」ボタンで保存
+
+## 技術スタック
+
+- **フレームワーク**: Next.js 15.5.4 (App Router)
+- **UI**: React 19 + TypeScript
+- **スタイリング**: Tailwind CSS
+- **AI API**: Google Gemini 2.5 Flash Image (nano banana)
+- **画像処理**: Canvas API
+- **開発環境**: Turbopack
+
+## ファイル構成
+
+```
+ai-sign-generator/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx           # メインページ
+│   │   ├── layout.tsx          # レイアウト
+│   │   └── globals.css         # グローバルスタイル
+│   ├── components/
+│   │   ├── ImageUpload.tsx     # 画像アップロードコンポーネント
+│   │   ├── DesignSelector.tsx  # デザイン選択コンポーネント
+│   │   └── ResultDisplay.tsx   # 結果表示コンポーネント
+│   └── lib/
+│       ├── nanoBananaAPI.ts    # Gemini API連携
+│       ├── config.ts           # 設定管理
+│       └── apiLimits.ts        # APIレート制限管理
+├── public/                      # 静的ファイル
+├── .env.local                   # 環境変数（要作成）
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+└── README.md
+```
+
+## 実装の詳細
+
+### Gemini API統合
+
+このアプリケーションは、Google Gemini 2.5 Flash Image APIを使用して画像編集を行います。
+
+**API仕様:**
+- エンドポイント: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`
+- 認証: `x-goog-api-key` ヘッダー
+- リクエスト形式: JSON（Base64エンコードされた画像 + テキストプロンプト）
+- レスポンス形式: JSON（Base64エンコードされた編集済み画像）
+
+**プロンプト生成戦略:**
+1. 日本語でプロンプトを生成
+2. 英語に翻訳してAPIに送信
+3. 看板タイプに応じた詳細な指示を追加
+4. 建物と周辺環境の保持を指示
+
+**エラー処理:**
+- APIキー検証
+- レート制限エラー（429）のリトライ処理（最大3回）
+- ネットワークエラーハンドリング
+- 安全フィルターエラー検出
+- ユーザーフレンドリーな日本語エラーメッセージ
+
+### 画像処理フロー
+
+1. **画像アップロード** → Base64エンコード
+2. **プロンプト生成** → 選択されたテーマ/フォント/タイプを含む
+3. **API呼び出し** → Gemini APIで画像編集
+4. **レスポンス処理** → Base64画像をデコードして表示
+5. **フォールバック** → API失敗時はCanvasで簡易編集
+
+## 注意事項
+
+### セキュリティ
+- ⚠️ APIキーは機密情報です。公開リポジトリにコミットしないでください
+- ⚠️ `.env.local`ファイルは`.gitignore`に追加されています
+- ⚠️ 本番環境では環境変数をサーバーサイドで管理してください
+
+### API制限
+- 📊 Gemini APIには無料枠があります（詳細は[Google AI Studio](https://ai.google.dev/pricing)参照）
+- 📊 レート制限に達した場合、自動的にリトライします
+- 📊 大量の処理を行う場合は課金設定を確認してください
+
+### 画像サイズ
+- 📸 推奨解像度: 1920x1080px以下
+- 📸 最大ファイルサイズ: 5MB
+- 📸 大きすぎる画像は処理時間が長くなる可能性があります
+
+## トラブルシューティング
+
+### APIキーエラー
+```
+APIキーが正しく設定されていません
+```
+→ `.env.local`ファイルを確認し、正しいAPIキーが設定されているか確認
+
+### レート制限エラー
+```
+APIの利用制限に達しました
+```
+→ しばらく待ってから再度お試しください（自動リトライは最大3回）
+
+### ネットワークエラー
+```
+ネットワークエラーが発生しました
+```
+→ インターネット接続を確認してください
+
+### 安全フィルターエラー
+```
+画像が安全フィルターに引っかかりました
+```
+→ 別の画像をお試しください
+
+## 今後の拡張予定
+
+- [ ] より多くの看板タイプの追加
+- [ ] カスタム色選択機能
+- [ ] 看板サイズ調整機能
+- [ ] 複数看板の同時編集
+- [ ] 編集履歴の保存
+- [ ] ユーザー認証
+- [ ] データベース連携
+
+## ライセンス
+
+MIT License
+
+## お問い合わせ
+
+看板制作のご相談はお気軽にお問い合わせください。
+
+---
+
+**Created with ❤️ using Google Gemini API**

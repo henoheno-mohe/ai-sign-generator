@@ -1,102 +1,159 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import ImageUpload from '@/components/ImageUpload';
+import DesignSelector from '@/components/DesignSelector';
+import ResultDisplay from '@/components/ResultDisplay';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import { config } from '@/lib/config';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [selectedTheme, setSelectedTheme] = useState<string>('');
+  const [selectedSignboardType, setSelectedSignboardType] = useState<string>('');
+  const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [apiResponseInfo, setApiResponseInfo] = useState<any>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const handleImageUpload = (imageUrl: string, file?: File) => {
+    setUploadedImage(imageUrl);
+    if (file) setUploadedFile(file);
+    setProcessedImage(null); // 新しい画像がアップロードされたら結果をリセット
+    setError(null); // エラーもリセット
+    setApiResponseInfo(null); // APIレスポンス情報もリセット
+  };
+
+  const handleDesignChange = (theme: string, signboardType: string) => {
+    setSelectedTheme(theme);
+    setSelectedSignboardType(signboardType);
+  };
+
+  const handleProcess = async () => {
+    if (!uploadedImage || !uploadedFile || !selectedTheme || !selectedSignboardType) return;
+    
+    setIsProcessing(true);
+    setError(null);
+    
+    try {
+      // APIキーのチェック
+      if (!config.nanoBananaApiKey || config.nanoBananaApiKey === 'your_api_key_here' || config.nanoBananaApiKey === 'your_actual_api_key_here') {
+        throw new Error('APIキーが設定されていません。.env.localファイルにNEXT_PUBLIC_NANO_BANANA_API_KEYを設定してください。詳細はREADME.mdをご確認ください。');
+      }
+
+      console.log('看板リニューアル処理を開始...');
+
+      // 画像をBase64に変換
+      const imageBase64 = await convertImageToBase64(uploadedFile);
+      
+      // プロンプトを生成（看板タイプを含む）
+      const prompt = generateSignboardPrompt(selectedTheme, 'modern', selectedSignboardType);
+      console.log('プロンプト:', prompt);
+      
+      // Gemini APIで直接画像を編集
+      console.log('Geminiで看板をリニューアル中...');
+      const result = await callNanoBananaAPIWithRetry(imageBase64, prompt, config.nanoBananaApiKey);
+      console.log('看板リニューアル完了');
+      
+      if (result.success && result.edited_image_url) {
+        setProcessedImage(result.edited_image_url);
+        setApiResponseInfo({
+          text_response: result.text_response,
+          processing_method: 'Gemini Native Image Editing',
+          signboard_type: selectedSignboardType
+        });
+      } else {
+        throw new Error(result.error || 'Image processing failed');
+      }
+      
+    } catch (error) {
+      console.error('Processing failed:', error);
+      
+      // エラーメッセージを日本語で表示
+      let errorMessage = '画像処理中にエラーが発生しました';
+      
+      if (error instanceof Error) {
+        const message = error.message;
+        
+        if (message.includes('API key')) {
+          errorMessage = 'APIキーが正しく設定されていません。.env.localファイルを確認してください。';
+        } else if (message.includes('403') || message.includes('permission')) {
+          errorMessage = 'APIキーの権限が不足しています。Google Cloud ConsoleでAPIが有効化されているか確認してください。';
+        } else if (message.includes('429') || message.includes('limit')) {
+          errorMessage = 'APIの利用制限に達しました。しばらく待ってから再度お試しください。';
+        } else if (message.includes('safety')) {
+          errorMessage = '画像が安全フィルターに引っかかりました。別の画像をお試しください。';
+        } else if (message.includes('network') || message.includes('fetch')) {
+          errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
+        } else if (message.includes('Imagen')) {
+          errorMessage = '画像生成でエラーが発生しました。別の画像または設定をお試しください。';
+        } else {
+          errorMessage = `エラー: ${message}`;
+        }
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* ヘッダー */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <h1 className="text-3xl font-bold text-gray-900">
+              AI看板デザインジェネレーター
+            </h1>
+            <nav className="hidden md:flex space-x-8">
+              <a href="#" className="text-gray-500 hover:text-gray-900">使い方</a>
+              <a href="#" className="text-gray-500 hover:text-gray-900">お問い合わせ</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* メインコンテンツ */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* 左側: アップロード・選択 */}
+          <div className="space-y-6">
+            <ImageUpload onImageUpload={handleImageUpload} />
+            
+            {uploadedImage && (
+              <DesignSelector
+                onDesignChange={handleDesignChange}
+                onProcess={handleProcess}
+                isProcessing={isProcessing}
+                canProcess={!!(selectedTheme && selectedSignboardType)}
+                error={error}
+              />
+            )}
+          </div>
+
+          {/* 右側: 結果表示 */}
+          <div>
+            <ResultDisplay
+              originalImage={uploadedImage}
+              processedImage={processedImage}
+              isProcessing={isProcessing}
+              apiResponseInfo={apiResponseInfo}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* フッター */}
+      <footer className="bg-white border-t mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center text-gray-500">
+            <p>&copy; 2024 AI看板デザインジェネレーター. All rights reserved.</p>
+            <p className="mt-2">看板制作のご相談はお気軽にお問い合わせください。</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
