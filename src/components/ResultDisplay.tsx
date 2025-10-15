@@ -107,7 +107,9 @@ export default function ResultDisplay({ originalImage, processedImage, isProcess
                     <details className="mt-2">
                       <summary className="text-xs text-gray-500 cursor-pointer">デバッグ: APIレスポンス詳細</summary>
                       <pre className="text-xs text-gray-400 mt-1 p-2 bg-white rounded border overflow-auto max-h-32">
-                        {JSON.stringify(apiResponseInfo.api_response, null, 2)}
+                        {typeof apiResponseInfo.api_response === 'object' 
+                          ? JSON.stringify(apiResponseInfo.api_response, null, 2)
+                          : String(apiResponseInfo.api_response)}
                       </pre>
                     </details>
                   )}
