@@ -367,7 +367,7 @@ export async function callNanoBananaAPI(
       fullResponse: data
     });
     
-    return await enhancedMockAPI(imageBase64, 'AI design suggestions for signboard renovation', englishPrompt);
+    return await enhancedMockAPI(imageBase64, 'AI design suggestions for signboard renovation', prompt);
   } catch (error) {
     debugLog('API呼び出しエラー', error);
     console.error('Nano Banana API Error:', error);
@@ -375,7 +375,7 @@ export async function callNanoBananaAPI(
     // ネットワークエラーの場合は高度なモックAPIにフォールバック
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
       debugLog('ネットワークエラーを検出、高度なモックAPIにフォールバック');
-      return await enhancedMockAPI(imageBase64, englishPrompt, englishPrompt);
+      return await enhancedMockAPI(imageBase64, 'Network error fallback', prompt);
     }
     
     throw error;
