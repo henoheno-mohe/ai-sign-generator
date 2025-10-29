@@ -389,15 +389,18 @@ export async function callNanoBananaAPI(
 }
 
 // 高度なモックAPI（AI提案を活用した画像編集）
-async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, originalPrompt: string): Promise<NanoBananaResponse> {
+async function enhancedMockAPI(imageBase64: string | string[], aiSuggestion: string, originalPrompt: string): Promise<NanoBananaResponse> {
   debugLog('高度なモックAPI実行', { aiSuggestion, originalPrompt });
+  
+  // 複数画像の場合は最初の画像のみを使用
+  const firstImage = Array.isArray(imageBase64) ? imageBase64[0] : imageBase64;
   
   // 2秒待機してリアルな処理時間をシミュレート
   await new Promise(resolve => setTimeout(resolve, 2000));
   
   try {
     // モック画像の場合は、デザイン指示に基づいて新しい看板画像を生成
-    if (imageBase64 === 'mock_image_base64') {
+    if (firstImage === 'mock_image_base64') {
       debugLog('モック画像の場合、デザイン指示に基づいて看板画像を生成');
       
       // デザイン指示から色情報を抽出
@@ -562,7 +565,7 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
         }
       };
       
-      img.src = `data:image/jpeg;base64,${imageBase64}`;
+      img.src = `data:image/jpeg;base64,${firstImage}`;
     });
   } catch (error) {
     debugLog('高度なモックAPI画像編集エラー', error);
