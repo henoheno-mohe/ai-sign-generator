@@ -5,13 +5,15 @@ import ImageUpload from '@/components/ImageUpload';
 import DesignSelector from '@/components/DesignSelector';
 import ResultDisplay from '@/components/ResultDisplay';
 import LicenseInput from '@/components/LicenseInput';
-import { callNanoBananaAPIWithRetry, generateSignboardPrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
 import { config } from '@/lib/config';
 import { FREE_TRIAL_USES } from '@/lib/license';
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [referenceImage, setReferenceImage] = useState<string | null>(null);
+  const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<string>('');
   const [selectedSignboardType, setSelectedSignboardType] = useState<string>('');
   const [processedImage, setProcessedImage] = useState<string | null>(null);
@@ -113,13 +115,23 @@ export default function Home() {
     setApiResponseInfo(null); // APIレスポンス情報もリセット
   };
 
+  const handleReferenceImageUpload = (imageUrl: string, file?: File) => {
+    setReferenceImage(imageUrl);
+    if (file) setReferenceFile(file);
+    setProcessedImage(null);
+    setError(null);
+    setApiResponseInfo(null);
+  };
+
   const handleDesignChange = (theme: string, signboardType: string) => {
     setSelectedTheme(theme);
     setSelectedSignboardType(signboardType);
   };
 
   const handleProcess = async () => {
-    if (!uploadedImage || !uploadedFile || !selectedTheme || !selectedSignboardType) return;
+    // 参考画像がある場合は看板タイプ不要、ない場合は必須
+    const requiresSignboardType = !referenceImage;
+    if (!uploadedImage || !uploadedFile || !selectedTheme || (requiresSignboardType && !selectedSignboardType)) return;
     
     // ライセンスチェック
     if (!canUseService()) {
@@ -142,13 +154,27 @@ export default function Home() {
       // 画像をBase64に変換
       const imageBase64 = await convertImageToBase64(uploadedFile);
       
-      // プロンプトを生成（看板タイプを含む）
-      const prompt = generateSignboardPrompt(selectedTheme, 'modern', selectedSignboardType);
+      let prompt: string;
+      let imagesToSend: string | string[];
+      
+      // 参考画像がある場合
+      if (referenceImage && referenceFile) {
+        console.log('参考画像モード：参考画像のスタイルを再現');
+        const referenceBase64 = await convertImageToBase64(referenceFile);
+        imagesToSend = [imageBase64, referenceBase64]; // 建物画像、参考画像の順
+        prompt = generateReferenceImagePrompt(selectedTheme);
+      } else {
+        // 通常モード（看板タイプ選択）
+        console.log('通常モード：看板タイプ', selectedSignboardType);
+        imagesToSend = imageBase64;
+        prompt = generateSignboardPrompt(selectedTheme, 'modern', selectedSignboardType);
+      }
+      
       console.log('プロンプト:', prompt);
       
       // Gemini APIで直接画像を編集
       console.log('Geminiで看板をリニューアル中...');
-      const result = await callNanoBananaAPIWithRetry(imageBase64, prompt, config.nanoBananaApiKey);
+      const result = await callNanoBananaAPIWithRetry(imagesToSend, prompt, config.nanoBananaApiKey);
       console.log('看板リニューアル完了');
       
       if (result.success && result.edited_image_url) {
@@ -158,8 +184,8 @@ export default function Home() {
         setProcessedImage(result.edited_image_url);
         setApiResponseInfo({
           text_response: result.text_response,
-          processing_method: 'Gemini Native Image Editing',
-          signboard_type: selectedSignboardType
+          processing_method: referenceImage ? 'Reference Image Mode' : 'Gemini Native Image Editing',
+          signboard_type: referenceImage ? 'Reference Image' : selectedSignboardType
         });
       } else {
         throw new Error(result.error || 'Image processing failed');
@@ -261,15 +287,19 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* 左側: アップロード・選択 */}
           <div className="space-y-6">
-            <ImageUpload onImageUpload={handleImageUpload} />
+            <ImageUpload 
+              onImageUpload={handleImageUpload}
+              onReferenceImageUpload={handleReferenceImageUpload}
+            />
             
             {uploadedImage && (
               <DesignSelector
                 onDesignChange={handleDesignChange}
                 onProcess={handleProcess}
                 isProcessing={isProcessing}
-                canProcess={!!(selectedTheme && selectedSignboardType)}
+                canProcess={!!(selectedTheme && (referenceImage || selectedSignboardType))}
                 error={error}
+                hasReferenceImage={!!referenceImage}
               />
             )}
           </div>

@@ -8,6 +8,7 @@ interface DesignSelectorProps {
   isProcessing: boolean;
   canProcess: boolean;
   error?: string | null;
+  hasReferenceImage?: boolean;
 }
 
 const colorThemes = [
@@ -88,7 +89,7 @@ const signboardTypes = [
   }
 ];
 
-export default function DesignSelector({ onDesignChange, onProcess, isProcessing, canProcess, error }: DesignSelectorProps) {
+export default function DesignSelector({ onDesignChange, onProcess, isProcessing, canProcess, error, hasReferenceImage = false }: DesignSelectorProps) {
   const [selectedTheme, setSelectedTheme] = useState<string>('');
   const [selectedSignboardType, setSelectedSignboardType] = useState<string>('');
 
@@ -140,31 +141,52 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
         </div>
       </div>
 
-      {/* 看板タイプ選択 */}
-      <div className="mb-8">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">看板タイプ</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {signboardTypes.map((type) => (
-            <div
-              key={type.id}
-              className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                selectedSignboardType === type.id
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-              onClick={() => handleSignboardTypeSelect(type.id)}
-            >
-              <div className="flex items-start space-x-3">
-                <div className="text-3xl">{type.icon}</div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{type.name}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{type.description}</p>
+      {/* 参考画像がある場合のメッセージ */}
+      {hasReferenceImage && (
+        <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-blue-800">参考画像モード</h3>
+              <p className="text-sm text-blue-700 mt-1">
+                参考画像が設定されているため、そのスタイルを優先的に再現します。色合いの選択は引き続き有効です。
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 看板タイプ選択（参考画像がない場合のみ表示） */}
+      {!hasReferenceImage && (
+        <div className="mb-8">
+          <h3 className="text-lg font-medium text-gray-800 mb-4">看板タイプ</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {signboardTypes.map((type) => (
+              <div
+                key={type.id}
+                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                  selectedSignboardType === type.id
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => handleSignboardTypeSelect(type.id)}
+              >
+                <div className="flex items-start space-x-3">
+                  <div className="text-3xl">{type.icon}</div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-900">{type.name}</h4>
+                    <p className="text-sm text-gray-600 mt-1">{type.description}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* エラー表示 */}
       {error && (

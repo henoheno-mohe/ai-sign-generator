@@ -192,9 +192,9 @@ function parseSignboardInfo(textResponse: string): SignboardInfo {
   }
 }
 
-// nano banana APIを呼び出し
+// nano banana APIを呼び出し（1枚または2枚の画像に対応）
 export async function callNanoBananaAPI(
-  imageBase64: string,
+  imageBase64: string | string[],
   prompt: string,
   apiKey: string
 ): Promise<NanoBananaResponse> {
@@ -205,26 +205,32 @@ export async function callNanoBananaAPI(
     // APIキーを安全に処理（クオテーションと非ASCII文字を除去）
     const cleanApiKey = apiKey.replace(/["'`]/g, '').replace(/[^\x00-\x7F]/g, '').trim();
     
+    // 画像を配列に変換
+    const images = Array.isArray(imageBase64) ? imageBase64 : [imageBase64];
+    
     debugLog('API呼び出し開始', {
       url: NANO_BANANA_API_URL,
       promptLength: englishPrompt.length,
-      imageSize: imageBase64.length,
+      imageCount: images.length,
       apiKeyLength: cleanApiKey.length
     });
     
+    // partsを構築：画像を最初に、テキストを最後に
+    const parts = [
+      ...images.map(img => ({
+        inline_data: {
+          mime_type: "image/jpeg",
+          data: img
+        }
+      })),
+      {
+        text: englishPrompt
+      }
+    ];
+    
     const requestBody = {
       contents: [{
-        parts: [
-          {
-            inline_data: {
-              mime_type: "image/jpeg",
-              data: imageBase64
-            }
-          },
-          {
-            text: englishPrompt
-          }
-        ]
+        parts: parts
       }],
       generationConfig: {
         temperature: 0.1,
@@ -601,6 +607,41 @@ async function enhancedMockAPI(imageBase64: string, aiSuggestion: string, origin
 }
 
 // 看板リニューアル用のプロンプト生成（画像編集用）
+// 参考画像を使用する場合のプロンプト生成
+export function generateReferenceImagePrompt(colorTheme: string): string {
+  const themePrompts = {
+    warm: '温かみのある暖色系（オレンジ、赤、黄色など）',
+    clean: '清潔感のある色合い（白、青、水色など）',
+    luxury: '高級感のある色合い（黒、金、深い色など）',
+    friendly: '親しみやすい明るい色合い',
+    trust: '信頼感のある落ち着いた色合い（青、緑など）'
+  };
+
+  const themeText = themePrompts[colorTheme as keyof typeof themePrompts] || themePrompts.warm;
+
+  const prompt = `この建物の看板を、2枚目の参考画像のようなデザインにリニューアルしてください。
+
+参考画像から再現する要素：
+- 看板のスタイルとデザイン（形状、質感、タイプ）
+- 発光方法や照明効果
+- 文字の太さや形状
+- 全体的な雰囲気
+
+色合いの調整：
+- ${themeText}を基調にしてください
+
+重要な要件：
+- 看板の位置は元のまま維持してください
+- ブランド名やロゴのテキストは維持してください
+- 建物や周囲の環境は変更しないでください
+- 参考画像のスタイルを忠実に再現してください
+
+編集した画像を生成してください。`;
+
+  return prompt;
+}
+
+// 通常の看板タイプ選択を使用する場合のプロンプト生成
 export function generateSignboardPrompt(colorTheme: string, fontStyle: string, signboardType?: string): string {
   const themePrompts = {
     warm: '温かみのある暖色系（オレンジ、赤、黄色など）',
