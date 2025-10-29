@@ -647,24 +647,30 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
 
   if (signboardType === 'led-channel-face') {
     prompt += `
-- 立体的な3D文字にして、文字の表面全体を明るく光らせてください
-- 白色LEDのように均一に発光させてください`;
+- 文字を立体的な3D形状にしてください
+- 文字の表面全体が均一に明るく光るようにしてください（フェイスライト）
+- 文字の縁がくっきりと際立つようにしてください
+- 視認性が高く、明るい印象を強調してください
+- 白色または明るい色のLED照明効果を表現してください`;
   } else if (signboardType === 'led-channel-side') {
     prompt += `
-- 立体的な3D文字にして、文字の側面（エッジ）だけを光らせてください
-- 文字の表面は光らず、薄い側面ラインだけが発光するようにしてください`;
+- 文字を立体的な3D形状にしてください
+- 文字の側面のみが光るようにしてください（サイドライト）
+- 文字の表面は光らず、側面のエッジだけが発光している状態を表現してください
+- モダンでスタイリッシュな印象を強調してください
+- 薄く鋭いライン状の光を表現してください`;
   } else if (signboardType === 'led-channel-back') {
     prompt += `
-- 立体的な3D文字にして、文字の背後から光を漏らしてください
-- 文字の周りに光のハロー効果を壁面に投影してください
-- 文字本体は光らず、背後の光だけが見えるようにしてください`;
+- 文字を立体的な3D形状にしてください
+- 文字の背面（壁面側）から光が漏れるようなバックライト効果を追加してください
+- 文字の周りにソフトなハロー効果（光の輪郭）を壁面に投影してください
+- 文字本体は光らず、背後の光だけが見えるようにしてください
+- 高級感と間接照明のような柔らかい印象を強調してください`;
   } else if (signboardType === 'neon') {
     prompt += `
-- ネオン管（ガラス管）のような太い管状の文字にしてください
-- 文字全体が均一に明るく発光するようにしてください
-- ピンク、青、紫などの鮮やかな発光色を使用してください
-- ガラス管の透明で滑らかな質感を表現してください
-- 文字の周りに光のグロー効果（にじみ）を追加してください`;
+- ネオン管のような発光効果を追加してください
+- 文字が光っているような鮮やかな発光を表現してください
+- レトロでスタイリッシュな雰囲気にしてください`;
   } else if (signboardType === 'wooden') {
     prompt += `
 - 木製の質感を追加してください
@@ -774,13 +780,13 @@ function translatePromptToEnglish(japanesePrompt: string): string {
 
   // 看板タイプ別の追加指示
   if (signboardType === 'led-channel-face') {
-    englishPrompt += ' Make 3D letters with fully illuminated front surface glowing brightly and uniformly.';
+    englishPrompt += ' Make the letters 3D with fully illuminated front surface (face-lit). The entire letter face should glow uniformly and brightly for high visibility.';
   } else if (signboardType === 'led-channel-side') {
-    englishPrompt += ' Make 3D letters with only side edges glowing. Front surface should NOT glow.';
+    englishPrompt += ' Make the letters 3D with only the side edges glowing (side-lit). The front surface should NOT glow, only thin edge lines should emit light for a modern stylish look.';
   } else if (signboardType === 'led-channel-back') {
-    englishPrompt += ' Make 3D letters with backlight creating soft halo glow on the wall. Letter body should NOT glow.';
+    englishPrompt += ' Make the letters 3D with backlight glow effect creating a soft halo on the wall behind the letters (back-lit). The letter body should NOT glow, only the backlight halo effect for a luxurious indirect lighting look.';
   } else if (signboardType === 'neon') {
-    englishPrompt += ' Make letters as thick tubular neon glass tubes. Letters should glow uniformly and brightly. Use vivid glowing colors like pink, blue, or purple. Add glass tube transparency and smooth texture. Add soft glow haze around the letters.';
+    englishPrompt += ' Add neon tube glowing effect with vibrant illumination for a retro stylish look.';
   } else if (signboardType === 'wooden') {
     englishPrompt += ' Add wooden texture with carved letter depth for a natural warm atmosphere.';
   } else if (signboardType === 'acrylic') {
