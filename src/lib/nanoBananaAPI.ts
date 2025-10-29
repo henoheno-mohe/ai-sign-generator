@@ -619,7 +619,9 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   };
 
   const signboardTypePrompts = {
-    'led-channel': 'LEDチャンネル文字タイプ（立体的な文字に背面からLEDで光る、モダンで高級感のある看板）',
+    'led-channel-face': 'LEDチャンネル文字タイプ（正面発光：立体的な文字の表面全体が明るく光る看板）',
+    'led-channel-side': 'LEDチャンネル文字タイプ（側面発光：立体的な文字の側面のみが光る、モダンでスタイリッシュな看板）',
+    'led-channel-back': 'LEDチャンネル文字タイプ（背面発光：文字の背面から光が漏れ、壁面にハロー効果を生む高級感のある看板）',
     'flat': '平面看板タイプ（従来の平らな看板）',
     'neon': 'ネオンサインタイプ（ネオン管のような発光する看板）',
     'wooden': '木製看板タイプ（ナチュラルで温かみのある木製デザイン）',
@@ -643,12 +645,27 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
 - ブランド名やロゴのテキストは維持してください
 - 建物や周囲の環境は変更しないでください`;
 
-  if (signboardType === 'led-channel') {
+  if (signboardType === 'led-channel-face') {
     prompt += `
 - 文字を立体的な3D形状にしてください
-- 文字の背面から光が漏れるようなバックライト効果を追加してください
-- 文字の縁に沿ってハロー効果（光の輪郭）を追加してください
-- 高級感とモダンな印象を強調してください`;
+- 文字の表面全体が均一に明るく光るようにしてください（フェイスライト）
+- 文字の縁がくっきりと際立つようにしてください
+- 視認性が高く、明るい印象を強調してください
+- 白色または明るい色のLED照明効果を表現してください`;
+  } else if (signboardType === 'led-channel-side') {
+    prompt += `
+- 文字を立体的な3D形状にしてください
+- 文字の側面のみが光るようにしてください（サイドライト）
+- 文字の表面は光らず、側面のエッジだけが発光している状態を表現してください
+- モダンでスタイリッシュな印象を強調してください
+- 薄く鋭いライン状の光を表現してください`;
+  } else if (signboardType === 'led-channel-back') {
+    prompt += `
+- 文字を立体的な3D形状にしてください
+- 文字の背面（壁面側）から光が漏れるようなバックライト効果を追加してください
+- 文字の周りにソフトなハロー効果（光の輪郭）を壁面に投影してください
+- 文字本体は光らず、背後の光だけが見えるようにしてください
+- 高級感と間接照明のような柔らかい印象を強調してください`;
   } else if (signboardType === 'neon') {
     prompt += `
 - ネオン管のような発光効果を追加してください
@@ -692,7 +709,9 @@ function translatePromptToEnglish(japanesePrompt: string): string {
   };
 
   const signboardTypeTranslations = {
-    'led-channel': 'LED channel letter type (3D letters with backlit LED glow effect)',
+    'led-channel-face': 'LED channel letter type with face-lit illumination (3D letters with front surface fully illuminated)',
+    'led-channel-side': 'LED channel letter type with side-lit illumination (3D letters with only side edges glowing)',
+    'led-channel-back': 'LED channel letter type with back-lit halo effect (3D letters with backlight creating halo glow on wall)',
     'flat': 'flat signboard type (traditional flat design)',
     'neon': 'neon sign type (glowing neon tube effect)',
     'wooden': 'wooden signboard type (natural wooden texture)',
@@ -704,9 +723,15 @@ function translatePromptToEnglish(japanesePrompt: string): string {
   
   // 看板タイプの検出と変換
   let signboardType = '';
-  if (japanesePrompt.includes('LEDチャンネル文字タイプ')) {
-    signboardType = 'led-channel';
-    englishPrompt += 'to ' + signboardTypeTranslations['led-channel'] + ' with ';
+  if (japanesePrompt.includes('正面発光：立体的な文字の表面全体が明るく光る')) {
+    signboardType = 'led-channel-face';
+    englishPrompt += 'to ' + signboardTypeTranslations['led-channel-face'] + ' with ';
+  } else if (japanesePrompt.includes('側面発光：立体的な文字の側面のみが光る')) {
+    signboardType = 'led-channel-side';
+    englishPrompt += 'to ' + signboardTypeTranslations['led-channel-side'] + ' with ';
+  } else if (japanesePrompt.includes('背面発光：文字の背面から光が漏れ')) {
+    signboardType = 'led-channel-back';
+    englishPrompt += 'to ' + signboardTypeTranslations['led-channel-back'] + ' with ';
   } else if (japanesePrompt.includes('平面看板タイプ')) {
     signboardType = 'flat';
     englishPrompt += 'to ' + signboardTypeTranslations['flat'] + ' with ';
@@ -754,8 +779,12 @@ function translatePromptToEnglish(japanesePrompt: string): string {
   englishPrompt += '. Keep the signboard position unchanged. Maintain brand names and logos text. Do not change the building or surrounding environment.';
 
   // 看板タイプ別の追加指示
-  if (signboardType === 'led-channel') {
-    englishPrompt += ' Make the letters 3D with backlight glow effect and halo around the edges for a modern luxurious look.';
+  if (signboardType === 'led-channel-face') {
+    englishPrompt += ' Make the letters 3D with fully illuminated front surface (face-lit). The entire letter face should glow uniformly and brightly for high visibility.';
+  } else if (signboardType === 'led-channel-side') {
+    englishPrompt += ' Make the letters 3D with only the side edges glowing (side-lit). The front surface should NOT glow, only thin edge lines should emit light for a modern stylish look.';
+  } else if (signboardType === 'led-channel-back') {
+    englishPrompt += ' Make the letters 3D with backlight glow effect creating a soft halo on the wall behind the letters (back-lit). The letter body should NOT glow, only the backlight halo effect for a luxurious indirect lighting look.';
   } else if (signboardType === 'neon') {
     englishPrompt += ' Add neon tube glowing effect with vibrant illumination for a retro stylish look.';
   } else if (signboardType === 'wooden') {
