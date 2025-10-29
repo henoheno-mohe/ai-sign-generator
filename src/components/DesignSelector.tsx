@@ -71,7 +71,7 @@ const signboardTypes = [
   {
     id: 'neon',
     name: 'ネオンサイン',
-    description: 'ネオン管のような発光する看板',
+    description: 'ガラス管が鮮やかに光る、レトロでスタイリッシュな看板',
     icon: '🔥'
   },
   {

@@ -668,9 +668,13 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
 - 高級感と間接照明のような柔らかい印象を強調してください`;
   } else if (signboardType === 'neon') {
     prompt += `
-- ネオン管のような発光効果を追加してください
-- 文字が光っているような鮮やかな発光を表現してください
-- レトロでスタイリッシュな雰囲気にしてください`;
+- ネオン管（ガラス管）のような発光効果を追加してください
+- 文字全体が鮮やかに光り、ガラス管の質感を表現してください
+- ネオン管特有の柔らかく丸みのある形状にしてください
+- 文字の周りにソフトなグロー効果（光のにじみ）を追加してください
+- ピンク、青、紫、オレンジなど鮮やかな発光色を使用してください
+- レトロでスタイリッシュな雰囲気にしてください
+- ネオン管の連続した曲線的なデザインを表現してください`;
   } else if (signboardType === 'wooden') {
     prompt += `
 - 木製の質感を追加してください
@@ -786,7 +790,7 @@ function translatePromptToEnglish(japanesePrompt: string): string {
   } else if (signboardType === 'led-channel-back') {
     englishPrompt += ' Make the letters 3D with backlight glow effect creating a soft halo on the wall behind the letters (back-lit). The letter body should NOT glow, only the backlight halo effect for a luxurious indirect lighting look.';
   } else if (signboardType === 'neon') {
-    englishPrompt += ' Add neon tube glowing effect with vibrant illumination for a retro stylish look.';
+    englishPrompt += ' Add neon tube (glass tube) glowing effect with vibrant illumination. Use soft rounded curves typical of neon tubes. Add soft glow haze around the letters. Use vivid colors like pink, blue, purple, or orange. Create a retro stylish atmosphere with continuous curved neon tube design.';
   } else if (signboardType === 'wooden') {
     englishPrompt += ' Add wooden texture with carved letter depth for a natural warm atmosphere.';
   } else if (signboardType === 'acrylic') {
