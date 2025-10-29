@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function AdminPage() {
   const [adminSecret, setAdminSecret] = useState('');
@@ -213,12 +214,12 @@ export default function AdminPage() {
 
         {/* 戻るリンク */}
         <div className="mt-8 text-center">
-          <a
+          <Link
             href="/"
             className="text-blue-600 hover:text-blue-700 font-medium"
           >
             ← トップページに戻る
-          </a>
+          </Link>
         </div>
       </div>
     </div>
