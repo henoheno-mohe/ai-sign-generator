@@ -82,9 +82,9 @@ export function handleApiError(error: unknown): string {
   return 'An unexpected error occurred.';
 }
 
-// リトライ機能付きAPI呼び出し
+// リトライ機能付きAPI呼び出し（1枚または2枚の画像に対応）
 export async function callNanoBananaAPIWithRetry(
-  imageBase64: string,
+  imageBase64: string | string[],
   prompt: string,
   apiKey: string,
   maxRetries: number = 3
