@@ -660,9 +660,11 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
 - 文字本体は光らず、背後の光だけが見えるようにしてください`;
   } else if (signboardType === 'neon') {
     prompt += `
-- ネオンサインのように文字全体を鮮やかに光らせてください
-- ピンクや青など明るい発光色を使用してください
-- 文字の周りにソフトなグロー効果を追加してください`;
+- ネオン管（ガラス管）のような太い管状の文字にしてください
+- 文字全体が均一に明るく発光するようにしてください
+- ピンク、青、紫などの鮮やかな発光色を使用してください
+- ガラス管の透明で滑らかな質感を表現してください
+- 文字の周りに光のグロー効果（にじみ）を追加してください`;
   } else if (signboardType === 'wooden') {
     prompt += `
 - 木製の質感を追加してください
@@ -778,7 +780,7 @@ function translatePromptToEnglish(japanesePrompt: string): string {
   } else if (signboardType === 'led-channel-back') {
     englishPrompt += ' Make 3D letters with backlight creating soft halo glow on the wall. Letter body should NOT glow.';
   } else if (signboardType === 'neon') {
-    englishPrompt += ' Make letters glow brightly like neon signs with vivid colors (pink, blue) and soft glow effect around them.';
+    englishPrompt += ' Make letters as thick tubular neon glass tubes. Letters should glow uniformly and brightly. Use vivid glowing colors like pink, blue, or purple. Add glass tube transparency and smooth texture. Add soft glow haze around the letters.';
   } else if (signboardType === 'wooden') {
     englishPrompt += ' Add wooden texture with carved letter depth for a natural warm atmosphere.';
   } else if (signboardType === 'acrylic') {
