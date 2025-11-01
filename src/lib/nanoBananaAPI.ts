@@ -622,22 +622,27 @@ export function generateReferenceImagePrompt(colorTheme: string): string {
 
   const themeText = themePrompts[colorTheme as keyof typeof themePrompts] || themePrompts.warm;
 
-  const prompt = `この建物の看板を、2枚目の参考画像のようなデザインにリニューアルしてください。
+  const prompt = `1枚目の画像: リニューアルしたい建物（ベース画像）
+2枚目の画像: 参考にしたい看板デザイン
 
-参考画像から再現する要素：
+タスク: 1枚目の建物画像に写っている看板だけを、2枚目の画像に写っている看板のスタイルを参考にして修正してください。
+
+2枚目の看板から参考にする要素：
 - 看板のスタイルとデザイン（形状、質感、タイプ）
-- 発光方法や照明効果
+- 発光方法や照明効果（LED、ネオン、バックライトなど）
 - 文字の太さや形状
-- 全体的な雰囲気
+- 全体的な雰囲気と高級感
 
 色合いの調整：
 - ${themeText}を基調にしてください
 
-重要な要件：
-- 看板の位置は元のまま維持してください
-- ブランド名やロゴのテキストは維持してください
-- 建物や周囲の環境は変更しないでください
-- 参考画像のスタイルを忠実に再現してください
+絶対に守る要件：
+- 1枚目の建物画像をベースにしてください
+- 1枚目の建物の看板の位置、サイズは維持してください
+- 1枚目のブランド名やロゴのテキストは維持してください
+- 1枚目の建物や周囲の環境は一切変更しないでください
+- 2枚目の画像は参考のみで、建物自体は使用しないでください
+- 看板部分だけを2枚目のスタイルに変更してください
 
 編集した画像を生成してください。`;
 
@@ -762,7 +767,51 @@ function translatePromptToEnglish(japanesePrompt: string): string {
     'acrylic': 'modern acrylic type (transparent/translucent acrylic with internal lighting)'
   };
 
-  // Nano Banana画像編集用のプロンプト
+  // 参考画像モードの検出
+  if (japanesePrompt.includes('1枚目の画像: リニューアルしたい建物') && japanesePrompt.includes('2枚目の画像: 参考にしたい看板デザイン')) {
+    let englishPrompt = `Image 1: The building to renovate (base image)
+Image 2: Reference signboard design to copy style from
+
+Task: Modify ONLY the signboard in Image 1 (the building) by applying the style of the signboard shown in Image 2.
+
+Elements to reference from Image 2's signboard:
+- Signboard style and design (shape, texture, type)
+- Lighting method and illumination effects (LED, neon, backlight, etc.)
+- Letter thickness and shape
+- Overall atmosphere and luxury feel
+
+Color adjustment:
+- Use `;
+
+    // 色テーマの検出と変換
+    if (japanesePrompt.includes('温かみのある')) {
+      englishPrompt += themeTranslations.warm;
+    } else if (japanesePrompt.includes('清潔感のある')) {
+      englishPrompt += themeTranslations.clean;
+    } else if (japanesePrompt.includes('高級感のある')) {
+      englishPrompt += themeTranslations.luxury;
+    } else if (japanesePrompt.includes('親しみやすい')) {
+      englishPrompt += themeTranslations.friendly;
+    } else if (japanesePrompt.includes('信頼感のある')) {
+      englishPrompt += themeTranslations.trust;
+    }
+
+    englishPrompt += ` as the color base
+
+Critical requirements:
+- Use Image 1 (building) as the base
+- Keep the signboard position and size from Image 1
+- Maintain brand names and logo text from Image 1
+- Do NOT change the building or surrounding environment from Image 1
+- Image 2 is reference ONLY for signboard style, do NOT use the building from Image 2
+- Only modify the signboard area to match Image 2's style
+
+Generate the edited image.`;
+
+    return englishPrompt;
+  }
+
+  // Nano Banana画像編集用のプロンプト（通常モード）
   let englishPrompt = 'Edit this building image: Change the signboard ';
   
   // 看板タイプの検出と変換
