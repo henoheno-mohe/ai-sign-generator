@@ -128,6 +128,64 @@ export default function Home() {
     setSelectedSignboardType(signboardType);
   };
 
+  // 発光タイプ変更ハンドラー
+  const handleChangeLighting = async (lightingType: 'side' | 'back') => {
+    if (!processedImage || !uploadedFile || !selectedTheme) return;
+    
+    // ライセンスチェック
+    if (!canUseService()) {
+      setError('使用回数の上限に達しました。ライセンスキーを入力してください。');
+      setShowLicenseInput(true);
+      return;
+    }
+
+    setIsProcessing(true);
+    setError(null);
+
+    try {
+      // 現在の処理済み画像をベースにして発光タイプのみを変更
+      // 処理済み画像をFileオブジェクトに変換
+      const response = await fetch(processedImage);
+      const blob = await response.blob();
+      const processedFile = new File([blob], 'processed.jpg', { type: 'image/jpeg' });
+      
+      const imageBase64 = await convertImageToBase64(processedFile);
+      
+      // 発光タイプに応じたプロンプトを生成
+      const lightingTypeMap = {
+        'side': 'led-channel-side',
+        'back': 'led-channel-back'
+      };
+      
+      const newSignboardType = lightingTypeMap[lightingType];
+      const prompt = generateSignboardPrompt(selectedTheme, 'modern', newSignboardType);
+      
+      console.log(`発光タイプを${lightingType}に変更中...`);
+      
+      const result = await callNanoBananaAPIWithRetry(imageBase64, prompt, config.nanoBananaApiKey);
+      
+      if (result.success && result.edited_image_url) {
+        // 成功したら使用回数をカウント
+        await recordUsage();
+        
+        setProcessedImage(result.edited_image_url);
+        setSelectedSignboardType(newSignboardType);
+        setApiResponseInfo({
+          text_response: result.text_response,
+          processing_method: 'Lighting Type Change',
+          signboard_type: newSignboardType
+        });
+      } else {
+        throw new Error(result.error || '発光タイプの変更に失敗しました');
+      }
+    } catch (error) {
+      console.error('Lighting change failed:', error);
+      setError('発光タイプの変更中にエラーが発生しました');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleProcess = async () => {
     // 参考画像がある場合は看板タイプ不要、ない場合は必須
     const requiresSignboardType = !referenceImage;
@@ -311,6 +369,8 @@ export default function Home() {
               processedImage={processedImage}
               isProcessing={isProcessing}
               apiResponseInfo={apiResponseInfo}
+              onChangeLighting={handleChangeLighting}
+              currentSignboardType={selectedSignboardType}
             />
           </div>
         </div>

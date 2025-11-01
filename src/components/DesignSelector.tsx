@@ -47,21 +47,9 @@ const colorThemes = [
 const signboardTypes = [
   {
     id: 'led-channel-face',
-    name: 'LEDチャンネル文字（正面発光）',
-    description: '文字全体が明るく光る、視認性の高いスタンダードタイプ',
+    name: 'LEDチャンネル文字',
+    description: '立体的な文字が光る、視認性の高いモダンなタイプ',
     icon: '💡'
-  },
-  {
-    id: 'led-channel-side',
-    name: 'LEDチャンネル文字（側面発光）',
-    description: '文字の側面が光る、モダンでスタイリッシュなタイプ',
-    icon: '✨'
-  },
-  {
-    id: 'led-channel-back',
-    name: 'LEDチャンネル文字（背面発光）',
-    description: '文字の周りにハロー効果、高級感のある間接照明タイプ',
-    icon: '🌟'
   },
   {
     id: 'flat',

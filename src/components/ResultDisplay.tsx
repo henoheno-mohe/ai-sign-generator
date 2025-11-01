@@ -12,9 +12,18 @@ interface ResultDisplayProps {
     processing_method?: string;
     signboard_type?: string;
   } | null;
+  onChangeLighting?: (lightingType: 'side' | 'back') => void;
+  currentSignboardType?: string;
 }
 
-export default function ResultDisplay({ originalImage, processedImage, isProcessing, apiResponseInfo }: ResultDisplayProps) {
+export default function ResultDisplay({ 
+  originalImage, 
+  processedImage, 
+  isProcessing, 
+  apiResponseInfo,
+  onChangeLighting,
+  currentSignboardType
+}: ResultDisplayProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">
@@ -74,6 +83,30 @@ export default function ResultDisplay({ originalImage, processedImage, isProcess
                   完了
                 </div>
               </div>
+              
+              {/* LEDチャンネル文字の場合：発光タイプ変更ボタン */}
+              {currentSignboardType === 'led-channel-face' && onChangeLighting && (
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h4 className="text-sm font-semibold text-gray-800 mb-3">💡 発光タイプを変更</h4>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => onChangeLighting('side')}
+                      className="flex-1 bg-white border-2 border-blue-300 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+                    >
+                      ✨ 側面発光に変更
+                    </button>
+                    <button 
+                      onClick={() => onChangeLighting('back')}
+                      className="flex-1 bg-white border-2 border-blue-300 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+                    >
+                      🌟 背面発光に変更
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2">
+                    ※ 現在の看板デザインを維持したまま、発光方法のみを変更します
+                  </p>
+                </div>
+              )}
               
               {/* アクションボタン */}
               <div className="mt-4 flex space-x-3">
