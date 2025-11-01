@@ -50,7 +50,7 @@ const signboardTypes = [
     name: 'LEDチャンネル文字',
     description: '立体的な文字が光る、視認性の高いモダンなタイプ',
     icon: '💡',
-    imageUrl: '/images/signboard-types/led-channel-face.jpg',
+    imageUrl: '/images/signboard-types/led-channel-face.png',
     example: 'スターバックス、ユニクロなどの大型店舗で使用'
   },
   {
@@ -58,7 +58,7 @@ const signboardTypes = [
     name: '平面看板',
     description: '従来の平らな看板デザイン',
     icon: '📋',
-    imageUrl: '/images/signboard-types/flat.jpg',
+    imageUrl: '/images/signboard-types/flat.png',
     example: '商店街の個人店、小規模店舗で一般的'
   },
   {
@@ -66,7 +66,7 @@ const signboardTypes = [
     name: 'ネオンサイン',
     description: 'ガラス管が鮮やかに光る、レトロでスタイリッシュな看板',
     icon: '🔥',
-    imageUrl: '/images/signboard-types/neon.jpg',
+    imageUrl: '/images/signboard-types/neon.png',
     example: 'バー、居酒屋、カフェなどで人気'
   },
   {
@@ -74,7 +74,7 @@ const signboardTypes = [
     name: '木製看板',
     description: 'ナチュラルで温かみのある木製デザイン',
     icon: '🌳',
-    imageUrl: '/images/signboard-types/wooden.jpg',
+    imageUrl: '/images/signboard-types/wooden.png',
     example: 'カフェ、パン屋、雑貨店などナチュラル系店舗'
   },
   {
@@ -82,7 +82,7 @@ const signboardTypes = [
     name: 'モダンアクリル',
     description: '透明・半透明のアクリル板を使用した現代的な看板',
     icon: '🔷',
-    imageUrl: '/images/signboard-types/acrylic.jpg',
+    imageUrl: '/images/signboard-types/acrylic.png',
     example: '美容院、クリニック、オフィスなど洗練された空間'
   }
 ];
