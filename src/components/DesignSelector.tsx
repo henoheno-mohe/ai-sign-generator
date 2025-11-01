@@ -49,31 +49,41 @@ const signboardTypes = [
     id: 'led-channel-face',
     name: 'LEDチャンネル文字',
     description: '立体的な文字が光る、視認性の高いモダンなタイプ',
-    icon: '💡'
+    icon: '💡',
+    imageUrl: '/images/signboard-types/led-channel-face.jpg',
+    example: 'スターバックス、ユニクロなどの大型店舗で使用'
   },
   {
     id: 'flat',
     name: '平面看板',
     description: '従来の平らな看板デザイン',
-    icon: '📋'
+    icon: '📋',
+    imageUrl: '/images/signboard-types/flat.jpg',
+    example: '商店街の個人店、小規模店舗で一般的'
   },
   {
     id: 'neon',
     name: 'ネオンサイン',
     description: 'ガラス管が鮮やかに光る、レトロでスタイリッシュな看板',
-    icon: '🔥'
+    icon: '🔥',
+    imageUrl: '/images/signboard-types/neon.jpg',
+    example: 'バー、居酒屋、カフェなどで人気'
   },
   {
     id: 'wooden',
     name: '木製看板',
     description: 'ナチュラルで温かみのある木製デザイン',
-    icon: '🌳'
+    icon: '🌳',
+    imageUrl: '/images/signboard-types/wooden.jpg',
+    example: 'カフェ、パン屋、雑貨店などナチュラル系店舗'
   },
   {
     id: 'acrylic',
     name: 'モダンアクリル',
     description: '透明・半透明のアクリル板を使用した現代的な看板',
-    icon: '🔷'
+    icon: '🔷',
+    imageUrl: '/images/signboard-types/acrylic.jpg',
+    example: '美容院、クリニック、オフィスなど洗練された空間'
   }
 ];
 
@@ -152,23 +162,42 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
       {!hasReferenceImage && (
         <div className="mb-8">
           <h3 className="text-lg font-medium text-gray-800 mb-4">看板タイプ</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {signboardTypes.map((type) => (
               <div
                 key={type.id}
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                className={`border-2 rounded-lg p-3 cursor-pointer transition-all ${
                   selectedSignboardType === type.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-blue-500 bg-blue-50 shadow-md'
+                    : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                 }`}
                 onClick={() => handleSignboardTypeSelect(type.id)}
               >
                 <div className="flex items-start space-x-3">
-                  <div className="text-3xl">{type.icon}</div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{type.name}</h4>
-                    <p className="text-sm text-gray-600 mt-1">{type.description}</p>
+                  {/* アイコン */}
+                  <div className="text-3xl flex-shrink-0">{type.icon}</div>
+                  
+                  {/* テキスト情報 */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-gray-900">{type.name}</h4>
+                    <p className="text-xs text-gray-600 mt-1">{type.description}</p>
+                    <p className="text-xs text-blue-600 mt-1 font-medium">例: {type.example}</p>
                   </div>
+                  
+                  {/* 参考画像（あれば表示） */}
+                  {type.imageUrl && (
+                    <div className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border border-gray-200">
+                      <img 
+                        src={type.imageUrl} 
+                        alt={type.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // 画像が読み込めない場合は非表示
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
