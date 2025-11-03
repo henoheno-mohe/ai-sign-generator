@@ -186,7 +186,7 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
                   
                   {/* 参考画像（あれば表示） */}
                   {type.imageUrl && (
-                    <div className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border border-gray-200">
+                    <div className="flex-shrink-0 w-32 h-20 rounded-md overflow-hidden border border-gray-200">
                       <img 
                         src={type.imageUrl} 
                         alt={type.name}
