@@ -166,13 +166,14 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
             {signboardTypes.map((type) => (
               <div
                 key={type.id}
-                className={`border-2 rounded-lg p-3 cursor-pointer transition-all ${
+                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                   selectedSignboardType === type.id
                     ? 'border-blue-500 bg-blue-50 shadow-md'
                     : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                 }`}
                 onClick={() => handleSignboardTypeSelect(type.id)}
               >
+                {/* 上部：アイコンとテキスト */}
                 <div className="flex items-start space-x-3">
                   {/* アイコン */}
                   <div className="text-3xl flex-shrink-0">{type.icon}</div>
@@ -183,22 +184,22 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
                     <p className="text-xs text-gray-600 mt-1">{type.description}</p>
                     <p className="text-xs text-blue-600 mt-1 font-medium">例: {type.example}</p>
                   </div>
-                  
-                  {/* 参考画像（あれば表示） */}
-                  {type.imageUrl && (
-                    <div className="flex-shrink-0 w-32 h-20 rounded-md overflow-hidden border border-gray-200">
-                      <img 
-                        src={type.imageUrl} 
-                        alt={type.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // 画像が読み込めない場合は非表示
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  )}
                 </div>
+                
+                {/* 下部：参考画像（あれば表示） */}
+                {type.imageUrl && (
+                  <div className="mt-3 w-full h-24 rounded-md overflow-hidden border border-gray-200 bg-gray-50">
+                    <img 
+                      src={type.imageUrl} 
+                      alt={type.name}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        // 画像が読み込めない場合は非表示
+                        e.currentTarget.parentElement!.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
