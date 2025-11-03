@@ -186,6 +186,71 @@ export default function Home() {
     }
   };
 
+  // プリセット参考画像を読み込む関数
+  const loadPresetImages = async (signboardType: string): Promise<string[]> => {
+    const signboardTypesConfig = [
+      {
+        id: 'led-channel-face',
+        presetImages: [
+          '/images/signboard-presets/led-channel-face-1.png',
+          '/images/signboard-presets/led-channel-face-2.png',
+          '/images/signboard-presets/led-channel-face-3.png',
+        ]
+      },
+      {
+        id: 'flat',
+        presetImages: [
+          '/images/signboard-presets/flat-1.png',
+          '/images/signboard-presets/flat-2.png',
+        ]
+      },
+      {
+        id: 'neon',
+        presetImages: [
+          '/images/signboard-presets/neon-1.png',
+          '/images/signboard-presets/neon-2.png',
+          '/images/signboard-presets/neon-3.png',
+        ]
+      },
+      {
+        id: 'wooden',
+        presetImages: [
+          '/images/signboard-presets/wooden-1.png',
+          '/images/signboard-presets/wooden-2.png',
+        ]
+      },
+      {
+        id: 'acrylic',
+        presetImages: [
+          '/images/signboard-presets/acrylic-1.png',
+          '/images/signboard-presets/acrylic-2.png',
+        ]
+      },
+    ];
+
+    const config = signboardTypesConfig.find(t => t.id === signboardType);
+    if (!config || !config.presetImages) return [];
+
+    const presetBase64Array: string[] = [];
+    
+    for (const imagePath of config.presetImages) {
+      try {
+        const response = await fetch(imagePath);
+        if (response.ok) {
+          const blob = await response.blob();
+          const file = new File([blob], 'preset.png', { type: 'image/png' });
+          const base64 = await convertImageToBase64(file);
+          presetBase64Array.push(base64);
+          console.log(`✓ プリセット画像読み込み成功: ${imagePath}`);
+        }
+      } catch (error) {
+        console.warn(`プリセット画像読み込み失敗: ${imagePath}`, error);
+      }
+    }
+    
+    return presetBase64Array;
+  };
+
   const handleProcess = async () => {
     // 参考画像がある場合は看板タイプ不要、ない場合は必須
     const requiresSignboardType = !referenceImage;
@@ -213,7 +278,7 @@ export default function Home() {
       const imageBase64 = await convertImageToBase64(uploadedFile);
       
       let prompt: string;
-      let imagesToSend: string | string[];
+      let imagesToSend: string[];
       
       // 参考画像がある場合
       if (referenceImage && referenceFile) {
@@ -222,13 +287,20 @@ export default function Home() {
         imagesToSend = [imageBase64, referenceBase64]; // 建物画像、参考画像の順
         prompt = generateReferenceImagePrompt(selectedTheme);
       } else {
-        // 通常モード（看板タイプ選択）
+        // 通常モード（看板タイプ選択 + プリセット参考画像）
         console.log('通常モード：看板タイプ', selectedSignboardType);
-        imagesToSend = imageBase64;
+        
+        // プリセット参考画像を読み込み
+        const presetImages = await loadPresetImages(selectedSignboardType);
+        console.log(`プリセット参考画像: ${presetImages.length}枚読み込み`);
+        
+        // 建物画像 + プリセット参考画像
+        imagesToSend = [imageBase64, ...presetImages];
         prompt = generateSignboardPrompt(selectedTheme, 'modern', selectedSignboardType);
       }
       
       console.log('プロンプト:', prompt);
+      console.log('送信画像数:', imagesToSend.length);
       
       // Gemini APIで直接画像を編集
       console.log('Geminiで看板をリニューアル中...');

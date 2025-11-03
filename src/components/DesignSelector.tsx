@@ -51,7 +51,12 @@ const signboardTypes = [
     description: '立体的な文字が光る、視認性の高いモダンなタイプ',
     icon: '💡',
     imageUrl: '/images/signboard-types/led-channel-face.png',
-    example: 'スターバックス、ユニクロなどの大型店舗で使用'
+    example: 'スターバックス、ユニクロなどの大型店舗で使用',
+    presetImages: [
+      '/images/signboard-presets/led-channel-face-1.png',
+      '/images/signboard-presets/led-channel-face-2.png',
+      '/images/signboard-presets/led-channel-face-3.png',
+    ]
   },
   {
     id: 'flat',
@@ -59,7 +64,11 @@ const signboardTypes = [
     description: '従来の平らな看板デザイン',
     icon: '📋',
     imageUrl: '/images/signboard-types/flat.png',
-    example: '商店街の個人店、小規模店舗で一般的'
+    example: '商店街の個人店、小規模店舗で一般的',
+    presetImages: [
+      '/images/signboard-presets/flat-1.png',
+      '/images/signboard-presets/flat-2.png',
+    ]
   },
   {
     id: 'neon',
@@ -67,7 +76,12 @@ const signboardTypes = [
     description: 'ガラス管が鮮やかに光る、レトロでスタイリッシュな看板',
     icon: '🔥',
     imageUrl: '/images/signboard-types/neon.png',
-    example: 'バー、居酒屋、カフェなどで人気'
+    example: 'バー、居酒屋、カフェなどで人気',
+    presetImages: [
+      '/images/signboard-presets/neon-1.png',
+      '/images/signboard-presets/neon-2.png',
+      '/images/signboard-presets/neon-3.png',
+    ]
   },
   {
     id: 'wooden',
@@ -75,7 +89,11 @@ const signboardTypes = [
     description: 'ナチュラルで温かみのある木製デザイン',
     icon: '🌳',
     imageUrl: '/images/signboard-types/wooden.png',
-    example: 'カフェ、パン屋、雑貨店などナチュラル系店舗'
+    example: 'カフェ、パン屋、雑貨店などナチュラル系店舗',
+    presetImages: [
+      '/images/signboard-presets/wooden-1.png',
+      '/images/signboard-presets/wooden-2.png',
+    ]
   },
   {
     id: 'acrylic',
@@ -83,7 +101,11 @@ const signboardTypes = [
     description: '透明・半透明のアクリル板を使用した現代的な看板',
     icon: '🔷',
     imageUrl: '/images/signboard-types/acrylic.png',
-    example: '美容院、クリニック、オフィスなど洗練された空間'
+    example: '美容院、クリニック、オフィスなど洗練された空間',
+    presetImages: [
+      '/images/signboard-presets/acrylic-1.png',
+      '/images/signboard-presets/acrylic-2.png',
+    ]
   }
 ];
 

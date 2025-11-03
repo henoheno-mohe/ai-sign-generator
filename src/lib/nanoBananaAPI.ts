@@ -681,7 +681,10 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `この建物の看板を${themeText}、${fontText}`;
+  let prompt = `画像1枚目: リニューアルしたい建物
+画像2枚目以降: ${typeText}の参考例（複数の実例）
+
+タスク: 1枚目の建物に写っている看板を、2枚目以降の参考画像のスタイルを学習して、${themeText}、${fontText}`;
   
   if (typeText) {
     prompt += `の${typeText}`;
@@ -689,10 +692,17 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   
   prompt += `にリニューアルしてください。
 
+参考画像から学ぶ要素：
+- 看板の質感、素材感、立体感
+- 発光方法や照明効果の特徴
+- 文字の太さ、形状、配置
+- 全体的な雰囲気とリアルな仕上がり
+
 重要な要件：
 - 看板の位置は元のまま維持してください
 - ブランド名やロゴのテキストは維持してください
-- 建物や周囲の環境は変更しないでください`;
+- 建物や周囲の環境は変更しないでください
+- 複数の参考画像から共通するスタイルを学習し、よりリアルに再現してください`;
 
   if (signboardType === 'led-channel-face') {
     prompt += `
@@ -811,8 +821,8 @@ Generate the edited image.`;
     return englishPrompt;
   }
 
-  // Nano Banana画像編集用のプロンプト（通常モード）
-  let englishPrompt = 'Edit this building image: Change the signboard ';
+  // Nano Banana画像編集用のプロンプト（通常モード：複数参考画像対応）
+  let englishPrompt = 'Image 1: Building to renovate\nImages 2+: Multiple reference examples of the signboard type\n\nTask: Renovate the signboard in Image 1 by learning from multiple reference images (2+). Apply ';
   
   // 看板タイプの検出と変換
   let signboardType = '';
@@ -869,7 +879,7 @@ Generate the edited image.`;
     englishPrompt += fontTranslations.powerful;
   }
 
-  englishPrompt += '. Keep the signboard position unchanged. Maintain brand names and logos text. Do not change the building or surrounding environment.';
+  englishPrompt += '. Learn from reference images: texture, material, 3D depth, lighting effects, letter thickness, shape, placement, and realistic finish. Keep signboard position unchanged. Maintain brand names and logos text. Do not change the building or surrounding environment. Learn common styles from multiple reference images to create highly realistic results.';
 
   // 看板タイプ別の追加指示
   if (signboardType === 'led-channel-face') {
