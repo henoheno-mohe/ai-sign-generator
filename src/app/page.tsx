@@ -195,6 +195,8 @@ export default function Home() {
           '/images/signboard-presets/led-channel-face-1.png',
           '/images/signboard-presets/led-channel-face-2.png',
           '/images/signboard-presets/led-channel-face-3.png',
+          '/images/signboard-presets/led-channel-face-4.png',
+          '/images/signboard-presets/led-channel-face-5.png',
         ]
       },
       {
