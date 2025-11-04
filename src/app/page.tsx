@@ -192,11 +192,11 @@ export default function Home() {
       {
         id: 'led-channel-face',
         presetImages: [
-          '/images/signboard-presets/led-channel-face-1.png',
-          '/images/signboard-presets/led-channel-face-2.png',
-          '/images/signboard-presets/led-channel-face-3.png',
-          '/images/signboard-presets/led-channel-face-4.png',
-          '/images/signboard-presets/led-channel-face-5.png',
+          '/images/signboard-presets/led-channel-face-1.jpg',
+          '/images/signboard-presets/led-channel-face-2.jpg',
+          '/images/signboard-presets/led-channel-face-3.jpg',
+          '/images/signboard-presets/led-channel-face-4.jpg',
+          '/images/signboard-presets/led-channel-face-5.jpg',
         ]
       },
       {
@@ -240,7 +240,11 @@ export default function Home() {
         const response = await fetch(imagePath);
         if (response.ok) {
           const blob = await response.blob();
-          const file = new File([blob], 'preset.png', { type: 'image/png' });
+          // 拡張子からMIMEタイプを判定
+          const ext = imagePath.split('.').pop()?.toLowerCase();
+          const mimeType = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'image/png';
+          const fileName = `preset.${ext}`;
+          const file = new File([blob], fileName, { type: mimeType });
           const base64 = await convertImageToBase64(file);
           presetBase64Array.push(base64);
           console.log(`✓ プリセット画像読み込み成功: ${imagePath}`);

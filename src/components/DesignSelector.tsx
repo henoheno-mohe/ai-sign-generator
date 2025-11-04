@@ -53,11 +53,11 @@ const signboardTypes = [
     imageUrl: '/images/signboard-types/led-channel-face.png',
     example: 'スターバックス、ユニクロなどの大型店舗で使用',
     presetImages: [
-      '/images/signboard-presets/led-channel-face-1.png',
-      '/images/signboard-presets/led-channel-face-2.png',
-      '/images/signboard-presets/led-channel-face-3.png',
-      '/images/signboard-presets/led-channel-face-4.png',
-      '/images/signboard-presets/led-channel-face-5.png',
+      '/images/signboard-presets/led-channel-face-1.jpg',
+      '/images/signboard-presets/led-channel-face-2.jpg',
+      '/images/signboard-presets/led-channel-face-3.jpg',
+      '/images/signboard-presets/led-channel-face-4.jpg',
+      '/images/signboard-presets/led-channel-face-5.jpg',
     ]
   },
   {
