@@ -6,7 +6,8 @@ import DesignSelector from '@/components/DesignSelector';
 import ResultDisplay from '@/components/ResultDisplay';
 import LicenseInput from '@/components/LicenseInput';
 import DetailSettings from '@/components/DetailSettings';
-import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, generateSignboardExtractionPrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import CropTool from '@/components/CropTool';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
 import { config } from '@/lib/config';
 import { FREE_TRIAL_USES } from '@/lib/license';
 
@@ -28,7 +29,7 @@ export default function Home() {
 
   // Phase 2: 看板切り取り用の状態
   const [extractedSignboard, setExtractedSignboard] = useState<string | null>(null);
-  const [isExtracting, setIsExtracting] = useState(false);
+  const [showCropTool, setShowCropTool] = useState(false);
 
   // Phase 3: サイズ入力用の状態
   const [signboardWidth, setSignboardWidth] = useState<number>(3000);
@@ -144,6 +145,7 @@ export default function Home() {
     setApiResponseInfo(null);
     setExtractedSignboard(null);
     setShowDetailSettings(false);
+    setShowCropTool(false);
   };
 
   // Phase 3: サイズ変更ハンドラー
@@ -165,8 +167,8 @@ export default function Home() {
     setSelectedSignboardType(signboardType);
   };
 
-  // Phase 2: 看板切り取りハンドラー
-  const handleExtractSignboard = async () => {
+  // Phase 2: 看板切り取りハンドラー（手動選択モードに変更）
+  const handleExtractSignboard = () => {
     if (!processedImage) return;
 
     // ライセンスチェック
@@ -176,40 +178,23 @@ export default function Home() {
       return;
     }
 
-    setIsExtracting(true);
-    setError(null);
+    // 手動選択UIを表示
+    setShowCropTool(true);
+  };
 
-    try {
-      console.log('看板切り取り処理を開始...');
+  // 切り取り完了ハンドラー
+  const handleCropComplete = async (croppedImageUrl: string) => {
+    setShowCropTool(false);
+    setExtractedSignboard(croppedImageUrl);
+    setShowDetailSettings(true);
+    
+    // 使用回数をカウント
+    await recordUsage();
+  };
 
-      // 処理済み画像をFileオブジェクトに変換
-      const response = await fetch(processedImage);
-      const blob = await response.blob();
-      const processedFile = new File([blob], 'processed.jpg', { type: 'image/jpeg' });
-      const imageBase64 = await convertImageToBase64(processedFile);
-
-      // 看板切り取りプロンプト
-      const prompt = generateSignboardExtractionPrompt();
-
-      console.log('Geminiで看板を切り取り中...');
-      const result = await callNanoBananaAPIWithRetry(imageBase64, prompt, config.nanoBananaApiKey);
-
-      if (result.success && result.edited_image_url) {
-        // 成功したら使用回数をカウント
-        await recordUsage();
-
-        setExtractedSignboard(result.edited_image_url);
-        setShowDetailSettings(true); // 詳細設定画面を表示
-        console.log('看板切り取り完了');
-      } else {
-        throw new Error(result.error || '看板の切り取りに失敗しました');
-      }
-    } catch (error) {
-      console.error('Extraction failed:', error);
-      setError('看板の切り取り中にエラーが発生しました');
-    } finally {
-      setIsExtracting(false);
-    }
+  // 切り取りキャンセルハンドラー
+  const handleCropCancel = () => {
+    setShowCropTool(false);
   };
 
   // 発光タイプ変更ハンドラー
@@ -531,7 +516,7 @@ export default function Home() {
               onChangeLighting={handleChangeLighting}
               currentSignboardType={selectedSignboardType}
               onExtractSignboard={handleExtractSignboard}
-              isExtracting={isExtracting}
+              isExtracting={false}
             />
           </div>
         </div>
@@ -558,6 +543,15 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* 切り取りツール */}
+      {showCropTool && processedImage && (
+        <CropTool
+          image={processedImage}
+          onCropComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </div>
   );
 }
