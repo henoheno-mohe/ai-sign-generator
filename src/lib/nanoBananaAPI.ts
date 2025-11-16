@@ -681,15 +681,25 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `Edit the main signboard text in Image 1 to have ${typeText ? typeText + ' style' : 'LED channel letter style'}. 
+  let prompt = `Edit Image 1: Transform the signboard text to look exactly like the LED channel letter style shown in reference images (2+).
 
-Keep everything else exactly the same:
-- Same text content (do not change any characters)
-- Same building
-- Same colors
-- Same layout
+Reference images (2-6) show the target style. Copy these characteristics:
+- 3D letters with 5-8cm depth/thickness
+- Metal frame (stainless steel or aluminum) visible on letter sides
+- White acrylic front panel glowing uniformly and brightly
+- Letters appear to float 5-10cm in front of the wall
+- Soft shadow cast on the wall behind letters
+- Bright illumination effect similar to reference examples
 
-Only make the signboard text look like the reference images (2+) by adding 3D effect and lighting.`;
+CRITICAL - Keep exactly the same:
+- Text content (same characters, same words)
+- Text color scheme from original
+- Building structure
+- All other elements (curtains, menu boards, etc.)
+
+Only transform the signboard text to match the 3D LED channel letter appearance from reference images.
+
+Generate the edited image.`;
 
   return prompt;
 }
