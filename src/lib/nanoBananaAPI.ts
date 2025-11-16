@@ -681,25 +681,28 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `Edit Image 1: Transform the signboard text to look exactly like the LED channel letter style shown in reference images (2+).
+  let prompt = `Edit this image: Transform ONLY the main signboard text into 3D LED channel letters.
 
-Reference images (2-6) show the target style. Copy these characteristics:
-- 3D letters with 5-8cm depth/thickness
-- Metal frame (stainless steel or aluminum) visible on letter sides
-- White acrylic front panel glowing uniformly and brightly
-- Letters appear to float 5-10cm in front of the wall
-- Soft shadow cast on the wall behind letters
-- Bright illumination effect similar to reference examples
+LED channel letter specifications:
+- 3D立体文字：Each letter has 5-8cm thickness/depth extending forward from the signboard
+- 金属フレーム：Visible stainless steel or aluminum frame on the sides of each letter
+- 正面発光：White acrylic front panel on each letter, glowing uniformly and brightly from internal LEDs
+- 浮遊効果：Letters appear to be mounted 5-10cm in front of the wall/signboard
+- 影の投影：Soft shadows cast by the 3D letters onto the wall behind them
+- 照明効果：Bright, professional illumination similar to commercial store signage (like NEXTFLOOR, BANANA REPUBLIC style)
 
-CRITICAL - Keep exactly the same:
-- Text content (same characters, same words)
-- Text color scheme from original
-- Building structure
-- All other elements (curtains, menu boards, etc.)
+CRITICAL RULES - DO NOT CHANGE:
+✗ Text content (keep every character exactly the same)
+✗ Text color (red stays red, keep original colors)
+✗ Building exterior (walls, doors, windows, roof)
+✗ Store interior
+✗ Other signboards, curtains, menu boards, posters
+✗ Surroundings
 
-Only transform the signboard text to match the 3D LED channel letter appearance from reference images.
+ONLY CHANGE:
+✓ Make the main signboard text 3D with LED channel letter effect
 
-Generate the edited image.`;
+Generate the edited image with realistic LED channel letters on the signboard.`;
 
   return prompt;
 }

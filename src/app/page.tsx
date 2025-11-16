@@ -293,16 +293,13 @@ export default function Home() {
         imagesToSend = [imageBase64, referenceBase64]; // 建物画像、参考画像の順
         prompt = generateReferenceImagePrompt(selectedTheme);
       } else {
-        // 通常モード（看板タイプ選択 + プリセット参考画像）
+        // 通常モード（看板タイプ選択のみ、参考画像なし）
         console.log('通常モード：看板タイプ', selectedSignboardType);
         
-        // プリセット参考画像を読み込み
-        const presetImages = await loadPresetImages(selectedSignboardType);
-        console.log(`プリセット参考画像: ${presetImages.length}枚読み込み`);
-        
-        // 建物画像 + プリセット参考画像
-        imagesToSend = [imageBase64, ...presetImages];
+        // 参考画像は使用せず、建物画像のみ送信
+        imagesToSend = [imageBase64];
         prompt = generateSignboardPrompt(selectedTheme, 'modern', selectedSignboardType);
+        console.log('参考画像なしモード：詳細説明のみで指示');
       }
       
       console.log('プロンプト:', prompt);
