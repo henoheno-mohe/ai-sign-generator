@@ -211,7 +211,7 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
     setTempArea(null);
   };
 
-  // 透視変換を実行
+  // 透視変換を実行（ピクセル単位のマッピング）
   const applyPerspectiveTransform = (): string | null => {
     if (perspectivePoints.length !== 4 || !imageRef.current) return null;
 
@@ -223,71 +223,112 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
       y: p.y / scale
     }));
 
-    // 出力サイズを計算（4点の最大幅・高さ）
-    const xs = srcPoints.map(p => p.x);
-    const ys = srcPoints.map(p => p.y);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
+    // 出力サイズを計算（上辺と下辺の平均幅、左辺と右辺の平均高さ）
+    const topWidth = Math.sqrt(
+      Math.pow(srcPoints[1].x - srcPoints[0].x, 2) + 
+      Math.pow(srcPoints[1].y - srcPoints[0].y, 2)
+    );
+    const bottomWidth = Math.sqrt(
+      Math.pow(srcPoints[2].x - srcPoints[3].x, 2) + 
+      Math.pow(srcPoints[2].y - srcPoints[3].y, 2)
+    );
+    const leftHeight = Math.sqrt(
+      Math.pow(srcPoints[3].x - srcPoints[0].x, 2) + 
+      Math.pow(srcPoints[3].y - srcPoints[0].y, 2)
+    );
+    const rightHeight = Math.sqrt(
+      Math.pow(srcPoints[2].x - srcPoints[1].x, 2) + 
+      Math.pow(srcPoints[2].y - srcPoints[1].y, 2)
+    );
     
-    const outputWidth = maxX - minX;
-    const outputHeight = maxY - minY;
-
-    // 目的地の矩形（正面図）
-    const dstPoints = [
-      { x: 0, y: 0 },
-      { x: outputWidth, y: 0 },
-      { x: outputWidth, y: outputHeight },
-      { x: 0, y: outputHeight }
-    ];
+    const outputWidth = Math.round((topWidth + bottomWidth) / 2);
+    const outputHeight = Math.round((leftHeight + rightHeight) / 2);
 
     // Canvasで透視変換を実行
     const canvas = document.createElement('canvas');
     canvas.width = outputWidth;
     canvas.height = outputHeight;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return null;
 
-    // 白背景
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // 一時キャンバスで元画像を描画
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = img.width;
+    tempCanvas.height = img.height;
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+    if (!tempCtx) return null;
+    tempCtx.drawImage(img, 0, 0);
+    const imageData = tempCtx.getImageData(0, 0, img.width, img.height);
 
-    // 透視変換行列を計算（簡易版）
-    try {
-      const matrix = getPerspectiveTransform(
-        srcPoints[0], srcPoints[1], srcPoints[2], srcPoints[3],
-        dstPoints[0], dstPoints[1], dstPoints[2], dstPoints[3]
-      );
+    // 出力画像データを作成
+    const outputImageData = ctx.createImageData(outputWidth, outputHeight);
 
-      // 変換を適用
-      ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-      ctx.drawImage(img, 0, 0);
-    } catch (error) {
-      console.error('Perspective transform failed:', error);
-      return null;
+    // 逆透視変換でピクセルをマッピング
+    for (let y = 0; y < outputHeight; y++) {
+      for (let x = 0; x < outputWidth; x++) {
+        // 正規化座標 (0-1)
+        const u = x / outputWidth;
+        const v = y / outputHeight;
+
+        // バイリニア補間で元画像の座標を計算
+        const srcX = 
+          srcPoints[0].x * (1 - u) * (1 - v) +
+          srcPoints[1].x * u * (1 - v) +
+          srcPoints[2].x * u * v +
+          srcPoints[3].x * (1 - u) * v;
+        
+        const srcY = 
+          srcPoints[0].y * (1 - u) * (1 - v) +
+          srcPoints[1].y * u * (1 - v) +
+          srcPoints[2].y * u * v +
+          srcPoints[3].y * (1 - u) * v;
+
+        // 元画像からピクセルを取得（バイリニア補間）
+        const srcXFloor = Math.floor(srcX);
+        const srcYFloor = Math.floor(srcY);
+        const srcXCeil = Math.min(srcXFloor + 1, img.width - 1);
+        const srcYCeil = Math.min(srcYFloor + 1, img.height - 1);
+        
+        const xFrac = srcX - srcXFloor;
+        const yFrac = srcY - srcYFloor;
+
+        if (srcXFloor >= 0 && srcXFloor < img.width && srcYFloor >= 0 && srcYFloor < img.height) {
+          // 4つの隣接ピクセルを取得
+          const getPixel = (px: number, py: number) => {
+            const idx = (py * img.width + px) * 4;
+            return [
+              imageData.data[idx],
+              imageData.data[idx + 1],
+              imageData.data[idx + 2],
+              imageData.data[idx + 3]
+            ];
+          };
+
+          const p1 = getPixel(srcXFloor, srcYFloor);
+          const p2 = getPixel(srcXCeil, srcYFloor);
+          const p3 = getPixel(srcXFloor, srcYCeil);
+          const p4 = getPixel(srcXCeil, srcYCeil);
+
+          // バイリニア補間
+          const outputIdx = (y * outputWidth + x) * 4;
+          for (let c = 0; c < 4; c++) {
+            const top = p1[c] * (1 - xFrac) + p2[c] * xFrac;
+            const bottom = p3[c] * (1 - xFrac) + p4[c] * xFrac;
+            outputImageData.data[outputIdx + c] = top * (1 - yFrac) + bottom * yFrac;
+          }
+        } else {
+          // 範囲外は白
+          const outputIdx = (y * outputWidth + x) * 4;
+          outputImageData.data[outputIdx] = 255;
+          outputImageData.data[outputIdx + 1] = 255;
+          outputImageData.data[outputIdx + 2] = 255;
+          outputImageData.data[outputIdx + 3] = 255;
+        }
+      }
     }
 
+    ctx.putImageData(outputImageData, 0, 0);
     return canvas.toDataURL('image/png');
-  };
-
-  // 透視変換行列を計算（簡易版）
-  const getPerspectiveTransform = (
-    src1: Point, src2: Point, src3: Point, src4: Point,
-    dst1: Point, dst2: Point, dst3: Point, dst4: Point
-  ): number[] => {
-    // 簡易的な実装：アフィン変換で近似
-    // より正確な透視変換にはライブラリが必要ですが、ここでは簡易版を使用
-    
-    const w = dst2.x - dst1.x;
-    const h = dst3.y - dst1.y;
-    
-    const scaleX = w / (src2.x - src1.x);
-    const scaleY = h / (src3.y - src1.y);
-    const translateX = dst1.x - src1.x * scaleX;
-    const translateY = dst1.y - src1.y * scaleY;
-    
-    return [scaleX, 0, 0, scaleY, translateX, translateY];
   };
 
   const handleCrop = () => {
