@@ -709,28 +709,35 @@ Generate the edited image with realistic LED channel letters on the signboard.`;
 
 // 看板を正面図に補正するプロンプト生成
 export function generateStraightenPrompt(): string {
-  const prompt = `Task: Transform this signboard image to a perfect front view (straight-on perspective).
+  const prompt = `CRITICAL TASK: Apply perspective correction to transform this angled signboard into a perfect orthogonal front view.
 
-Current state: The signboard may be viewed at an angle or with perspective distortion.
+Current Problem: This signboard is photographed from an angle with perspective distortion (vanishing point effect).
 
-Required transformation:
-1. Correct perspective distortion - make it appear as if photographed directly from the front
-2. Straighten any tilt or rotation
-3. Maintain the original text, colors, and design
-4. Keep the signboard horizontal (text should read left to right)
-5. Preserve all details and quality
+Required Transformation (MANDATORY):
+1. Apply inverse perspective transformation to make the signboard completely flat and rectangular
+2. All parallel lines on the signboard MUST become perfectly parallel (no convergence)
+3. The signboard MUST appear as if photographed with a camera positioned exactly perpendicular to its surface
+4. Remove ALL depth/3D perspective effects - make it look like a flat 2D design
+5. Straighten to perfect horizontal orientation
 
-Output: Generate an image of the same signboard viewed perfectly straight-on, as if you're standing directly in front of it.
+Think of this as "unwrapping" or "flattening" the signboard from 3D space to 2D plane.
 
-Do NOT change:
-- Text content
-- Colors
+Example: If a rectangular signboard appears as a trapezoid due to perspective, transform it back to a perfect rectangle.
+
+Visual Goal: The output should look like a flat graphic design file, NOT a photograph of a physical object.
+
+Preserve (DO NOT CHANGE):
+- Text content (same characters)
+- Colors and materials
 - Design elements
-- Size or proportions
+- Logo and branding
 
-ONLY change:
-- Viewing angle (make it front-facing)
-- Perspective (remove distortion)`;
+Transform (MUST CHANGE):
+- Viewing angle → make it 90° perpendicular
+- Perspective distortion → remove completely (make orthogonal)
+- Any trapezoid shape → make rectangular
+
+Generate the corrected image showing the signboard in perfect orthogonal front view.`;
 
   return prompt;
 }
