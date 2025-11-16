@@ -140,12 +140,63 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
     setTempArea(null);
   };
 
+  // 画像の傾き補正（簡易版）
+  const straightenImage = (canvas: HTMLCanvasElement): HTMLCanvasElement => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return canvas;
+    
+    // 新しいキャンバスを作成（正面図用）
+    const straightCanvas = document.createElement('canvas');
+    const straightCtx = straightCanvas.getContext('2d');
+    if (!straightCtx) return canvas;
+
+    // アスペクト比を維持しながら、標準的な看板サイズに補正
+    // 看板は通常、横長（3:1〜5:1の比率）
+    const targetAspectRatio = 4; // 横:縦 = 4:1
+    const targetHeight = 400; // 基準高さ
+    const targetWidth = targetHeight * targetAspectRatio;
+
+    straightCanvas.width = targetWidth;
+    straightCanvas.height = targetHeight;
+
+    // 白背景を設定
+    straightCtx.fillStyle = '#ffffff';
+    straightCtx.fillRect(0, 0, straightCanvas.width, straightCanvas.height);
+
+    // 元の画像を新しいキャンバスに描画（アスペクト比を維持してフィット）
+    const sourceAspect = canvas.width / canvas.height;
+    let drawWidth, drawHeight, offsetX, offsetY;
+
+    if (sourceAspect > targetAspectRatio) {
+      // 元画像の方が横長
+      drawWidth = targetWidth;
+      drawHeight = targetWidth / sourceAspect;
+      offsetX = 0;
+      offsetY = (targetHeight - drawHeight) / 2;
+    } else {
+      // 元画像の方が縦長（または同じ）
+      drawHeight = targetHeight;
+      drawWidth = targetHeight * sourceAspect;
+      offsetX = (targetWidth - drawWidth) / 2;
+      offsetY = 0;
+    }
+
+    // イメージスムージングを有効化（アンチエイリアス）
+    straightCtx.imageSmoothingEnabled = true;
+    straightCtx.imageSmoothingQuality = 'high';
+
+    // 元の画像を描画
+    straightCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height, offsetX, offsetY, drawWidth, drawHeight);
+
+    return straightCanvas;
+  };
+
   const handleCrop = () => {
     if (!cropArea || !imageRef.current) return;
 
     const img = imageRef.current;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const tempCanvas = document.createElement('canvas');
+    const ctx = tempCanvas.getContext('2d');
     if (!ctx) return;
 
     // 元画像のサイズで切り取り
@@ -154,8 +205,8 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
     const actualWidth = cropArea.width / scale;
     const actualHeight = cropArea.height / scale;
 
-    canvas.width = actualWidth;
-    canvas.height = actualHeight;
+    tempCanvas.width = actualWidth;
+    tempCanvas.height = actualHeight;
 
     ctx.drawImage(
       img,
@@ -169,7 +220,10 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
       actualHeight
     );
 
-    const croppedImageUrl = canvas.toDataURL('image/png');
+    // 傾き補正を適用
+    const straightenedCanvas = straightenImage(tempCanvas);
+    const croppedImageUrl = straightenedCanvas.toDataURL('image/png');
+    
     onCropComplete(croppedImageUrl);
   };
 
@@ -199,6 +253,7 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
               <li>選択範囲は青い枠で表示されます</li>
               <li>選択をやり直す場合は「リセット」ボタンをクリック</li>
               <li>範囲が決まったら「切り取り完了」ボタンをクリック</li>
+              <li className="text-green-700 font-medium">✨ 切り取り後、自動的に正面図に補正されます</li>
             </ol>
           </div>
 
