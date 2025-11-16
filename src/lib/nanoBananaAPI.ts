@@ -707,27 +707,30 @@ Generate the edited image with realistic LED channel letters on the signboard.`;
   return prompt;
 }
 
-// 看板を切り取るプロンプト生成
-export function generateSignboardExtractionPrompt(): string {
-  const prompt = `Task: Extract ONLY the main signboard from this store image.
+// 看板を正面図に補正するプロンプト生成
+export function generateStraightenPrompt(): string {
+  const prompt = `Task: Transform this signboard image to a perfect front view (straight-on perspective).
 
-Step 1: Identify the main signboard
-- Find the largest sign with the store name (usually at the top of the building)
-- This is the horizontal rectangular sign with text/logo
+Current state: The signboard may be viewed at an angle or with perspective distortion.
 
-Step 2: Crop tightly around the signboard
-- Cut out ONLY the signboard rectangle
-- Do NOT include the building, windows, doors, entrance, or surrounding area
-- The output should be just the signboard itself (like cutting it out with scissors)
+Required transformation:
+1. Correct perspective distortion - make it appear as if photographed directly from the front
+2. Straighten any tilt or rotation
+3. Maintain the original text, colors, and design
+4. Keep the signboard horizontal (text should read left to right)
+5. Preserve all details and quality
 
-Step 3: Present the signboard
-- Show the signboard straight-on (front view)
-- Place it on a white background
-- Keep all text, colors, and design elements intact
+Output: Generate an image of the same signboard viewed perfectly straight-on, as if you're standing directly in front of it.
 
-Example: If the store is "RAMEN MATSUICHIYA" with a red signboard, output should be ONLY that red rectangular sign with the text, nothing else.
+Do NOT change:
+- Text content
+- Colors
+- Design elements
+- Size or proportions
 
-Generate an image showing only the isolated signboard.`;
+ONLY change:
+- Viewing angle (make it front-facing)
+- Perspective (remove distortion)`;
 
   return prompt;
 }
