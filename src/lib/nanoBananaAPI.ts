@@ -709,16 +709,25 @@ Generate the edited image with realistic LED channel letters on the signboard.`;
 
 // 看板を切り取るプロンプト生成
 export function generateSignboardExtractionPrompt(): string {
-  const prompt = `Extract and isolate the main signboard from this image.
+  const prompt = `Task: Extract ONLY the main signboard from this store image.
 
-Task:
-- Identify the main signboard (the largest sign with the store name)
-- Crop and extract only that signboard area
-- Remove the building and background
-- Present the signboard as if viewed straight-on (front view)
-- Keep the signboard design intact
+Step 1: Identify the main signboard
+- Find the largest sign with the store name (usually at the top of the building)
+- This is the horizontal rectangular sign with text/logo
 
-Output: Generate an image showing only the extracted signboard on a transparent or white background.`;
+Step 2: Crop tightly around the signboard
+- Cut out ONLY the signboard rectangle
+- Do NOT include the building, windows, doors, entrance, or surrounding area
+- The output should be just the signboard itself (like cutting it out with scissors)
+
+Step 3: Present the signboard
+- Show the signboard straight-on (front view)
+- Place it on a white background
+- Keep all text, colors, and design elements intact
+
+Example: If the store is "RAMEN MATSUICHIYA" with a red signboard, output should be ONLY that red rectangular sign with the text, nothing else.
+
+Generate an image showing only the isolated signboard.`;
 
   return prompt;
 }
