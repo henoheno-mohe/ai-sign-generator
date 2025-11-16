@@ -681,88 +681,15 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `【2段階タスク】
+  let prompt = `Edit the main signboard text in Image 1 to have ${typeText ? typeText + ' style' : 'LED channel letter style'}. 
 
-■ Step 1: 看板を特定
-1枚目の画像から、店舗の「メイン看板」を特定してください。
-- メイン看板 = 店名が書かれた最も大きな看板（通常は店舗の上部にある）
-- 看板の位置、サイズ、現在の文字内容を正確に認識してください
+Keep everything else exactly the same:
+- Same text content (do not change any characters)
+- Same building
+- Same colors
+- Same layout
 
-■ Step 2: その看板だけを編集
-Step 1で特定した看板の文字部分だけに、以下のスタイルを適用してください：
-- ${themeText}
-- ${fontText}`;
-  
-  if (typeText) {
-    prompt += `
-- ${typeText}のスタイル`;
-  }
-  
-  prompt += `
-
-参考画像（2枚目以降）の使い方：
-- これらは看板スタイルの参考例です
-- 文字の質感、3D効果、発光方法を学んでください
-- これらの画像自体は使用せず、スタイルだけを学習してください
-
-【編集ルール - 看板の文字のみ】：
-✓ 変更OK: 文字の視覚スタイル（3D効果、発光、質感）
-✗ 変更NG: 文字の内容（「らーめん」は「らーめん」のまま、「稲荷屋」は「稲荷屋」のまま）
-✗ 変更NG: 文字の配置・サイズ・位置
-✗ 変更NG: 看板の背景色・形状
-✗ 変更NG: 看板の位置・サイズ
-
-【編集ルール - 看板以外の全て】：
-✗ 絶対に変更禁止: 建物の壁・ドア・窓・柱・屋根
-✗ 絶対に変更禁止: のれん・メニュー看板・ポスター・その他の看板
-✗ 絶対に変更禁止: 店内の様子・照明・インテリア
-✗ 絶対に変更禁止: 周囲の環境・隣の店・道路
-
-【出力】：
-1枚目の画像を元に、Step 1で特定した看板の文字スタイルだけを変更した画像を生成してください。
-看板以外は1ピクセルも変更しないでください。`;
-
-  if (signboardType === 'led-channel-face') {
-    prompt += `
-- 文字を立体的な3D形状にしてください
-- 文字の表面全体が均一に明るく光るようにしてください（フェイスライト）
-- 文字の縁がくっきりと際立つようにしてください
-- 視認性が高く、明るい印象を強調してください
-- 白色または明るい色のLED照明効果を表現してください`;
-  } else if (signboardType === 'led-channel-side') {
-    prompt += `
-- 文字を立体的な3D形状にしてください
-- 文字の側面のみが光るようにしてください（サイドライト）
-- 文字の表面は光らず、側面のエッジだけが発光している状態を表現してください
-- モダンでスタイリッシュな印象を強調してください
-- 薄く鋭いライン状の光を表現してください`;
-  } else if (signboardType === 'led-channel-back') {
-    prompt += `
-- 文字を立体的な3D形状にしてください
-- 文字の背面（壁面側）から光が漏れるようなバックライト効果を追加してください
-- 文字の周りにソフトなハロー効果（光の輪郭）を壁面に投影してください
-- 文字本体は光らず、背後の光だけが見えるようにしてください
-- 高級感と間接照明のような柔らかい印象を強調してください`;
-  } else if (signboardType === 'neon') {
-    prompt += `
-- ネオン管のような発光効果を追加してください
-- 文字が光っているような鮮やかな発光を表現してください
-- レトロでスタイリッシュな雰囲気にしてください`;
-  } else if (signboardType === 'wooden') {
-    prompt += `
-- 木製の質感を追加してください
-- 彫刻されたような文字の立体感を表現してください
-- ナチュラルで温かみのある雰囲気にしてください`;
-  } else if (signboardType === 'acrylic') {
-    prompt += `
-- 透明または半透明のアクリル板のような質感を追加してください
-- 内部照明で光っているような効果を表現してください
-- 現代的で洗練された印象にしてください`;
-  }
-
-  prompt += `
-
-編集した画像を生成してください。`;
+Only make the signboard text look like the reference images (2+) by adding 3D effect and lighting.`;
 
   return prompt;
 }
