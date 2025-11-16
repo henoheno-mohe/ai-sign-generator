@@ -681,40 +681,46 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `【重要】これは画像編集タスクです。1枚目の画像を少しだけ編集してください。
+  let prompt = `【2段階タスク】
 
-画像1枚目: 編集対象の建物（この画像をベースにします）
-画像2枚目以降: 看板スタイルの参考例（スタイルを学ぶだけで、これらの画像は使用しません）
+■ Step 1: 看板を特定
+1枚目の画像から、店舗の「メイン看板」を特定してください。
+- メイン看板 = 店名が書かれた最も大きな看板（通常は店舗の上部にある）
+- 看板の位置、サイズ、現在の文字内容を正確に認識してください
 
-編集内容: 
-1枚目の画像の看板部分に書かれている文字に、${themeText}、${fontText}`;
+■ Step 2: その看板だけを編集
+Step 1で特定した看板の文字部分だけに、以下のスタイルを適用してください：
+- ${themeText}
+- ${fontText}`;
   
   if (typeText) {
-    prompt += `の${typeText}`;
+    prompt += `
+- ${typeText}のスタイル`;
   }
   
-  prompt += `のような視覚効果を適用してください。
+  prompt += `
 
-参考画像（2枚目以降）から学ぶ要素：
-- 文字の質感、素材感（アクリル、金属など）
-- 3D立体効果の表現方法
-- 発光・照明効果の見せ方
+参考画像（2枚目以降）の使い方：
+- これらは看板スタイルの参考例です
+- 文字の質感、3D効果、発光方法を学んでください
+- これらの画像自体は使用せず、スタイルだけを学習してください
 
-【絶対に変更してはいけない要素】：
-1. 看板のテキスト内容（一文字も変更禁止）
-   - 例: 「らーめん 稲荷屋」の場合、「ら」「ー」「め」「ん」「稲」「荷」「屋」すべて同じ文字を使用
-   - 漢字・ひらがな・カタカナを別の文字に変えない
-2. 文字の配置・レイアウト（位置、間隔、行数）
-3. 看板の背景色・形状・サイズ・位置
-4. 建物の構造（壁、柱、ドア、窓、屋根）
-5. 店舗の外観・デザイン・色
-6. のれん、メニュー看板、ポスター、看板以外のすべての要素
-7. 周囲の環境（隣の店、道路、照明）
+【編集ルール - 看板の文字のみ】：
+✓ 変更OK: 文字の視覚スタイル（3D効果、発光、質感）
+✗ 変更NG: 文字の内容（「らーめん」は「らーめん」のまま、「稲荷屋」は「稲荷屋」のまま）
+✗ 変更NG: 文字の配置・サイズ・位置
+✗ 変更NG: 看板の背景色・形状
+✗ 変更NG: 看板の位置・サイズ
 
-【変更して良い唯一の要素】：
-- 看板の文字に${typeText}の視覚スタイルを適用（文字内容は変えずに、見た目だけ変更）
+【編集ルール - 看板以外の全て】：
+✗ 絶対に変更禁止: 建物の壁・ドア・窓・柱・屋根
+✗ 絶対に変更禁止: のれん・メニュー看板・ポスター・その他の看板
+✗ 絶対に変更禁止: 店内の様子・照明・インテリア
+✗ 絶対に変更禁止: 周囲の環境・隣の店・道路
 
-1枚目の画像をベースに、看板の文字だけにスタイルを適用した画像を生成してください。`;
+【出力】：
+1枚目の画像を元に、Step 1で特定した看板の文字スタイルだけを変更した画像を生成してください。
+看板以外は1ピクセルも変更しないでください。`;
 
   if (signboardType === 'led-channel-face') {
     prompt += `
@@ -834,7 +840,7 @@ Generate the edited image.`;
   }
 
   // Nano Banana画像編集用のプロンプト（通常モード：複数参考画像対応）
-  let englishPrompt = '[IMPORTANT] This is an image editing task. Edit Image 1 minimally.\n\nImage 1: Building to edit (use this as the base)\nImages 2+: Reference examples for signboard style (learn style only, do not use these images)\n\nEditing task: Apply visual effects of ';
+  let englishPrompt = '[2-STEP TASK]\n\nStep 1: Identify the signboard\nFrom Image 1, identify the main signboard (the largest sign with the store name, usually at the top of the store). Recognize its position, size, and current text content accurately.\n\nStep 2: Edit ONLY that signboard\nApply the following style ONLY to the text on the signboard identified in Step 1:\n- ';
   
   // 看板タイプの検出と変換
   let signboardType = '';
@@ -891,7 +897,7 @@ Generate the edited image.`;
     englishPrompt += fontTranslations.powerful;
   }
 
-  englishPrompt += ' to the text on the signboard in Image 1. Learn from references (Images 2+): text texture, material (acrylic, metal), 3D depth effect, lighting effect. [MUST NOT CHANGE]: 1. Text content (keep every character exactly, e.g., "らーめん 稲荷屋" stays "らーめん 稲荷屋" - no character substitution). 2. Text layout (position, spacing, lines). 3. Signboard background color, shape, size, position. 4. Building structure (walls, pillars, doors, windows, roof). 5. Store exterior, design, colors. 6. All other elements (curtains, menu boards, posters). 7. Surroundings (adjacent stores, roads, lights). [ONLY CHANGE]: Apply visual style to signboard text (appearance only, not content). Use Image 1 as base and apply style to text only.';
+  englishPrompt += '\n\nReference images (2+): Learn text texture, 3D effect, lighting method from these style examples (do not use the images themselves).\n\n[EDIT RULES - Signboard text only]:\n✓ OK to change: Text visual style (3D effect, lighting, texture)\n✗ DO NOT change: Text content (keep "らーめん" as "らーめん", "稲荷屋" as "稲荷屋")\n✗ DO NOT change: Text layout, size, position\n✗ DO NOT change: Signboard background color, shape\n✗ DO NOT change: Signboard position, size\n\n[EDIT RULES - Everything except signboard]:\n✗ NEVER change: Building walls, doors, windows, pillars, roof\n✗ NEVER change: Curtains, menu boards, posters, other signs\n✗ NEVER change: Store interior, lights, furnishings\n✗ NEVER change: Surroundings, adjacent stores, roads\n\n[OUTPUT]: Based on Image 1, generate an image where ONLY the text style of the signboard (identified in Step 1) is changed. Do not change a single pixel outside the signboard text.';
 
   // 看板タイプ別の追加指示
   if (signboardType === 'led-channel-face') {
