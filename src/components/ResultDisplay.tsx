@@ -14,6 +14,8 @@ interface ResultDisplayProps {
   } | null;
   onChangeLighting?: (lightingType: 'side' | 'back') => void;
   currentSignboardType?: string;
+  onExtractSignboard?: () => void;
+  isExtracting?: boolean;
 }
 
 export default function ResultDisplay({ 
@@ -22,7 +24,9 @@ export default function ResultDisplay({
   isProcessing, 
   apiResponseInfo,
   onChangeLighting,
-  currentSignboardType
+  currentSignboardType,
+  onExtractSignboard,
+  isExtracting
 }: ResultDisplayProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -85,28 +89,58 @@ export default function ResultDisplay({
               </div>
               
               {/* LEDチャンネル文字の場合：発光タイプ変更ボタン */}
-              {currentSignboardType === 'led-channel-face' && onChangeLighting && (
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <h4 className="text-sm font-semibold text-gray-800 mb-3">💡 発光タイプを変更</h4>
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={() => onChangeLighting('side')}
-                      className="flex-1 bg-white border-2 border-blue-300 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium"
-                    >
-                      ✨ 側面発光に変更
-                    </button>
-                    <button 
-                      onClick={() => onChangeLighting('back')}
-                      className="flex-1 bg-white border-2 border-blue-300 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium"
-                    >
-                      🌟 背面発光に変更
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-600 mt-2">
-                    ※ 現在の看板デザインを維持したまま、発光方法のみを変更します
-                  </p>
-                </div>
+        {currentSignboardType === 'led-channel-face' && onChangeLighting && (
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h4 className="text-sm font-semibold text-gray-800 mb-3">💡 発光タイプを変更</h4>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => onChangeLighting('side')}
+                className="flex-1 bg-white border-2 border-blue-300 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+              >
+                ✨ 側面発光に変更
+              </button>
+              <button 
+                onClick={() => onChangeLighting('back')}
+                className="flex-1 bg-white border-2 border-blue-300 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+              >
+                🌟 背面発光に変更
+              </button>
+            </div>
+            <p className="text-xs text-gray-600 mt-2">
+              ※ 現在の看板デザインを維持したまま、発光方法のみを変更します
+            </p>
+          </div>
+        )}
+
+        {/* Phase 2: 看板切り取りボタン */}
+        {processedImage && onExtractSignboard && (
+          <div className="mt-4">
+            <button
+              onClick={onExtractSignboard}
+              disabled={isExtracting}
+              className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                isExtracting
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-lg'
+              }`}
+            >
+              {isExtracting ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  看板を切り取り中...
+                </span>
+              ) : (
+                '✂️ 看板を切り取る（詳細設定へ）'
               )}
+            </button>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              ※ 看板部分だけを切り取り、サイズ入力と見積もり作成に進みます
+            </p>
+          </div>
+        )}
               
               {/* アクションボタン */}
               <div className="mt-4 flex space-x-3">

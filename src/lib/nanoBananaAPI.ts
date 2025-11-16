@@ -707,6 +707,22 @@ Generate the edited image with realistic LED channel letters on the signboard.`;
   return prompt;
 }
 
+// 看板を切り取るプロンプト生成
+export function generateSignboardExtractionPrompt(): string {
+  const prompt = `Extract and isolate the main signboard from this image.
+
+Task:
+- Identify the main signboard (the largest sign with the store name)
+- Crop and extract only that signboard area
+- Remove the building and background
+- Present the signboard as if viewed straight-on (front view)
+- Keep the signboard design intact
+
+Output: Generate an image showing only the extracted signboard on a transparent or white background.`;
+
+  return prompt;
+}
+
 // プロンプトを英語に変換（画像編集API用）
 function translatePromptToEnglish(japanesePrompt: string): string {
   const themeTranslations = {

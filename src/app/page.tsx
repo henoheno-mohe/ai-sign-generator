@@ -5,7 +5,8 @@ import ImageUpload from '@/components/ImageUpload';
 import DesignSelector from '@/components/DesignSelector';
 import ResultDisplay from '@/components/ResultDisplay';
 import LicenseInput from '@/components/LicenseInput';
-import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import DetailSettings from '@/components/DetailSettings';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, generateSignboardExtractionPrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
 import { config } from '@/lib/config';
 import { FREE_TRIAL_USES } from '@/lib/license';
 
@@ -24,6 +25,14 @@ export default function Home() {
     processing_method?: string;
     signboard_type?: string;
   } | null>(null);
+
+  // Phase 2: 看板切り取り用の状態
+  const [extractedSignboard, setExtractedSignboard] = useState<string | null>(null);
+  const [isExtracting, setIsExtracting] = useState(false);
+
+  // Phase 3: サイズ入力用の状態
+  const [signboardWidth, setSignboardWidth] = useState<number>(3000);
+  const [showDetailSettings, setShowDetailSettings] = useState(false);
 
   // ライセンス管理
   const [licenseKey, setLicenseKey] = useState<string | null>(null);
@@ -123,9 +132,84 @@ export default function Home() {
     setApiResponseInfo(null);
   };
 
+  const handleReset = () => {
+    setUploadedImage(null);
+    setUploadedFile(null);
+    setReferenceImage(null);
+    setReferenceFile(null);
+    setSelectedTheme('');
+    setSelectedSignboardType('');
+    setProcessedImage(null);
+    setError(null);
+    setApiResponseInfo(null);
+    setExtractedSignboard(null);
+    setShowDetailSettings(false);
+  };
+
+  // Phase 3: サイズ変更ハンドラー
+  const handleWidthChange = (width: number) => {
+    setSignboardWidth(width);
+  };
+
+  // Phase 4: 見積もり生成ハンドラー（準備）
+  const handleGenerateQuote = () => {
+    alert('見積もり機能は次のフェーズで実装します！');
+    console.log('見積もり生成:', {
+      signboardType: selectedSignboardType,
+      width: signboardWidth,
+    });
+  };
+
   const handleDesignChange = (theme: string, signboardType: string) => {
     setSelectedTheme(theme);
     setSelectedSignboardType(signboardType);
+  };
+
+  // Phase 2: 看板切り取りハンドラー
+  const handleExtractSignboard = async () => {
+    if (!processedImage) return;
+
+    // ライセンスチェック
+    if (!canUseService()) {
+      setError('使用回数の上限に達しました。ライセンスキーを入力してください。');
+      setShowLicenseInput(true);
+      return;
+    }
+
+    setIsExtracting(true);
+    setError(null);
+
+    try {
+      console.log('看板切り取り処理を開始...');
+
+      // 処理済み画像をFileオブジェクトに変換
+      const response = await fetch(processedImage);
+      const blob = await response.blob();
+      const processedFile = new File([blob], 'processed.jpg', { type: 'image/jpeg' });
+      const imageBase64 = await convertImageToBase64(processedFile);
+
+      // 看板切り取りプロンプト
+      const prompt = generateSignboardExtractionPrompt();
+
+      console.log('Geminiで看板を切り取り中...');
+      const result = await callNanoBananaAPIWithRetry(imageBase64, prompt, config.nanoBananaApiKey);
+
+      if (result.success && result.edited_image_url) {
+        // 成功したら使用回数をカウント
+        await recordUsage();
+
+        setExtractedSignboard(result.edited_image_url);
+        setShowDetailSettings(true); // 詳細設定画面を表示
+        console.log('看板切り取り完了');
+      } else {
+        throw new Error(result.error || '看板の切り取りに失敗しました');
+      }
+    } catch (error) {
+      console.error('Extraction failed:', error);
+      setError('看板の切り取り中にエラーが発生しました');
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   // 発光タイプ変更ハンドラー
@@ -446,9 +530,23 @@ export default function Home() {
               apiResponseInfo={apiResponseInfo}
               onChangeLighting={handleChangeLighting}
               currentSignboardType={selectedSignboardType}
+              onExtractSignboard={handleExtractSignboard}
+              isExtracting={isExtracting}
             />
           </div>
         </div>
+
+        {/* Phase 2 & 3: 詳細設定画面 */}
+        {showDetailSettings && extractedSignboard && (
+          <div className="mt-8">
+            <DetailSettings
+              extractedSignboard={extractedSignboard}
+              signboardWidth={signboardWidth}
+              onWidthChange={handleWidthChange}
+              onGenerateQuote={handleGenerateQuote}
+            />
+          </div>
+        )}
       </main>
 
       {/* フッター */}
