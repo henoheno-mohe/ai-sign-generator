@@ -7,7 +7,7 @@ import ResultDisplay from '@/components/ResultDisplay';
 import LicenseInput from '@/components/LicenseInput';
 import DetailSettings from '@/components/DetailSettings';
 import CropTool from '@/components/CropTool';
-import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, generateStraightenPrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
 import { config } from '@/lib/config';
 import { FREE_TRIAL_USES } from '@/lib/license';
 
@@ -30,7 +30,6 @@ export default function Home() {
   // Phase 2: 看板切り取り用の状態
   const [extractedSignboard, setExtractedSignboard] = useState<string | null>(null);
   const [showCropTool, setShowCropTool] = useState(false);
-  const [isStraightening, setIsStraightening] = useState(false);
 
   // Phase 3: サイズ入力用の状態
   const [signboardWidth, setSignboardWidth] = useState<number>(3000);
@@ -183,48 +182,14 @@ export default function Home() {
     setShowCropTool(true);
   };
 
-  // 切り取り完了ハンドラー（AI補正を追加）
+  // 切り取り完了ハンドラー（透視変換は CropTool 内で実行済み）
   const handleCropComplete = async (croppedImageUrl: string) => {
     setShowCropTool(false);
-    setIsStraightening(true);
-    setError(null);
-
-    try {
-      console.log('看板を正面図に補正中...');
-
-      // Base64文字列から直接使用（data:image/png;base64, を除去）
-      const base64Data = croppedImageUrl.split(',')[1];
-
-      // 正面図補正プロンプト
-      const prompt = generateStraightenPrompt();
-
-      // Gemini APIで補正
-      const result = await callNanoBananaAPIWithRetry(base64Data, prompt, config.nanoBananaApiKey);
-
-      if (result.success && result.edited_image_url) {
-        setExtractedSignboard(result.edited_image_url);
-        setShowDetailSettings(true);
-        
-        // 使用回数をカウント
-        await recordUsage();
-        
-        console.log('正面図補正完了');
-      } else {
-        // 補正に失敗した場合は元の画像を使用
-        console.warn('AI補正失敗、元の画像を使用します');
-        setExtractedSignboard(croppedImageUrl);
-        setShowDetailSettings(true);
-        await recordUsage();
-      }
-    } catch (error) {
-      console.error('Straightening failed:', error);
-      // エラーでも元の画像を使用
-      setExtractedSignboard(croppedImageUrl);
-      setShowDetailSettings(true);
-      await recordUsage();
-    } finally {
-      setIsStraightening(false);
-    }
+    setExtractedSignboard(croppedImageUrl);
+    setShowDetailSettings(true);
+    
+    // 使用回数をカウント
+    await recordUsage();
   };
 
   // 切り取りキャンセルハンドラー
@@ -588,21 +553,6 @@ export default function Home() {
         />
       )}
 
-      {/* AI補正中ローディング */}
-      {isStraightening && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-xl p-8 max-w-md">
-            <div className="flex flex-col items-center">
-              <svg className="animate-spin h-16 w-16 text-blue-600 mb-4" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">🤖 AIが正面図に補正中...</h3>
-              <p className="text-gray-600 text-center">看板を真正面から見たように変換しています</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
