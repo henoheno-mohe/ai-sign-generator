@@ -211,14 +211,67 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
     setTempArea(null);
   };
 
+  // 4点を自動的に並び替え（左上→右上→右下→左下）
+  const sortPoints = (points: Point[]): Point[] => {
+    if (points.length !== 4) return points;
+
+    // 重心を計算
+    const centerX = points.reduce((sum, p) => sum + p.x, 0) / 4;
+    const centerY = points.reduce((sum, p) => sum + p.y, 0) / 4;
+
+    // 各点の角度を計算（重心からの角度）
+    const pointsWithAngle = points.map(p => ({
+      ...p,
+      angle: Math.atan2(p.y - centerY, p.x - centerX)
+    }));
+
+    // 角度でソート（-π から π）
+    pointsWithAngle.sort((a, b) => a.angle - b.angle);
+
+    // 左上から時計回りに並び替え
+    // 最も上にある点を見つける
+    let topIndex = 0;
+    let minY = pointsWithAngle[0].y;
+    for (let i = 1; i < 4; i++) {
+      if (pointsWithAngle[i].y < minY) {
+        minY = pointsWithAngle[i].y;
+        topIndex = i;
+      }
+    }
+
+    // 左上から時計回りの順番に並び替え
+    const sorted: Point[] = [];
+    for (let i = 0; i < 4; i++) {
+      const idx = (topIndex + i) % 4;
+      sorted.push({
+        x: pointsWithAngle[idx].x,
+        y: pointsWithAngle[idx].y
+      });
+    }
+
+    // 最初の点が左上か右上かチェック（X座標で判定）
+    if (sorted[0].x > sorted[1].x) {
+      // 右上から始まっている場合、逆順にする
+      sorted.reverse();
+      // さらに最後の要素を先頭に移動
+      const last = sorted.pop()!;
+      sorted.unshift(last);
+    }
+
+    return sorted;
+  };
+
   // 透視変換を実行（ピクセル単位のマッピング）
   const applyPerspectiveTransform = (): string | null => {
     if (perspectivePoints.length !== 4 || !imageRef.current) return null;
 
     const img = imageRef.current;
     
+    // 4点を自動的に並び替え
+    const orderedPoints = sortPoints(perspectivePoints);
+    
     // 元画像サイズに変換
-    const srcPoints = perspectivePoints.map(p => ({
+    const srcPoints = orderedPoints.map(p => ({
       x: p.x / scale,
       y: p.y / scale
     }));
@@ -445,10 +498,8 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
               </ol>
             ) : (
               <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
-                <li className="font-semibold">看板の<span className="text-red-600">左上隅</span>をクリック（①）</li>
-                <li className="font-semibold">看板の<span className="text-red-600">右上隅</span>をクリック（②）</li>
-                <li className="font-semibold">看板の<span className="text-red-600">右下隅</span>をクリック（③）</li>
-                <li className="font-semibold">看板の<span className="text-red-600">左下隅</span>をクリック（④）</li>
+                <li className="font-semibold">看板の<span className="text-red-600">4つの角</span>をクリック（①②③④）</li>
+                <li className="text-blue-600 font-medium">✨ 順番は自由！自動的に並び替えます</li>
                 <li>4点を指定すると自動的に正面図に変換されます</li>
                 <li>やり直す場合は「リセット」ボタンをクリック</li>
               </ol>
