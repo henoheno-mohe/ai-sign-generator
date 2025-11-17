@@ -707,42 +707,54 @@ Generate the edited image with realistic LED channel letters on the signboard.`;
   return prompt;
 }
 
-// 看板をイラレ風に綺麗に作り直すプロンプト生成
+// 看板を入稿データレベルに作り直すプロンプト生成
 export function generateCleanRecreatePrompt(): string {
-  const prompt = `Task: Recreate this signboard as a clean, professional vector-style design suitable for print production.
+  const prompt = `CRITICAL TASK: Convert this signboard photo into a PRINT-READY production file (like AI/EPS export).
 
-Current image: A photo of a signboard that needs to be converted into clean graphic design.
+This is for actual signboard manufacturing - output must be PERFECT.
 
-Required transformation:
-1. Recreate the signboard as if designed in Adobe Illustrator
-2. Make all text perfectly clean and sharp (not pixelated)
-3. Use solid colors and clean gradients
-4. Remove any photo artifacts, blur, or noise
-5. Keep the exact same text content (same characters)
-6. Maintain the same color scheme and layout
-7. Make edges and outlines perfectly crisp
-8. Professional print-ready quality
+MANDATORY Requirements:
 
-Visual Goal:
-- Output should look like a graphic design file, NOT a photograph
-- Text should be perfectly readable with clean edges
-- Colors should be solid and vibrant
-- Background should be clean (remove lighting artifacts)
-- Professional signboard mockup quality
+1. TEXT QUALITY (CRITICAL):
+   - Recreate ALL text as if it were vector type (not rasterized)
+   - Text edges MUST be perfectly sharp (像素級鋭利)
+   - Zero pixelation, zero blur on any character
+   - Professional typography quality
+   - Maintain EXACT same characters and text content
 
-Preserve:
-- Exact text content (all characters must match)
-- Overall design layout
-- Color theme
-- Visual hierarchy
+2. COLOR TREATMENT:
+   - Convert photo colors to SOLID, FLAT colors (not gradients from lighting)
+   - Remove ALL lighting variations (shadows, highlights, uneven illumination)
+   - Use CMYK-ready vibrant colors
+   - Clean, even color fills throughout
+   - No color noise or banding
 
-Transform:
-- Photo quality → Vector-style graphic quality
-- Blurry/pixelated → Sharp and clean
-- Uneven lighting → Even, professional lighting
-- Photo artifacts → Clean design
+3. BACKGROUND & EDGES:
+   - Solid background color (no texture, no lighting effects)
+   - Perfectly straight edges and borders
+   - Clean, geometric shapes
+   - Remove ALL photo artifacts
 
-Generate a clean, professional signboard design image.`;
+4. VISUAL STYLE:
+   - Output should look like Adobe Illustrator vector export
+   - NOT a photograph - a graphic design file
+   - Flat design aesthetic (no photo realism)
+   - Print production ready
+   - Could be sent directly to signboard manufacturer
+
+5. QUALITY STANDARDS:
+   - Resolution: High enough for large format printing
+   - Sharpness: Every edge must be crisp
+   - Cleanliness: Zero noise, zero artifacts
+   - Professional: Looks like professional designer work
+
+EXAMPLE COMPARISON:
+❌ BAD: Photo with shadows, lighting, blur, pixelated text
+✅ GOOD: Clean vector-style graphic, flat colors, sharp text, professional mockup
+
+Think: "What would a professional signboard manufacturer expect as production file?"
+
+Generate the print-ready signboard design.`;
 
   return prompt;
 }

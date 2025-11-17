@@ -294,10 +294,9 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
       Math.pow(srcPoints[2].y - srcPoints[1].y, 2)
     );
     
-    // 解像度を2倍に向上（より高品質な出力）
-    const upscaleFactor = 2.0;
-    const outputWidth = Math.round((topWidth + bottomWidth) / 2 * upscaleFactor);
-    const outputHeight = Math.round((leftHeight + rightHeight) / 2 * upscaleFactor);
+    // 元のサイズで出力（補正はAI再生成時に実施）
+    const outputWidth = Math.round((topWidth + bottomWidth) / 2);
+    const outputHeight = Math.round((leftHeight + rightHeight) / 2);
 
     // Canvasで透視変換を実行
     const canvas = document.createElement('canvas');
@@ -383,65 +382,7 @@ export default function CropTool({ image, onCropComplete, onCancel }: CropToolPr
     }
 
     ctx.putImageData(outputImageData, 0, 0);
-
-    // 画質補正フィルターを適用
-    const enhancedCanvas = enhanceImageQuality(canvas);
-    
-    return enhancedCanvas.toDataURL('image/png', 1.0); // 最高品質で出力
-  };
-
-  // 画質補正フィルター（シャープネス + コントラスト強化）
-  const enhanceImageQuality = (sourceCanvas: HTMLCanvasElement): HTMLCanvasElement => {
-    const ctx = sourceCanvas.getContext('2d', { willReadFrequently: true });
-    if (!ctx) return sourceCanvas;
-
-    const imageData = ctx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
-    const data = imageData.data;
-
-    // シャープネスフィルター（アンシャープマスク）
-    const tempData = new Uint8ClampedArray(data);
-    const w = sourceCanvas.width;
-    const h = sourceCanvas.height;
-
-    // シャープネスカーネル
-    const sharpenKernel = [
-      0, -1, 0,
-      -1, 5, -1,
-      0, -1, 0
-    ];
-
-    for (let y = 1; y < h - 1; y++) {
-      for (let x = 1; x < w - 1; x++) {
-        for (let c = 0; c < 3; c++) { // RGB のみ（アルファは除く）
-          let sum = 0;
-          
-          // 3x3カーネル適用
-          for (let ky = -1; ky <= 1; ky++) {
-            for (let kx = -1; kx <= 1; kx++) {
-              const idx = ((y + ky) * w + (x + kx)) * 4 + c;
-              const kernelIdx = (ky + 1) * 3 + (kx + 1);
-              sum += tempData[idx] * sharpenKernel[kernelIdx];
-            }
-          }
-          
-          const idx = (y * w + x) * 4 + c;
-          data[idx] = Math.max(0, Math.min(255, sum));
-        }
-      }
-    }
-
-    // コントラスト強化（軽め）
-    const contrast = 1.15; // 15%コントラスト向上
-    const factor = (259 * (contrast * 100 + 255)) / (255 * (259 - contrast * 100));
-
-    for (let i = 0; i < data.length; i += 4) {
-      data[i] = Math.max(0, Math.min(255, factor * (data[i] - 128) + 128));     // R
-      data[i + 1] = Math.max(0, Math.min(255, factor * (data[i + 1] - 128) + 128)); // G
-      data[i + 2] = Math.max(0, Math.min(255, factor * (data[i + 2] - 128) + 128)); // B
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-    return sourceCanvas;
+    return canvas.toDataURL('image/png', 1.0); // 最高品質で出力
   };
 
   const handleCrop = () => {
