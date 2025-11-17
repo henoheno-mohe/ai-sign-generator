@@ -707,6 +707,46 @@ Generate the edited image with realistic LED channel letters on the signboard.`;
   return prompt;
 }
 
+// 看板をイラレ風に綺麗に作り直すプロンプト生成
+export function generateCleanRecreatePrompt(): string {
+  const prompt = `Task: Recreate this signboard as a clean, professional vector-style design suitable for print production.
+
+Current image: A photo of a signboard that needs to be converted into clean graphic design.
+
+Required transformation:
+1. Recreate the signboard as if designed in Adobe Illustrator
+2. Make all text perfectly clean and sharp (not pixelated)
+3. Use solid colors and clean gradients
+4. Remove any photo artifacts, blur, or noise
+5. Keep the exact same text content (same characters)
+6. Maintain the same color scheme and layout
+7. Make edges and outlines perfectly crisp
+8. Professional print-ready quality
+
+Visual Goal:
+- Output should look like a graphic design file, NOT a photograph
+- Text should be perfectly readable with clean edges
+- Colors should be solid and vibrant
+- Background should be clean (remove lighting artifacts)
+- Professional signboard mockup quality
+
+Preserve:
+- Exact text content (all characters must match)
+- Overall design layout
+- Color theme
+- Visual hierarchy
+
+Transform:
+- Photo quality → Vector-style graphic quality
+- Blurry/pixelated → Sharp and clean
+- Uneven lighting → Even, professional lighting
+- Photo artifacts → Clean design
+
+Generate a clean, professional signboard design image.`;
+
+  return prompt;
+}
+
 // 看板を正面図に補正するプロンプト生成
 export function generateStraightenPrompt(): string {
   const prompt = `CRITICAL TASK: Apply perspective correction to transform this angled signboard into a perfect orthogonal front view.

@@ -7,13 +7,17 @@ interface DetailSettingsProps {
   signboardWidth: number;
   onWidthChange: (width: number) => void;
   onGenerateQuote: () => void;
+  onCleanRecreate?: () => void;
+  isRecreating?: boolean;
 }
 
 export default function DetailSettings({
   extractedSignboard,
   signboardWidth,
   onWidthChange,
-  onGenerateQuote
+  onGenerateQuote,
+  onCleanRecreate,
+  isRecreating
 }: DetailSettingsProps) {
   const [inputWidth, setInputWidth] = useState<string>(signboardWidth.toString());
 
@@ -41,6 +45,36 @@ export default function DetailSettings({
             className="w-full h-auto max-h-64 object-contain mx-auto"
           />
         </div>
+        
+        {/* AIで綺麗に作り直すボタン */}
+        {onCleanRecreate && (
+          <div className="mt-4">
+            <button
+              onClick={onCleanRecreate}
+              disabled={isRecreating}
+              className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                isRecreating
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : 'bg-purple-600 text-white hover:bg-purple-700 shadow-md hover:shadow-lg'
+              }`}
+            >
+              {isRecreating ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  AIが作り直し中...
+                </span>
+              ) : (
+                '✨ AIで綺麗に作り直す（イラレ風）'
+              )}
+            </button>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              ※ 写真品質をベクター風のクリーンなデザインに変換します
+            </p>
+          </div>
+        )}
       </div>
 
       {/* サイズ入力 */}

@@ -7,7 +7,7 @@ import ResultDisplay from '@/components/ResultDisplay';
 import LicenseInput from '@/components/LicenseInput';
 import DetailSettings from '@/components/DetailSettings';
 import CropTool from '@/components/CropTool';
-import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, generateCleanRecreatePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
 import { config } from '@/lib/config';
 import { FREE_TRIAL_USES } from '@/lib/license';
 
@@ -30,6 +30,7 @@ export default function Home() {
   // Phase 2: 看板切り取り用の状態
   const [extractedSignboard, setExtractedSignboard] = useState<string | null>(null);
   const [showCropTool, setShowCropTool] = useState(false);
+  const [isRecreating, setIsRecreating] = useState(false);
 
   // Phase 3: サイズ入力用の状態
   const [signboardWidth, setSignboardWidth] = useState<number>(3000);
@@ -195,6 +196,50 @@ export default function Home() {
   // 切り取りキャンセルハンドラー
   const handleCropCancel = () => {
     setShowCropTool(false);
+  };
+
+  // AIで綺麗に作り直すハンドラー
+  const handleCleanRecreate = async () => {
+    if (!extractedSignboard) return;
+
+    // ライセンスチェック
+    if (!canUseService()) {
+      setError('使用回数の上限に達しました。ライセンスキーを入力してください。');
+      setShowLicenseInput(true);
+      return;
+    }
+
+    setIsRecreating(true);
+    setError(null);
+
+    try {
+      console.log('AIで看板を綺麗に作り直し中...');
+
+      // Base64文字列から直接使用（data:image/png;base64, を除去）
+      const base64Data = extractedSignboard.split(',')[1];
+
+      // 綺麗に作り直すプロンプト
+      const prompt = generateCleanRecreatePrompt();
+
+      // Gemini APIで再生成
+      const result = await callNanoBananaAPIWithRetry(base64Data, prompt, config.nanoBananaApiKey);
+
+      if (result.success && result.edited_image_url) {
+        setExtractedSignboard(result.edited_image_url);
+        
+        // 使用回数をカウント
+        await recordUsage();
+        
+        console.log('綺麗な看板作成完了');
+      } else {
+        throw new Error(result.error || '看板の再生成に失敗しました');
+      }
+    } catch (error) {
+      console.error('Clean recreate failed:', error);
+      setError('看板の再生成中にエラーが発生しました');
+    } finally {
+      setIsRecreating(false);
+    }
   };
 
   // 発光タイプ変更ハンドラー
@@ -529,6 +574,8 @@ export default function Home() {
               signboardWidth={signboardWidth}
               onWidthChange={handleWidthChange}
               onGenerateQuote={handleGenerateQuote}
+              onCleanRecreate={handleCleanRecreate}
+              isRecreating={isRecreating}
             />
           </div>
         )}
