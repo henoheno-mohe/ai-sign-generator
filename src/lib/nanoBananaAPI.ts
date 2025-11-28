@@ -1,9 +1,9 @@
 // API設定とユーティリティ関数
-// Gemini 3 Pro Preview - 最新の画像編集モデル（思考機能付き）
-export const NANO_BANANA_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent';
+// nano banana = Gemini 2.5 Flash Image - 画像編集専用モデル
+export const NANO_BANANA_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
 export const LIST_MODELS_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
-// Gemini 3 Pro Preview は画像編集とテキスト生成の両方に対応
-export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent';
+// Nano Banana (Gemini ネイティブ画像生成) は画像編集専用エンドポイントを使用
+export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
 
 // モック機能（開発用）
 export const USE_MOCK_API = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_MOCK_API === 'true';
@@ -123,7 +123,6 @@ Focus on the main business signboards and provide detailed information for the m
         topK: 32,
         topP: 1,
         maxOutputTokens: 2048,
-        thinking_level: 'high', // Gemini 3: 高品質な推論
       }
     };
 
@@ -237,7 +236,6 @@ export async function callNanoBananaAPI(
         temperature: 0.1,
         topK: 32,
         topP: 1,
-        thinking_level: 'high', // Gemini 3: 高品質な推論
         maxOutputTokens: 4096,
       },
       safetySettings: [
@@ -977,7 +975,6 @@ export async function generateSignboardImage(
         topK: 32,
         topP: 1,
         maxOutputTokens: 4096,
-        thinking_level: 'high', // Gemini 3: 高品質な推論
       },
       safetySettings: [
         {
