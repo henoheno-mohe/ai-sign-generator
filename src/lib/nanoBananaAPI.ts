@@ -1,9 +1,9 @@
 // API設定とユーティリティ関数
-// nano banana = Gemini 2.5 Flash Image - 画像編集専用モデル
-export const NANO_BANANA_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
+// Gemini 3.0 Flash - 最新の画像編集専用モデル
+export const NANO_BANANA_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent';
 export const LIST_MODELS_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
-// Nano Banana (Gemini ネイティブ画像生成) は画像編集専用エンドポイントを使用
-export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
+// Gemini 3.0 Flash は画像編集専用エンドポイントを使用
+export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent';
 
 // モック機能（開発用）
 export const USE_MOCK_API = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_MOCK_API === 'true';

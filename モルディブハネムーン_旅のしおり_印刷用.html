@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モルディブ ハネムーン旅行のしおり</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        
+        body {
+            font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+            line-height: 1.8;
+            color: #333;
+            font-size: 11pt;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .cover {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            page-break-after: always;
+        }
+        
+        .cover h1 {
+            font-size: 32pt;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .cover .info {
+            font-size: 14pt;
+            margin: 10px 0;
+        }
+        
+        h2 {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #4a5568;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            page-break-after: avoid;
+        }
+        
+        h3 {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            page-break-after: avoid;
+        }
+        
+        .schedule-day {
+            background: #f7fafc;
+            border-left: 5px solid #667eea;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            page-break-inside: avoid;
+        }
+        
+        .schedule-day h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .time-entry {
+            margin: 10px 0 10px 20px;
+            padding-left: 15px;
+            border-left: 2px solid #cbd5e0;
+        }
+        
+        .highlight {
+            background: #fff5e1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .note {
+            background: #e6fffa;
+            border-left: 4px solid #38b2ac;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        .warning {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .checklist li {
+            padding: 5px 0 5px 30px;
+            position: relative;
+        }
+        
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            font-size: 16pt;
+            color: #667eea;
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border: 2px solid #cbd5e0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .contact-info {
+            background: #edf2f7;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 10pt;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .message-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 10px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        @media print {
+            body {
+                font-size: 10pt;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cover">
+    <h1>🏝️ モルディブ<br>ハネムーン旅行のしおり</h1>
+    <div class="info">旅行者：佐々木 亨規 様・文香 様</div>
+    <div class="info">期間：2025年11月25日(火) ～ 12月2日(火) 【8日間】</div>
+    <div class="info">コース：スマプラ バルセロホエールラグーンモルディブ</div>
+    <div class="info">予約番号：06925003916</div>
+</div>
+
+<h2>📅 旅程表</h2>
+
+<div class="schedule-day">
+    <h3>■ 1日目：11月25日(火) 【日本出発】</h3>
+    
+    <h4>【成田空港へのアクセス】</h4>
+    <div class="time-entry">
+        <strong>08:00頃</strong> 北綾瀬駅 出発<br>
+        東京メトロ千代田線で日暮里駅へ（約20分、約200円）
+    </div>
+    
+    <div class="time-entry">
+        <strong>08:20頃</strong> 日暮里駅 到着<br>
+        <span class="highlight">★スカイライナーに乗り換え（全席指定席）</span>
+    </div>
+    
+    <div class="time-entry">
+        <strong>08:40〜08:50頃</strong> 日暮里駅 発<br>
+        京成スカイライナーで成田空港第2ターミナルへ<br>
+        （約36分、2,490円 = 乗車券1,240円+ライナー券1,250円）
+    </div>
+    
+    <div class="time-entry">
+        <strong>09:20〜09:30頃</strong> 成田空港第2ターミナル 到着<br>
+        <span class="highlight">★チェックイン手続き</span><br>
+        <span class="highlight">★IASSエグゼクティブラウンジ2で出発前のひととき</span>
+    </div>
+    
+    <div class="time-entry">
+        <strong>11:20</strong> 東京(成田)発 → コロンボ(バンダラナイケ)<br>
+        スリランカ航空 UL455便 / 座席：61C
+    </div>
+    
+    <div class="time-entry">
+        <strong>17:30</strong> コロンボ着
+    </div>
+    
+    <div class="time-entry">
+        <strong>18:50</strong> コロンボ発 → マーレ<br>
+        スリランカ航空 UL103便 / 座席：36C
+    </div>
+    
+    <div class="time-entry">
+        <strong>19:45</strong> マーレ(ヴェラナ国際空港)着<br>
+        <span class="highlight">★空港到着後、リゾートスタッフがお出迎え</span><br>
+        <span class="highlight">★ホテルカウンターへご案内</span><br>
+        <span class="highlight">★水上飛行機でホテルへ移動</span>
+    </div>
+    
+    <div class="info-box">
+        <strong>宿泊:</strong> オーシャン グランド アット フルマーレ<br>
+        <small>OCEAN GRAND AT HULMALE<br>
+        Crystal View, Lot 10717, Kaani Magu, Maldives<br>
+        TEL: +960-3355077</small>
+    </div>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 2日目：11月26日(水) 【モルディブ リゾート泊】</h3>
+    <p>終日自由行動</p>
+    
+    <div class="note">
+        <span class="highlight">★リゾートスタッフがマーレ空港までお迎え</span><br>
+        <span class="highlight">★マーレ空港にて現地係員より、リゾートカウンターへご案内</span><br>
+        <span class="highlight">★空港リゾートスタッフが水上飛行機チェックイン・搭乗をお手伝い</span><br>
+        <span class="highlight">★水上飛行機でホテルへ移動</span>
+    </div>
+    
+    <div class="info-box">
+        <strong>宿泊:</strong> バルセロ ホエール ラグーン モルディブ<br>
+        <small>BARCELO WHALE LAGOON MALDIVES<br>
+        Bodufinolhu Island, Fenfushi 20209, Republic of Maldives<br>
+        TEL: +960-6683000</small><br>
+        <br>
+        ※ホテルでのお食事となります<br>
+        ※チェックイン：14:00～ / チェックアウト：～12:00
+    </div>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 3日目：11月27日(木) 【モルディブ リゾート泊】</h3>
+    <p>終日自由行動</p>
+    <p><strong>宿泊:</strong> バルセロ ホエール ラグーン モルディブ<br>
+    <strong>食事:</strong> 朝・昼・夕</p>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 4日目：11月28日(金) 【モルディブ リゾート泊】</h3>
+    <p>終日自由行動</p>
+    <p><strong>宿泊:</strong> バルセロ ホエール ラグーン モルディブ<br>
+    <strong>食事:</strong> 朝・昼・夕</p>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 5日目：11月29日(土) 【モルディブ リゾート泊】</h3>
+    <p>終日自由行動</p>
+    <p><strong>宿泊:</strong> バルセロ ホエール ラグーン モルディブ<br>
+    <strong>食事:</strong> 朝・昼・夕</p>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 6日目：11月30日(日) 【モルディブ リゾート泊】</h3>
+    <p>終日自由行動</p>
+    <p><strong>宿泊:</strong> バルセロ ホエール ラグーン モルディブ<br>
+    <strong>食事:</strong> 朝・昼・夕</p>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 7日目：12月1日(月) 【マーレ泊 / 移動日】</h3>
+    <div class="note">
+        <span class="highlight">★リゾートスタッフが水上飛行機乗り場までご案内</span><br>
+        <span class="highlight">★水上飛行機でマーレへ移動</span><br>
+        <span class="highlight">★マーレ空港到着後、水上飛行機会社の車で国際線出発ロビーへ</span><br>
+        　お越し下さい。現地係員が国際線出発口でお待ち致しております
+    </div>
+    
+    <div class="time-entry">
+        <strong>15:35</strong> マーレ(マーレ)発 → コロンボ(バンダラナイケ)<br>
+        スリランカ航空 UL116便
+    </div>
+    
+    <div class="time-entry">
+        <strong>17:30</strong> コロンボ(バンダラナイケ)着
+    </div>
+    
+    <div class="time-entry">
+        <strong>20:30</strong> コロンボ(バンダラナイケ)発 → 東京(成田)<br>
+        スリランカ航空 UL454便 / 座席：63C
+    </div>
+    
+    <p><strong>宿泊:</strong> 機中泊</p>
+</div>
+
+<div class="schedule-day">
+    <h3>■ 8日目：12月2日(火) 【日本到着】</h3>
+    <div class="time-entry">
+        <strong>08:10</strong> 東京(成田)着
+    </div>
+    <p class="highlight">★お疲れ様でした！</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>🛋️ 空港ラウンジ情報</h2>
+
+<div class="info-box">
+    <h3>■ 成田空港ラウンジ（エポスゴールドカード利用可能）</h3>
+    
+    <p><strong>【ラウンジ名】</strong> IASSエグゼクティブラウンジ2</p>
+    
+    <p><strong>【場所】</strong> 第2旅客ターミナル 本館4階<br>
+    ※出国手続き「前」にあります</p>
+    
+    <p><strong>【営業時間】</strong> 7:00～21:00</p>
+    
+    <p><strong>【利用方法】</strong></p>
+    <ol>
+        <li>搭乗手続き（チェックイン）を済ませる</li>
+        <li>ラウンジへ向かう（出国審査場に入る前）</li>
+        <li>受付でエポスゴールドカードと搭乗券を提示</li>
+    </ol>
+    
+    <p><strong>【サービス内容】</strong></p>
+    <ul>
+        <li>ソフトドリンク無料</li>
+        <li>アルコール1杯無料</li>
+        <li>新聞・雑誌の閲覧</li>
+        <li>無料Wi-Fi</li>
+        <li>フライト情報モニター</li>
+        <li>FAX・コピーサービス</li>
+    </ul>
+    
+    <div class="note">
+        <strong>【ポイント】</strong><br>
+        ★11:20発の便なので、遅くとも9:30頃までに空港到着推奨<br>
+        ★チェックイン後、出国審査前にラウンジでゆっくりできます<br>
+        ★同伴者（文香さん）は1名1,100円（税込）で一緒に利用できます
+    </div>
+    
+    <p><small>※営業時間や利用条件は予告なく変更される場合があります</small></p>
+</div>
+
+<h2>🏖️ リゾートで楽しめるアクティビティ</h2>
+
+<h3>【マリンアクティビティ】</h3>
+<ul class="checklist">
+    <li><strong>スノーケリング</strong><br>3箇所でスノーケリングを楽しめます</li>
+    <li><strong>ダイビング</strong><br>世界中のダイバーの憧れのモルディブで体験ダイビング<br>ライセンス取得コースもあり</li>
+    <li><strong>フィッシング</strong><br>モーニングフィッシング(早朝出発)<br>ナイトフィッシング(夕方出発)<br>ビッグゲームフィッシング(トローリング)</li>
+    <li><strong>ドルフィンウォッチング</strong><br>イルカを見に行けます</li>
+    <li><strong>アイランドホッピング</strong>(島めぐりツアー)</li>
+    <li><strong>カタマラン</strong>(セーリング)</li>
+</ul>
+
+<h3>【リラクゼーション】</h3>
+<ul class="checklist">
+    <li>スパ・マッサージ</li>
+</ul>
+
+<h3>【観光】</h3>
+<ul class="checklist">
+    <li><strong>マーレ観光</strong><br>首都マーレでショッピングや観光<br>フェリーまたはスピードボートでアクセス</li>
+</ul>
+
+<h3>【その他】</h3>
+<ul class="checklist">
+    <li>エクスカーション(日帰り観光・体験ツアー)</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>🏨 ホテル情報・設備</h2>
+
+<h3>■ バルセロ ホエール ラグーン モルディブ</h3>
+<div class="info-box">
+    <p><strong>【基本情報】</strong><br>
+    開業年：2023年 / 改装年：2024年<br>
+    建物階数：1階 / 総部屋数：100部屋<br>
+    地区：南アリ環礁</p>
+    
+    <p><strong>【Wi-Fi】</strong> 館内無料</p>
+    
+    <p><strong>【部屋設備】</strong></p>
+    <table>
+        <tr>
+            <td>○ テレビ（アイロン）</td>
+            <td>○ シャワー</td>
+        </tr>
+        <tr>
+            <td>○ 電話（インターネット回線）</td>
+            <td>○ ドライヤー</td>
+        </tr>
+        <tr>
+            <td>○ エアコン（歯ブラシ）</td>
+            <td>× 電子レンジ/オーブン</td>
+        </tr>
+        <tr>
+            <td>○ セーフティボックス</td>
+            <td>○ ミニバー</td>
+        </tr>
+        <tr>
+            <td>○ タオル（炊飯器）</td>
+            <td>× 冷蔵庫</td>
+        </tr>
+        <tr>
+            <td>○ 石鹸/シャンプー</td>
+            <td>× コーヒーメーカー</td>
+        </tr>
+        <tr>
+            <td>○ バスタブ（ポット）</td>
+            <td></td>
+        </tr>
+    </table>
+    
+    <p><strong>【館内設備】</strong><br>
+    ○ ルームサービス / ○ ランドリーサービス / ○ 会議室<br>
+    ○ 英語スタッフ / × 日本語スタッフ / ○ レストラン / × バー</p>
+    
+    <p><small>※日本語・英語スタッフに関しては、常駐ではない場合がございます</small></p>
+</div>
+
+<h3>■ オーシャン グランド アット フルマーレ</h3>
+<div class="info-box">
+    <p><strong>【基本情報】</strong><br>
+    開業年：2014年 / 改装年：2022年 / 建物階数：30部屋</p>
+    
+    <p><strong>【部屋設備】</strong><br>
+    ○ エレベーター / ○ ルームサービス / × バルコニー<br>
+    ○ 宴会場 / × スパ / ○ ランドリーサービス<br>
+    × ビジネスセンター / × 日本語スタッフ<br>
+    × フィットネスセンター / ○ 英語スタッフ<br>
+    × プール / ○ レストラン</p>
+    
+    <p><small>※日本語・英語スタッフに関しては、常駐ではない場合がございます</small></p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>🌴 モルディブ基本情報</h2>
+
+<div class="info-box">
+    <p><strong>【首都】</strong> マーレ</p>
+    
+    <p><strong>【言語】</strong> ディベヒ語（モルディブ独自の言語です）<br>
+    マーレやリゾートでは英語が通じます</p>
+    
+    <p><strong>【宗教】</strong> イスラム教<br>
+    国の宗教に指定されており、アルコール・豚肉は禁止です<br>
+    モルディブへの持ち込みは法律により、固く禁止されております</p>
+    
+    <p><strong>【気候】</strong> 雨季(4月～10月頃)・乾季(11月～3月頃)があります<br>
+    一年を通じて気温は25～30℃前後と温暖な気候です</p>
+    
+    <p><strong>【産業】</strong> 漁業・観光業</p>
+    
+    <p><strong>【時差】</strong> 日本との時差は4時間<br>
+    サマータイムはなし（日本との時差は常に-4時間）</p>
+    
+    <p><strong>【通貨】</strong> モルディブ・ルフィア(MVR)<br>
+    モルディブ独自の通貨ですが、約1米ドル=12.75ルフィア<br>
+    マーレやリゾートではUSドルが使えます</p>
+    
+    <p><strong>【電圧・コンセント】</strong><br>
+    電圧：220～240V/50Hz<br>
+    プラグタイプ：BFタイプ<br>
+    ※日本の電化製品を使用する場合は、変圧器が必要です</p>
+    
+    <p><strong>【チップ】</strong><br>
+    ホテルのポーター・清掃1部屋につき1ドル程度<br>
+    レストラン：1名につき1～2ドル程度</p>
+    
+    <p><strong>【水道水】</strong><br>
+    水道水の飲用は不可<br>
+    ミネラルウォーターを購入する</p>
+</div>
+
+<h2>👔 服装のポイント</h2>
+
+<div class="info-box">
+    <p><strong>【気温】</strong><br>
+    熱帯性気候で年間を通じて26℃～33℃<br>
+    気候はモンスーン（季節風）の影響で乾季(12月～4月)と雨季(5月～11月)に分かれる。<br>
+    乾季は、晴天が続き湿度は低め。雨季の気温は、乾季とほぼ同じで多湿。<br>
+    短期間の降雨が一日に何回か降ります</p>
+    
+    <p><strong>【服装】</strong></p>
+    <ul>
+        <li><strong>リゾート</strong><br>
+        基本的には日本の夏の服装で良い。冷房が効きすぎる場合もあるので、<br>
+        薄手のカーディガンや羽織るものがあると便利</li>
+        <li><strong>レストラン</strong><br>
+        女性はワンピースがおすすめ。男性は襟付きシャツに長ズボンを着用する<br>
+        ディナーでは若干着席を準備する</li>
+    </ul>
+    
+    <p><strong>【日焼け対策】</strong><br>
+    浅い目線しにさらされるので、帽子やサングラス、日傘、日焼け止めなどの対策が必要。<br>
+    薄手のカーディガンや羽織るものでOKだが、天気や空調の変化に対応できるよう、<br>
+    薄手の長袖を準備する</p>
+    
+    <p><strong>【雨季の対策】</strong><br>
+    脱水予防のためのミネラルウォーターは常時携行する</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>⚠️ 重要な注意事項</h2>
+
+<div class="warning">
+    <h3>■ 入国カードのオンライン化について</h3>
+    <p>モルディブ入国の際、「旅行者申告書(Traveller Declaration)」の登録が義務付けられており、<br>
+    入国時、フライト時刻までの96時間以内に登録が必要です。</p>
+    
+    <p>申告はモルディブ入国管理局の公式HPから行い、申告料は無料です。</p>
+    
+    <p><strong>【オンライン専用サイト「IMUGA」】</strong><br>
+    <a href="https://imuga.immigration.gov.mv/traveller">https://imuga.immigration.gov.mv/traveller</a></p>
+    
+    <p><small>※この情報は予告なく変更になる場合があります</small></p>
+</div>
+
+<div class="warning">
+    <h3>■ クレジットカードの支払いについて</h3>
+    <p>モルディブリゾートでは各種クレジットカードでの支払いを取り扱っておりますが、<br>
+    通信技術上の問題で、まれにお持ちのクレジットカードをご利用いただけない場合がございます。<br>
+    その為、クレジットカードでのご精算をお考えのお客様につきましては、</p>
+    
+    <ol>
+        <li>VISA、MASTER、アメリカンエクスプレスを含む、2種類以上のカードを必ずご用意ください。<br>
+        JCBの利用が可能なリゾートでも、まれに通信技術上の問題で、ご利用いただけない場合がございます。</li>
+        <li>クレジットカードの暗証番号を予めご確認ください。<br>
+        クレジットカード精算時に暗証番号の入力を求められる場合がございます。</li>
+        <li>海外での使用が可能か予めご確認ください。海外使用停止サービス等に加入されている場合、<br>
+        事前にカード会社へ解除の手続き等が必要となることにございます。<br>
+        お客様の快適なご旅行のために、ご留意頂きますようお願い申し上げます。</li>
+    </ol>
+</div>
+
+<div class="warning">
+    <h3>■ 電子タバコ及び加熱式タバコ製品の持ち込みについて</h3>
+    <ol>
+        <li>2024年11月9日から、個人使用目的で、タバコ製品を一定量持ち込むことが許可されるのは、<br>
+        観光査証で入国した旅行者のみとなりました。</li>
+        <li>2024年11月15日から、電子タバコ及び加熱式タバコ製品の持ち込みが禁止されます。</li>
+        <li>2024年12月15日からは、電子タバコ及び加熱式タバコ製品の使用、販売、無償配付も禁止されます。</li>
+    </ol>
+</div>
+
+<div class="info-box">
+    <h3>■ 宿泊年齢の制限について</h3>
+    <p>法令又はホテルの取り決めにより、各部屋代表者の方として18歳以上の方が必須となります。<br>
+    ご予約の際は必ず18歳以上の方を代表者としてご予約ください。<br>
+    また、掲載内容は予告なく変更になる場合がありますので予めご了承ください。</p>
+</div>
+
+<div class="info-box">
+    <h3>■ 環境税の制限について</h3>
+    <p>2025/1/15発表<br>
+    ホテルの宿泊料と併せに、以下の環境税(Green Tax)が必要となります。<br>
+    現地ホテルに直接お支払いください。</p>
+    
+    <p>・US$12（2泊未満除外）<br>
+    ※1泊1名につき<br>
+    ※金額・条件は予告なく変更されることがあります。</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>📞 現地連絡先</h2>
+
+<div class="contact-info">
+    <h3>■ 現地手配先（インパック モルディブ）</h3>
+    <p><strong>INPAC MALDIVES CO.LTD.（インパック）</strong><br>
+    住所：4TH FLOOR-B1<br>
+    　　　H-RABEE'EE MANZIL, SOSUN MAGU,<br>
+    　　　MALE, REPUBLIC OF MALDIVES</p>
+    
+    <p>TEL：(960)778-8712<br>
+    FAX：(960)333-2593<br>
+    緊急連絡先：(960)778-8712 毎日24時間</p>
+</div>
+
+<div class="contact-info">
+    <h3>■ 日本の旅行会社</h3>
+    <p>お取り扱い営業所：銀座本店<br>
+    TEL：050-1752-1069<br>
+    担当：銀座本店<br>
+    予約番号：06925003916</p>
+</div>
+
+<div class="contact-info">
+    <h3>■ HISエアポートアシスタンスサービス（日本出発当日の緊急連絡先）</h3>
+    <p>成田国際空港：0476-34-8563（7:30～22:00）<br>
+    羽田空港(国際線)：03-6428-0366（7:30～22:00）<br>
+    中部国際空港セントレア：090-1757-4806（7:30～17:00）<br>
+    関西国際空港(第1ターミナル)：050-1752-5472（7:00～22:00）</p>
+</div>
+
+<div class="contact-info">
+    <h3>■ インパック・ジャパン マーレオフィス</h3>
+    <p>4F-B H-Rabee'ee Manzil Sosun Magu Male Rep of Maldives</p>
+    
+    <p>モルディブ滞在中お困りの際または緊急時は下記電話番号までお電話をお願い致します。</p>
+    
+    <p>(+960) 333-2592（オフィス/基本英語）<br>
+    (+960) 778-8712（日本語対応）</p>
+    
+    <p><small>※国内電話の場合+960は不要です。</small></p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>✅ 持ち物チェックリスト</h2>
+
+<h3>【必須書類】</h3>
+<ul class="checklist">
+    <li>パスポート（残存有効期間：入国時1ヶ月以上）</li>
+    <li>eチケット控え</li>
+    <li>旅行日程表（この書類）</li>
+    <li>クレジットカード（2種類以上推奨）</li>
+    <li>現金（USドル推奨）</li>
+</ul>
+
+<h3>【衣類】</h3>
+<ul class="checklist">
+    <li>Tシャツ・タンクトップ</li>
+    <li>短パン・ワンピース</li>
+    <li>水着</li>
+    <li>サングラス</li>
+    <li>帽子</li>
+    <li>ビーチサンダル</li>
+    <li>薄手の羽織りもの（冷房対策）</li>
+    <li>レストラン用の服（襟付きシャツ、長ズボン、ワンピースなど）</li>
+</ul>
+
+<h3>【日焼け・暑さ対策】</h3>
+<ul class="checklist">
+    <li>日焼け止め（SPF50+推奨）</li>
+    <li>サングラス</li>
+    <li>帽子</li>
+    <li>ラッシュガード</li>
+</ul>
+
+<h3>【衛生用品】</h3>
+<ul class="checklist">
+    <li>歯ブラシ・歯磨き粉</li>
+    <li>シャンプー・リンス（持参したい場合）</li>
+    <li>化粧品</li>
+    <li>髭剃り</li>
+</ul>
+
+<h3>【電化製品】</h3>
+<ul class="checklist">
+    <li>スマートフォン</li>
+    <li>カメラ（防水カメラ・GoProなど）</li>
+    <li>充電器・モバイルバッテリー</li>
+    <li>変圧器・変換プラグ（BFタイプ）</li>
+</ul>
+
+<h3>【その他】</h3>
+<ul class="checklist">
+    <li>常備薬</li>
+    <li>絆創膏</li>
+    <li>酔い止め</li>
+    <li>虫除けスプレー</li>
+    <li>ジップロック（濡れたものを入れる用）</li>
+    <li>エコバッグ</li>
+    <li>筆記用具</li>
+    <li>ガイドブック</li>
+</ul>
+
+<h3>【海でのアクティビティ用】</h3>
+<ul class="checklist">
+    <li>防水ポーチ</li>
+    <li>シュノーケルセット（レンタルも可）</li>
+    <li>マリンシューズ</li>
+    <li>GoPro・防水カメラ</li>
+</ul>
+
+<div class="message-box">
+    <h2>💕 おふたりへのメッセージ</h2>
+    
+    <p style="font-size: 18pt; margin: 20px 0;">亨規さん、文香さん</p>
+    
+    <p style="font-size: 14pt;">ご結婚おめでとうございます!</p>
+    
+    <p style="margin: 30px 0; font-size: 12pt; line-height: 2;">
+    素敵なハネムーンになりますように。<br>
+    モルディブの美しい海と空、そしてふたりだけの特別な時間を<br>
+    心ゆくまでお楽しみください。
+    </p>
+    
+    <p style="margin: 30px 0; font-size: 12pt; line-height: 2;">
+    この旅が、おふたりの人生の新しい1ページの<br>
+    素晴らしいスタートとなりますように。
+    </p>
+    
+    <p style="font-size: 16pt; margin-top: 30px;">Have a wonderful honeymoon! 🏝️💕</p>
+</div>
+
+<div style="text-align: center; margin-top: 50px; color: #718096; font-size: 10pt;">
+    <p>作成日：2025年11月23日</p>
+</div>
+
+</body>
+</html>
