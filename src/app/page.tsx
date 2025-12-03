@@ -7,7 +7,7 @@ import ResultDisplay from '@/components/ResultDisplay';
 import LicenseInput from '@/components/LicenseInput';
 import DetailSettings from '@/components/DetailSettings';
 import CropTool from '@/components/CropTool';
-import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, generateCleanRecreatePrompt, convertImageToBase64 } from '@/lib/nanoBananaAPI';
+import { callNanoBananaAPIWithRetry, generateSignboardPrompt, generateReferenceImagePrompt, generateCleanRecreatePrompt, convertImageToBase64, generateRandomDesignPrompt, getRandomDesignName } from '@/lib/nanoBananaAPI';
 import { config } from '@/lib/config';
 import { FREE_TRIAL_USES } from '@/lib/license';
 
@@ -41,6 +41,11 @@ export default function Home() {
   const [remainingUses, setRemainingUses] = useState<number>(0);
   const [useFreeTrialCount, setUseFreeTrialCount] = useState<number>(0);
   const [showLicenseInput, setShowLicenseInput] = useState(false);
+
+  // ランダムデザイン生成
+  const [randomDesigns, setRandomDesigns] = useState<Array<{ name: string; image: string }>>([]);
+  const [isGeneratingRandom, setIsGeneratingRandom] = useState(false);
+  const [showRandomResults, setShowRandomResults] = useState(false);
 
   // 初回ロード時にlocalStorageからライセンス情報を取得
   useEffect(() => {
@@ -154,9 +159,9 @@ export default function Home() {
     setSignboardWidth(width);
   };
 
-  // Phase 4: 見積もり生成ハンドラー（準備）
+  // Phase 4: 見積もり生成ハンドラー
   const handleGenerateQuote = () => {
-    alert('見積もり機能は次のフェーズで実装します！');
+    // DetailSettingsコンポーネント内で処理
     console.log('見積もり生成:', {
       signboardType: selectedSignboardType,
       width: signboardWidth,
@@ -239,6 +244,69 @@ export default function Home() {
       setError('看板の再生成中にエラーが発生しました');
     } finally {
       setIsRecreating(false);
+    }
+  };
+
+  // ランダムデザイン生成ハンドラー
+  const handleGenerateRandomDesigns = async () => {
+    if (!uploadedImage || !uploadedFile) return;
+
+    // ライセンスチェック（3回分必要）
+    const requiredUses = 3;
+    if (licenseKey && remainingUses < requiredUses) {
+      setError(`ランダムデザイン生成には${requiredUses}回分の使用回数が必要です（残り${remainingUses}回）`);
+      setShowLicenseInput(true);
+      return;
+    }
+    if (!licenseKey && (useFreeTrialCount + requiredUses) > FREE_TRIAL_USES) {
+      setError(`ランダムデザイン生成には${requiredUses}回分の使用回数が必要です（無料トライアル残り${FREE_TRIAL_USES - useFreeTrialCount}回）`);
+      setShowLicenseInput(true);
+      return;
+    }
+
+    setIsGeneratingRandom(true);
+    setError(null);
+    setRandomDesigns([]);
+    setShowRandomResults(true);
+
+    try {
+      console.log('3種類のランダムデザインを生成中...');
+      const base64Data = await convertImageToBase64(uploadedFile);
+
+      // 3つのデザインを並列で生成
+      const designPromises = [1, 2, 3].map(async (variationNumber) => {
+        const prompt = generateRandomDesignPrompt(variationNumber);
+        const name = getRandomDesignName(variationNumber);
+
+        try {
+          const result = await callNanoBananaAPIWithRetry(base64Data, prompt, config.nanoBananaApiKey);
+          
+          if (result.success && result.edited_image_url) {
+            // 使用回数をカウント
+            await recordUsage();
+            return { name, image: result.edited_image_url };
+          }
+          return null;
+        } catch (error) {
+          console.error(`Design ${variationNumber} failed:`, error);
+          return null;
+        }
+      });
+
+      const results = await Promise.all(designPromises);
+      const successfulDesigns = results.filter((d): d is { name: string; image: string } => d !== null);
+
+      if (successfulDesigns.length > 0) {
+        setRandomDesigns(successfulDesigns);
+        console.log(`${successfulDesigns.length}種類のデザインを生成しました`);
+      } else {
+        throw new Error('すべてのデザイン生成に失敗しました');
+      }
+    } catch (error) {
+      console.error('Random design generation failed:', error);
+      setError('ランダムデザイン生成中にエラーが発生しました');
+    } finally {
+      setIsGeneratingRandom(false);
     }
   };
 
@@ -539,7 +607,41 @@ export default function Home() {
               onReferenceImageUpload={handleReferenceImageUpload}
             />
             
-            {uploadedImage && (
+            {/* ランダムデザイン生成ボタン */}
+            {uploadedImage && !showRandomResults && (
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border-2 border-dashed border-purple-300">
+                <h3 className="text-lg font-bold text-purple-900 mb-2">🎲 イメージが湧かない？</h3>
+                <p className="text-sm text-purple-700 mb-4">
+                  AIが3種類のランダムデザインを自動生成！参考にしてください。
+                </p>
+                <button
+                  onClick={handleGenerateRandomDesigns}
+                  disabled={isGeneratingRandom}
+                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                    isGeneratingRandom
+                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-md hover:shadow-lg'
+                  }`}
+                >
+                  {isGeneratingRandom ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 74 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      3種類のデザインを生成中...
+                    </span>
+                  ) : (
+                    '🎲 ランダムに3種類生成する'
+                  )}
+                </button>
+                <p className="text-xs text-purple-600 mt-2 text-center">
+                  ※ 3回分の使用回数を消費します
+                </p>
+              </div>
+            )}
+            
+            {uploadedImage && !showRandomResults && (
               <DesignSelector
                 onDesignChange={handleDesignChange}
                 onProcess={handleProcess}
@@ -553,16 +655,53 @@ export default function Home() {
 
           {/* 右側: 結果表示 */}
           <div>
-            <ResultDisplay
-              originalImage={uploadedImage}
-              processedImage={processedImage}
-              isProcessing={isProcessing}
-              apiResponseInfo={apiResponseInfo}
-              onChangeLighting={handleChangeLighting}
-              currentSignboardType={selectedSignboardType}
-              onExtractSignboard={handleExtractSignboard}
-              isExtracting={false}
-            />
+            {!showRandomResults ? (
+              <ResultDisplay
+                originalImage={uploadedImage}
+                processedImage={processedImage}
+                isProcessing={isProcessing}
+                apiResponseInfo={apiResponseInfo}
+                onChangeLighting={handleChangeLighting}
+                currentSignboardType={selectedSignboardType}
+                onExtractSignboard={handleExtractSignboard}
+                isExtracting={false}
+              />
+            ) : (
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">🎲 ランダムデザイン結果</h2>
+                  <button
+                    onClick={() => {
+                      setShowRandomResults(false);
+                      setRandomDesigns([]);
+                    }}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  >
+                    通常モードに戻る
+                  </button>
+                </div>
+                
+                {randomDesigns.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-6">
+                    {randomDesigns.map((design, index) => (
+                      <div key={index} className="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-400 transition-colors">
+                        <h3 className="font-bold text-lg text-purple-900 mb-2">{design.name}</h3>
+                        <img
+                          src={design.image}
+                          alt={design.name}
+                          className="w-full rounded-lg shadow-md"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : isGeneratingRandom ? (
+                  <div className="text-center py-12">
+                    <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mb-4"></div>
+                    <p className="text-gray-600">3種類のデザインを生成中...</p>
+                  </div>
+                ) : null}
+              </div>
+            )}
           </div>
         </div>
 
@@ -572,6 +711,7 @@ export default function Home() {
             <DetailSettings
               extractedSignboard={extractedSignboard}
               signboardWidth={signboardWidth}
+              signboardType={selectedSignboardType}
               onWidthChange={handleWidthChange}
               onGenerateQuote={handleGenerateQuote}
               onCleanRecreate={handleCleanRecreate}

@@ -1,9 +1,9 @@
 // API設定とユーティリティ関数
-// nano banana = Gemini 2.5 Flash Image - 画像編集専用モデル
-export const NANO_BANANA_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
+// Gemini 3 Pro Image Preview (Nano Banana Pro) - 高度な画像編集モデル（最大4K解像度）
+export const NANO_BANANA_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent';
 export const LIST_MODELS_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
-// Nano Banana (Gemini ネイティブ画像生成) は画像編集専用エンドポイントを使用
-export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
+// Gemini 3 Pro Image Preview は画像編集に特化（思考プロセス付き）
+export const NANO_BANANA_IMAGE_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent';
 
 // モック機能（開発用）
 export const USE_MOCK_API = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_MOCK_API === 'true';
@@ -681,80 +681,91 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `Edit this image: Transform ONLY the main signboard text into 3D LED channel letters.
+  let prompt = `Edit this image: Transform ONLY the main signboard text into 正面発光LEDチャンネル文字 (Front-lit LED Channel Letters).
 
-LED channel letter specifications:
-- 3D立体文字：Each letter has 5-8cm thickness/depth extending forward from the signboard
-- 金属フレーム：Visible stainless steel or aluminum frame on the sides of each letter
-- 正面発光：White acrylic front panel on each letter, glowing uniformly and brightly from internal LEDs
-- 浮遊効果：Letters appear to be mounted 5-10cm in front of the wall/signboard
-- 影の投影：Soft shadows cast by the 3D letters onto the wall behind them
-- 照明効果：Bright, professional illumination similar to commercial store signage (like NEXTFLOOR, BANANA REPUBLIC style)
+正面発光LEDチャンネル文字 specifications:
+
+【正面発光 = FRONT FACE GLOWS BRIGHTLY】
+- 正面（Front acrylic face）: MUST glow brightly and uniformly with strong LED illumination
+- The entire front surface of each letter GLOWS like a bright lightbox
+- Front face should be the BRIGHTEST part, clearly visible day and night
+- Professional, vibrant, eye-catching illumination on the front face
+
+【色合い = COLOR THEME】
+- Apply this color scheme: ${themeText}
+- IMPORTANT: Change the signboard and text colors to match this theme
+- The glowing front face should use colors from this theme
+- Make sure the color change is clearly visible and prominent
+
+【側面 = SIDES DO NOT GLOW】
+- 側面（Side frames）: Visible metal frame (ステンレス/アルミ) - NO light, NO glow
+- Only the front acrylic surface glows, sides remain dark metal
+
+【3D Structure】
+- 3D立体文字 with 5-8cm depth/thickness
+- Letters mounted 5-10cm forward from wall
+- Soft shadows behind 3D letters
+
+Visual effect: BRIGHT GLOWING FRONT (with ${themeText}) + Dark metal sides = Front-lit LED channel letters
 
 CRITICAL RULES - DO NOT CHANGE:
-✗ Text content (keep every character exactly the same)
-✗ Text color (red stays red, keep original colors)
-✗ Building exterior (walls, doors, windows, roof)
-✗ Store interior
-✗ Other signboards, curtains, menu boards, posters
+✗ Text content (keep exact same text)
+✗ Building exterior, store interior
+✗ Other signboards, decorations
 ✗ Surroundings
 
-ONLY CHANGE:
-✓ Make the main signboard text 3D with LED channel letter effect
+MUST CHANGE:
+✓ Make main signboard text 3D with BRIGHT front-lit effect (正面を明るく発光)
+✓ Change colors to match the specified color theme (${themeText})
 
-Generate the edited image with realistic LED channel letters on the signboard.`;
+Generate the edited image.`;
 
   return prompt;
 }
 
 // 看板を入稿データレベルに作り直すプロンプト生成
 export function generateCleanRecreatePrompt(): string {
-  const prompt = `CRITICAL TASK: Convert this signboard photo into a PRINT-READY production file (like AI/EPS export).
+  const prompt = `CRITICAL TASK: Convert this signboard into VECTOR-STYLE production data for signboard manufacturing (看板製作用入稿データ).
 
-This is for actual signboard manufacturing - output must be PERFECT.
+TARGET: Clean Adobe Illustrator-style flat graphic (入稿データ), NOT a photograph.
 
-MANDATORY Requirements:
+【MANDATORY REQUIREMENTS】
 
-1. TEXT QUALITY (CRITICAL):
-   - Recreate ALL text as if it were vector type (not rasterized)
-   - Text edges MUST be perfectly sharp (像素級鋭利)
-   - Zero pixelation, zero blur on any character
-   - Professional typography quality
-   - Maintain EXACT same characters and text content
+1. REMOVE ALL UNWANTED ELEMENTS:
+   - DELETE all light bulbs, lamps, lighting fixtures (電球を全て削除)
+   - DELETE all ceiling elements, walls, surrounding environment
+   - DELETE all reflections, highlights, and lighting effects
+   - ONLY keep: signboard surface + text/logo
+   - Clean, isolated signboard design ONLY
 
-2. COLOR TREATMENT:
-   - Convert photo colors to SOLID, FLAT colors (not gradients from lighting)
-   - Remove ALL lighting variations (shadows, highlights, uneven illumination)
-   - Use CMYK-ready vibrant colors
-   - Clean, even color fills throughout
-   - No color noise or banding
+2. BACKGROUND - PERFECTLY FLAT:
+   - Background MUST be solid, uniform, flat color (単色・均一)
+   - NO gradients, NO lighting variations, NO shadows on background
+   - Example: Yellow background = perfectly even yellow (#FFD700)
+   - Remove ALL unevenness and color variations
+   - Like a flat color fill in Illustrator
 
-3. BACKGROUND & EDGES:
-   - Solid background color (no texture, no lighting effects)
-   - Perfectly straight edges and borders
-   - Clean, geometric shapes
-   - Remove ALL photo artifacts
+3. VECTOR-STYLE FLAT DESIGN:
+   - Convert to flat graphic design (NOT photographic)
+   - Solid, flat colors throughout (完全フラット)
+   - Sharp vector edges (NOT photo edges)
+   - NO photo textures, NO photo realism
+   - Like Adobe Illustrator AI/EPS file
 
-4. VISUAL STYLE:
-   - Output should look like Adobe Illustrator vector export
-   - NOT a photograph - a graphic design file
-   - Flat design aesthetic (no photo realism)
-   - Print production ready
-   - Could be sent directly to signboard manufacturer
+4. PRESERVE DIMENSIONS & DESIGN:
+   - MUST maintain exact aspect ratio (縦横比を保持)
+   - Same text content and font style
+   - Same 3D LED effect (but flattened/vectorized)
+   - Same overall layout
 
-5. QUALITY STANDARDS:
-   - Resolution: High enough for large format printing
-   - Sharpness: Every edge must be crisp
-   - Cleanliness: Zero noise, zero artifacts
-   - Professional: Looks like professional designer work
+VISUAL GOAL:
+❌ BAD: Photo with light bulbs, gradients, shadows, uneven colors
+✅ GOOD: Flat vector graphic, solid uniform background, no light bulbs, clean production-ready data
 
-EXAMPLE COMPARISON:
-❌ BAD: Photo with shadows, lighting, blur, pixelated text
-✅ GOOD: Clean vector-style graphic, flat colors, sharp text, professional mockup
+Think: "What would a signboard manufacturer accept as production file?"
+A clean Illustrator file with flat colors and no photo elements.
 
-Think: "What would a professional signboard manufacturer expect as production file?"
-
-Generate the print-ready signboard design.`;
+Generate the vector-style production data (入稿データ).`;
 
   return prompt;
 }
@@ -930,9 +941,9 @@ Generate the edited image.`;
   if (signboardType === 'led-channel-face') {
     englishPrompt += ' Make the letters 3D with fully illuminated front surface (face-lit). The entire letter face should glow uniformly and brightly for high visibility.';
   } else if (signboardType === 'led-channel-side') {
-    englishPrompt += ' Make the letters 3D with only the side edges glowing (side-lit). The front surface should NOT glow, only thin edge lines should emit light for a modern stylish look.';
+    englishPrompt += '\n\n【側面発光 = SIDE EDGES GLOW BRIGHTLY】Make letters 3D with BRIGHT glowing side edges. The thin metal side frames emit strong LED light creating elegant edge illumination. Front face and back are NOT illuminated - only the side edges glow brightly. Modern and stylish appearance with glowing outlines.';
   } else if (signboardType === 'led-channel-back') {
-    englishPrompt += ' Make the letters 3D with backlight glow effect creating a soft halo on the wall behind the letters (back-lit). The letter body should NOT glow, only the backlight halo effect for a luxurious indirect lighting look.';
+    englishPrompt += '\n\n【背面発光 = BACK HALO GLOWS BRIGHTLY】Make letters 3D with BRIGHT halo effect glowing from behind. Strong LED backlight creates a vivid glowing halo on the wall behind each letter. The letter body itself is NOT illuminated - only the backlight halo glows brightly. Luxurious indirect lighting with prominent halo effect.';
   } else if (signboardType === 'neon') {
     englishPrompt += ' Add neon tube glowing effect with vibrant illumination for a retro stylish look.';
   } else if (signboardType === 'wooden') {
@@ -1276,6 +1287,72 @@ function calculateSignboardSize(signboardInfo: SignboardInfo, canvasWidth: numbe
   } else {
     return { width: baseSize, height: baseSize * 0.6 };
   }
+}
+
+// ランダムデザイン生成用のプロンプト（3種類のバリエーション）
+export function generateRandomDesignPrompt(variationNumber: number): string {
+  const variations = [
+    {
+      name: 'モダン&ミニマル',
+      prompt: `Edit this image: Transform the main signboard into a MODERN MINIMALIST design.
+
+Style: Clean, simple, sophisticated
+- Flat signboard with sleek typography
+- Monochrome or minimal color palette (black, white, gray with one accent color)
+- Thin, elegant fonts
+- Plenty of negative space
+- Contemporary, upscale appearance
+
+CRITICAL RULES - DO NOT CHANGE:
+✗ Text content ✗ Building exterior ✗ Surroundings
+
+Generate modern minimalist signboard design.`
+    },
+    {
+      name: '高級感&エレガント',
+      prompt: `Edit this image: Transform the main signboard into a LUXURY ELEGANT design.
+
+Style: Premium, sophisticated, high-end
+- Deep colors (black, gold, burgundy, navy)
+- Elegant serif fonts or refined sans-serif
+- Subtle metallic accents (gold, silver)
+- Classy and prestigious appearance
+- Upscale boutique style
+
+CRITICAL RULES - DO NOT CHANGE:
+✗ Text content ✗ Building exterior ✗ Surroundings
+
+Generate luxury elegant signboard design.`
+    },
+    {
+      name: 'ネオン&レトロ',
+      prompt: `Edit this image: Transform the main signboard into a NEON RETRO design.
+
+Style: Vintage neon sign aesthetic
+- Glowing neon tube effect
+- Retro color palette (pink, cyan, purple, orange)
+- Classic diner/bar style
+- Nostalgic 80s-90s vibe
+- Illuminated at night appearance
+
+CRITICAL RULES - DO NOT CHANGE:
+✗ Text content ✗ Building exterior ✗ Surroundings
+
+Generate neon retro signboard design.`
+    }
+  ];
+
+  const variation = variations[variationNumber - 1];
+  return variation.prompt;
+}
+
+export function getRandomDesignName(variationNumber: number): string {
+  const names = [
+    'モダン&ミニマル',
+    '高級感&エレガント',
+    'ネオン&レトロ'
+  ];
+  return names[variationNumber - 1];
 }
 
 // リトライ機能付きAPI呼び出し（apiLimits.tsからインポート）
