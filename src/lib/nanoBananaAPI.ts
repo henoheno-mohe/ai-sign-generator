@@ -681,7 +681,7 @@ export function generateSignboardPrompt(colorTheme: string, fontStyle: string, s
   const fontText = fontPrompts[fontStyle as keyof typeof fontPrompts] || fontPrompts.modern;
   const typeText = signboardType ? signboardTypePrompts[signboardType as keyof typeof signboardTypePrompts] || '' : '';
 
-  let prompt = `Edit this image: Transform ONLY the main signboard text into 正面発光LEDチャンネル文字 (Front-lit LED Channel Letters).
+  const prompt = `Edit this image: Transform ONLY the main signboard text into 正面発光LEDチャンネル文字 (Front-lit LED Channel Letters).
 
 正面発光LEDチャンネル文字 specifications:
 
