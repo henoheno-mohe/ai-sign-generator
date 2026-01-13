@@ -1,0 +1,4 @@
+[00:00:00.746] Server  LOG     ✓ Ready in 563ms
+[00:00:06.269] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:06.389] Browser WARN    Image with src "/hero/before.jpg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
