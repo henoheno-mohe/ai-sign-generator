@@ -2,19 +2,12 @@
 
 import React from "react";
 import type { BackgroundTemplate } from "@/lib/backgrounds";
-import type { SelectedColors } from "@/components/ColorPicker24";
 
 export default function NeonPreviewGrid({
   templates,
-  text,
-  sketchDataUrl,
-  colors,
   aiImageDataUrl,
 }: {
   templates: BackgroundTemplate[];
-  text: string;
-  sketchDataUrl: string | null;
-  colors: SelectedColors;
   aiImageDataUrl?: string | null;
 }) {
   if (!aiImageDataUrl) return null;

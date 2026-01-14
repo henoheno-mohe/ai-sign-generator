@@ -226,9 +226,6 @@ export default function StudioClient() {
           <>
             <NeonPreviewGrid
               templates={[background]}
-              text={text}
-              sketchDataUrl={sketchDataUrl}
-              colors={colors}
               aiImageDataUrl={aiImageDataUrl}
             />
 
