@@ -53,12 +53,13 @@ SCENE (DEFAULT):
 - The neon sign should be the main highlight light source, with soft warm room fill.
 
 PRODUCT MUST MATCH:
+- VIEWPOINT: STRICTLY FRONT VIEW (straight-on shot). ABSOLUTELY NO angled shots, NO perspective distortion, NO side views. The camera must be perfectly parallel to the sign.
 - LED neon flex / neon tube sign, single-stroke look, uniform tube thickness.
 - Tube diameter / glow width: approximately φ${tubeDiameter}mm.
 - Tube placement detail: MUST keep a clear 2mm gap between adjacent tubes. Tubes should not touch each other.
 - Tube ends: MUST have slightly rounded end-caps (round tips). ABSOLUTELY NO sharp or flat cut ends.
 - Mounted using clear acrylic panels (front + back acrylic sandwich).
-- Acrylic shape: MUST be a SINGLE simple rectangle plate. ABSOLUTELY NO contour cutting. NO layered acrylic. NO acrylic cut along the neon tube shapes. It must be one flat rectangular sheet.
+- Acrylic shape: MUST be a SINGLE, PERFECTLY FLAT RECTANGULAR PLATE. ABSOLUTELY NO contour cutting. DO NOT follow the neon tube's outline. The acrylic must be a simple, clean, non-cut rectangle with straight 90-degree corners.
 - Visible standoff hardware: STRICTLY ONLY 4 round standoff caps at the four corners of the rectangular plate. Do NOT add any extra standoffs or mounting points in the middle or other areas.
 - The acrylic panel is slightly offset from the wall with clear standoff spacers, casting subtle realistic shadows.
 - Real-world scale: the overall sign width should be approximately ${targetWidth}mm.
