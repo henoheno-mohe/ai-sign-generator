@@ -184,19 +184,19 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
 
       {/* 看板タイプ選択（参考画像がない場合のみ表示） */}
       {!hasReferenceImage && (
-        <div className="mb-8">
+      <div className="mb-8">
           <h3 className="text-lg font-medium text-gray-800 mb-4">看板タイプ</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {signboardTypes.map((type) => (
-              <div
+            <div
                 key={type.id}
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+              className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                   selectedSignboardType === type.id
                     ? 'border-blue-500 bg-blue-50 shadow-md'
                     : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
-                }`}
+              }`}
                 onClick={() => handleSignboardTypeSelect(type.id)}
-              >
+            >
                 {/* 上部：アイコンとテキスト */}
                 <div className="flex items-start space-x-3">
                   {/* アイコン */}
@@ -224,10 +224,10 @@ export default function DesignSelector({ onDesignChange, onProcess, isProcessing
                     />
                   </div>
                 )}
-              </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
+      </div>
       )}
 
       {/* エラー表示 */}

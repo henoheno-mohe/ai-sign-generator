@@ -77,9 +77,12 @@ SCENE (DEFAULT):
 PRODUCT MUST MATCH:
 - LED neon flex / neon tube sign, single-stroke look, uniform tube thickness.
 - Tube diameter / glow width: approximately φ${tubeDiameter}mm.
+- Tube placement detail: MUST keep a clear 2mm gap between adjacent tubes. Tubes should not touch each other.
+- Tube ends: MUST have slightly rounded end-caps (round tips). ABSOLUTELY NO sharp or flat cut ends.
 - Mounted using clear acrylic panels (front + back acrylic sandwich).
-- Visible standoff hardware: 4 round standoff caps / screws at the corners.
-- The acrylic panel is slightly offset from the wall, with subtle realistic shadows.
+- Acrylic shape: MUST be a SINGLE simple rectangle plate. ABSOLUTELY NO contour cutting. NO layered acrylic. NO acrylic cut along the neon tube shapes. It must be one flat rectangular sheet.
+- Visible standoff hardware: STRICTLY ONLY 4 round standoff caps at the four corners of the rectangular plate. Do NOT add any extra standoffs or mounting points in the middle or other areas.
+- The acrylic panel is slightly offset from the wall with clear standoff spacers, casting subtle realistic shadows.
 - Real-world scale: the overall sign width should be approximately ${targetWidth}mm.
 - Height should be auto-determined by the design (logo/text) while keeping natural proportions.
 - Acrylic panel size should fit the design with reasonable margins (do not crop the design).
@@ -149,7 +152,7 @@ function getDefaultBackground() {
 "[project]/neon-sign-maker/src/lib/nanoBananaCompat.ts [app-route] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-// neon-sign-maker: 既存プロジェクトと同じモデル/URLを流用
+// 2026年最新の画像生成モデル（Gemini 3.0 Pro Image Preview）に戻します
 __turbopack_context__.s([
     "NANO_BANANA_IMAGE_API_URL",
     ()=>NANO_BANANA_IMAGE_API_URL
@@ -248,8 +251,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$neon$2d$sign$2d$maker$2f$src
 ;
 ;
 function getApiKey() {
-    // 既存のキー名を流用（将来はサーバー用キーに分離推奨）
-    return process.env.NANO_BANANA_API_KEY || process.env.NEXT_PUBLIC_NANO_BANANA_API_KEY || "";
+    // 直接新しいキーを書き込む（テスト用）
+    const key = "AIzaSyDUw6dAtm76yWa92NByfd_gQyDog_oUYB4";
+    console.log("DEBUG: Using Hardcoded API Key prefix:", key.substring(0, 10) + "...");
+    return key;
 }
 function dataUrlToBase64(dataUrl) {
     const match = dataUrl.match(/^data:(.+);base64,(.*)$/);
@@ -263,13 +268,8 @@ async function POST(req) {
     try {
         const body = await req.json();
         const apiKey = getApiKey();
-        if (!apiKey) {
-            return __TURBOPACK__imported__module__$5b$project$5d2f$neon$2d$sign$2d$maker$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-                error: "APIキーが設定されていません（環境変数 NANO_BANANA_API_KEY を設定してください）"
-            }, {
-                status: 400
-            });
-        }
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
         const sketchDataUrl = body?.sketchDataUrl ?? null;
         const text = body?.text ?? "";
         const colors = body?.colors;

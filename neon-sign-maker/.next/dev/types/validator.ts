@@ -65,6 +65,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../src/app/studio/v1/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/studio/v1">> = Specific
+  const handler = {} as typeof import("../../../src/app/studio/v1/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/studio/v2/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/studio/v2">> = Specific
+  const handler = {} as typeof import("../../../src/app/studio/v2/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../src/app/api/neon/generate/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/neon/generate">> = Specific

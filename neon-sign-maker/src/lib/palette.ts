@@ -1,6 +1,7 @@
 export type NeonColor = {
   id: string;
   name: string;
+  nameJp: string;
   hex: `#${string}`;
 };
 
@@ -9,22 +10,20 @@ export type NeonColor = {
 // - colors (10): red, pink, rose, purple, blue, sky blue, green, lemon yellow, yellow, orange
 export const NEON_PALETTE_14: NeonColor[] = [
   // whites
-  { id: "cool-white-8000k", name: "クールホワイト（8000K相当）", hex: "#EAF3FF" },
-  { id: "off-white-6000k", name: "オフホワイト（6000K相当）", hex: "#F6F7F4" },
-  { id: "warm-white-4000k", name: "ウォームホワイト（4000K相当）", hex: "#FFF1D6" },
-  { id: "lamp-orange-3000k", name: "ランプオレンジ（3000K相当）", hex: "#FFD1A3" },
+  { id: "cool-white-8000k", name: "cool white", nameJp: "クールホワイト", hex: "#EAF3FF" },
+  { id: "off-white-6000k", name: "off white", nameJp: "オフホワイト", hex: "#F6F7F4" },
+  { id: "warm-white-4000k", name: "warm white", nameJp: "ウォームホワイト", hex: "#FFF1D6" },
+  { id: "lamp-orange-3000k", name: "lamp orange", nameJp: "ランプオレンジ", hex: "#FFD1A3" },
 
   // colors
-  { id: "red", name: "red", hex: "#FF1744" },
-  { id: "pink", name: "pink", hex: "#FF2DAA" },
-  { id: "rose", name: "rose", hex: "#FF4DFF" },
-  { id: "purple", name: "purple", hex: "#8A2BFF" },
-  { id: "blue", name: "blue", hex: "#2D5BFF" },
-  { id: "sky-blue", name: "sky blue", hex: "#00E5FF" },
-  { id: "green", name: "green", hex: "#39FF14" },
-  { id: "lemon-yellow", name: "lemon yellow", hex: "#FFF200" },
-  { id: "yellow", name: "yellow", hex: "#FFB000" },
-  { id: "orange", name: "orange", hex: "#FF6A00" }
+  { id: "red", name: "red", nameJp: "レッド", hex: "#FF1744" },
+  { id: "pink", name: "pink", nameJp: "ピンク", hex: "#FF2DAA" },
+  { id: "rose", name: "rose", nameJp: "ローズ", hex: "#FF4DFF" },
+  { id: "purple", name: "purple", nameJp: "パープル", hex: "#8A2BFF" },
+  { id: "blue", name: "blue", nameJp: "ブルー", hex: "#2D5BFF" },
+  { id: "sky-blue", name: "sky blue", nameJp: "スカイブルー", hex: "#00E5FF" },
+  { id: "green", name: "green", nameJp: "グリーン", hex: "#39FF14" },
+  { id: "lemon-yellow", name: "lemon yellow", nameJp: "レモンイエロー", hex: "#FFF200" },
+  { id: "yellow", name: "yellow", nameJp: "イエロー", hex: "#FFB000" },
+  { id: "orange", name: "orange", nameJp: "オレンジ", hex: "#FF6A00" }
 ];
-
-

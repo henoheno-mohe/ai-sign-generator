@@ -68,14 +68,14 @@ export function handleApiError(error: unknown): string {
   if (error && typeof error === 'object') {
     const err = error as { status?: number; message?: string };
     if (err.status === 429) {
-      return 'Request limit exceeded. Please try again later.';
+    return 'Request limit exceeded. Please try again later.';
     } else if (err.status === 401) {
-      return 'Invalid API key. Please check your configuration.';
+    return 'Invalid API key. Please check your configuration.';
     } else if (err.status === 403) {
-      return 'Insufficient API key permissions.';
+    return 'Insufficient API key permissions.';
     } else if (err.status && err.status >= 500) {
-      return 'Server error occurred. Please try again later.';
-    } else {
+    return 'Server error occurred. Please try again later.';
+  } else {
       return err.message || 'An unexpected error occurred.';
     }
   }

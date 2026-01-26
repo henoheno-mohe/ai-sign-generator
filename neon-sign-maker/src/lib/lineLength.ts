@@ -275,7 +275,7 @@ function toBrightMask(
 export async function estimateTubeLengthCmFromNeonPhoto({
   imageDataUrl,
   targetWidthMm,
-  brightPercentile = 0.85,
+  brightPercentile = 0.96, // より厳しく（発光の芯だけを拾うように）
   maxDim = 1024,
 }: {
   imageDataUrl: string;
@@ -297,7 +297,9 @@ export async function estimateTubeLengthCmFromNeonPhoto({
   if (!ctx) throw new Error("Canvas not available");
   ctx.drawImage(img, 0, 0, w, h);
 
-  const bin = toBrightMask(ctx, w, h, clamp(brightPercentile, 0.5, 0.98));
+  // 輝度ベースのマスク作成。パーセンタイルを上げることで、ハロー（光の漏れ）を排除し、
+  // チューブの芯の部分だけを抽出して線長を測る。
+  const bin = toBrightMask(ctx, w, h, clamp(brightPercentile, 0.8, 0.99));
   const bbox = computeBBox(bin, w, h);
   if (!bbox) {
     return { bboxWidthPx: 0, bboxHeightPx: 0, skeletonLengthPx: 0, tubeLengthCm: 0 };
@@ -307,13 +309,19 @@ export async function estimateTubeLengthCmFromNeonPhoto({
   const lenPx = skeletonLengthPx(skel, w, h);
 
   const widthMm = clamp(targetWidthMm, 200, 2000);
-  // 基準は「アクリル板の外寸（全体幅）」= targetWidthMm
-  // 画像からアクリル板の外寸幅(px)を推定する。
-  // 方針: 四隅スタンドオフ金具は暗い円として写りやすいので、各コーナー領域の最暗点を拾い、横幅を推定。
-  const panelWidthPx = estimatePanelWidthPxFromStandoffs(ctx, w, h) ?? Math.round(w * 0.9);
+  
+  // アクリルパネルの幅(px)を推定。
+  // AI生成画像の場合、アクリルが画像幅いっぱいに広がることが多いので、
+  // 金具検出に失敗した場合は画像幅の95%程度をアクリル幅として仮定する。
+  const estimatedPanelPx = estimatePanelWidthPxFromStandoffs(ctx, w, h);
+  const panelWidthPx = estimatedPanelPx ?? Math.round(w * 0.95);
+  
   const mmPerPx = widthMm / Math.max(1, panelWidthPx);
   const tubeLengthMm = lenPx * mmPerPx;
-  const tubeLengthCm = tubeLengthMm / 10;
+  
+  // 補正係数: 写真から抽出した線長は、細かなノイズや二重線化で過大になりやすいため、
+  // 経験的な補正（0.8倍程度）をかける。
+  const tubeLengthCm = (tubeLengthMm / 10) * 0.8;
 
   return {
     bboxWidthPx: bbox.width,

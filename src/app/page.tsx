@@ -571,10 +571,10 @@ export default function Home() {
                   ライセンス入力
                 </button>
               )}
-              <nav className="hidden md:flex space-x-8">
-                <a href="#" className="text-gray-500 hover:text-gray-900">使い方</a>
-                <a href="#" className="text-gray-500 hover:text-gray-900">お問い合わせ</a>
-              </nav>
+            <nav className="hidden md:flex space-x-8">
+              <a href="#" className="text-gray-500 hover:text-gray-900">使い方</a>
+              <a href="#" className="text-gray-500 hover:text-gray-900">お問い合わせ</a>
+            </nav>
             </div>
           </div>
         </div>
@@ -656,11 +656,11 @@ export default function Home() {
           {/* 右側: 結果表示 */}
           <div>
             {!showRandomResults ? (
-              <ResultDisplay
-                originalImage={uploadedImage}
-                processedImage={processedImage}
-                isProcessing={isProcessing}
-                apiResponseInfo={apiResponseInfo}
+            <ResultDisplay
+              originalImage={uploadedImage}
+              processedImage={processedImage}
+              isProcessing={isProcessing}
+              apiResponseInfo={apiResponseInfo}
                 onChangeLighting={handleChangeLighting}
                 currentSignboardType={selectedSignboardType}
                 onExtractSignboard={handleExtractSignboard}

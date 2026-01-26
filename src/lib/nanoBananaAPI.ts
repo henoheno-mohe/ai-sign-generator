@@ -218,14 +218,14 @@ export async function callNanoBananaAPI(
     // partsを構築：画像を最初に、テキストを最後に
     const parts = [
       ...images.map(img => ({
-        inline_data: {
-          mime_type: "image/jpeg",
+            inline_data: {
+              mime_type: "image/jpeg",
           data: img
-        }
+            }
       })),
-      {
-        text: englishPrompt
-      }
+          {
+            text: englishPrompt
+          }
     ];
     
     const requestBody = {
@@ -363,8 +363,8 @@ export async function callNanoBananaAPI(
           // テキストレスポンスのみの場合、フォールバック処理
           debugLog('テキストレスポンスのみ、画像編集フォールバックを実行');
           return await enhancedMockAPI(imageBase64, textResponse, englishPrompt);
-        }
       }
+    }
     }
     
     // 最後のフォールバック: 高度なモックAPIで画像編集を実行
@@ -848,17 +848,17 @@ Elements to reference from Image 2's signboard:
 
 Color adjustment:
 - Use `;
-
-    // 色テーマの検出と変換
-    if (japanesePrompt.includes('温かみのある')) {
+  
+  // 色テーマの検出と変換
+  if (japanesePrompt.includes('温かみのある')) {
       englishPrompt += themeTranslations.warm;
-    } else if (japanesePrompt.includes('清潔感のある')) {
+  } else if (japanesePrompt.includes('清潔感のある')) {
       englishPrompt += themeTranslations.clean;
-    } else if (japanesePrompt.includes('高級感のある')) {
+  } else if (japanesePrompt.includes('高級感のある')) {
       englishPrompt += themeTranslations.luxury;
-    } else if (japanesePrompt.includes('親しみやすい')) {
+  } else if (japanesePrompt.includes('親しみやすい')) {
       englishPrompt += themeTranslations.friendly;
-    } else if (japanesePrompt.includes('信頼感のある')) {
+  } else if (japanesePrompt.includes('信頼感のある')) {
       englishPrompt += themeTranslations.trust;
     }
 

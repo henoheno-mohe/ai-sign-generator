@@ -1,4 +1,5 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/studio/page": "app/studio/page.js"
+  "/api/neon/generate/route": "app/api/neon/generate/route.js",
+  "/studio/v2/page": "app/studio/v2/page.js"
 }

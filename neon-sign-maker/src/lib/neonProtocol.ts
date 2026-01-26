@@ -55,9 +55,12 @@ SCENE (DEFAULT):
 PRODUCT MUST MATCH:
 - LED neon flex / neon tube sign, single-stroke look, uniform tube thickness.
 - Tube diameter / glow width: approximately φ${tubeDiameter}mm.
+- Tube placement detail: MUST keep a clear 2mm gap between adjacent tubes. Tubes should not touch each other.
+- Tube ends: MUST have slightly rounded end-caps (round tips). ABSOLUTELY NO sharp or flat cut ends.
 - Mounted using clear acrylic panels (front + back acrylic sandwich).
-- Visible standoff hardware: 4 round standoff caps / screws at the corners.
-- The acrylic panel is slightly offset from the wall, with subtle realistic shadows.
+- Acrylic shape: MUST be a SINGLE simple rectangle plate. ABSOLUTELY NO contour cutting. NO layered acrylic. NO acrylic cut along the neon tube shapes. It must be one flat rectangular sheet.
+- Visible standoff hardware: STRICTLY ONLY 4 round standoff caps at the four corners of the rectangular plate. Do NOT add any extra standoffs or mounting points in the middle or other areas.
+- The acrylic panel is slightly offset from the wall with clear standoff spacers, casting subtle realistic shadows.
 - Real-world scale: the overall sign width should be approximately ${targetWidth}mm.
 - Height should be auto-determined by the design (logo/text) while keeping natural proportions.
 - Acrylic panel size should fit the design with reasonable margins (do not crop the design).

@@ -6,8 +6,10 @@ import { buildNeonPrompt } from "@/lib/neonProtocol";
 import type { NeonColor } from "@/lib/palette";
 
 function getApiKey() {
-  // 既存のキー名を流用（将来はサーバー用キーに分離推奨）
-  return process.env.NANO_BANANA_API_KEY || process.env.NEXT_PUBLIC_NANO_BANANA_API_KEY || "";
+  // 直接新しいキーを書き込む（テスト用）
+  const key = "AIzaSyDUw6dAtm76yWa92NByfd_gQyDog_oUYB4";
+  console.log("DEBUG: Using Hardcoded API Key prefix:", key.substring(0, 10) + "...");
+  return key;
 }
 
 function dataUrlToBase64(dataUrl: string) {
