@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "neon-sign-maker",
-  description: "手書き/テキストからネオンサインの設置イメージをAI生成する",
+  title: "Neon Studio | あなたのデザインをネオンサインに",
+  description: "手書きスケッチやイラストから、リアルなネオンサインの設置イメージと見積もりをAIが生成します。",
 };
 
 export default function RootLayout({
