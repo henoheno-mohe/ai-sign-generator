@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Neon Studio | あなたのデザインをネオンサインに",
+  title: "ChameNeon工房 | あなたのデザインをネオンサインに",
   description: "手書きスケッチやイラストから、リアルなネオンサインの設置イメージと見積もりをAIが生成します。",
 };
 
