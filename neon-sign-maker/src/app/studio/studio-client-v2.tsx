@@ -27,6 +27,29 @@ export default function StudioClientV2() {
   const [aiError, setAiError] = React.useState<string | null>(null);
   const [tubeLengthCm, setTubeLengthCm] = React.useState<number | null>(null);
 
+  const handleOrder = () => {
+    if (!aiImageDataUrl) return;
+
+    const baseContactUrl = "https://chameneon.base.shop/contact";
+    const colorNames = selectedColors.map(c => c.name).join("、");
+    const estimatedPrice = priceYenExTax ? Math.round(priceYenExTax * 1.1) : 0;
+    
+    const message = `【AI見積もり依頼】
+以下の内容で制作を検討しています。
+
+■見積もり内容
+・横幅: ${widthMm}mm
+・選択色: ${colorNames}
+・推定チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : "解析中"}cm
+・概算お見積もり: ¥${estimatedPrice.toLocaleString()}(税込)
+
+※AIスタジオで生成された画像を確認しました。詳細の打ち合わせをお願いします。
+`;
+
+    const url = `${baseContactUrl}?message=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
   const canGenerate = Boolean(sketchDataUrl);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -82,7 +105,7 @@ export default function StudioClientV2() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-300 to-fuchsia-300 shadow-[0_0_15px_rgba(165,243,252,0.5)]" />
-            <div className="text-sm font-bold tracking-wide">neon-sign-maker</div>
+            <div className="text-sm font-bold tracking-wide">ChameNeon工房</div>
           </div>
           <nav className="hidden items-center gap-6 text-sm text-zinc-200 sm:flex">
             <a className="text-white underline decoration-emerald-300 underline-offset-8" href="#studio">
@@ -91,16 +114,17 @@ export default function StudioClientV2() {
             <a className="hover:text-white" href="#examples">
               制作事例
             </a>
-            <a className="hover:text-white" href="#contact">
+            <a className="hover:text-white" href="https://chameneon.base.shop/contact" target="_blank">
               お問い合わせ
             </a>
           </nav>
-          <a
-            href="#order"
-            className="rounded-full bg-emerald-200 px-4 py-2 text-sm font-bold text-black hover:bg-emerald-100 transition-colors"
+          <button
+            onClick={handleOrder}
+            className="rounded-full bg-emerald-200 px-4 py-2 text-sm font-bold text-black hover:bg-emerald-100 transition-colors disabled:opacity-50"
+            disabled={!aiImageDataUrl}
           >
             注文
-          </a>
+          </button>
         </div>
       </div>
 
@@ -400,6 +424,7 @@ export default function StudioClientV2() {
                     <div className="mt-8">
                       <button
                         type="button"
+                        onClick={handleOrder}
                         disabled={isGenerating || isEstimating || !aiImageDataUrl}
                         className="w-full rounded-2xl bg-[#2d7a71] py-5 text-base font-black text-white hover:bg-[#24635b] transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none"
                       >
