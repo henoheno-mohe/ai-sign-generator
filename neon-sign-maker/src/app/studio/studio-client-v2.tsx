@@ -55,7 +55,7 @@ export default function StudioClientV2() {
 
   const priceYenExTax = tubeLengthCm == null ? null : estimatePriceYenExTaxFromTubeLength(tubeLengthCm, FIXED_YEN_PER_CM_TUBE);
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (isAutoColor: boolean = false) => {
     if (!canGenerate || isGenerating) return;
 
     setIsGenerating(true);
@@ -72,7 +72,8 @@ export default function StudioClientV2() {
         body: JSON.stringify({
           sketchDataUrl,
           text: "", // V2では画像メインのため空
-          colors: selectedColors,
+          colors: isAutoColor ? [] : selectedColors,
+          isAutoColor,
           widthMm,
           tubeDiameter,
         }),
@@ -320,11 +321,11 @@ export default function StudioClientV2() {
                 </div>
 
                 {/* CTA */}
-                <div className="pt-4">
+                <div className="pt-4 space-y-3">
                   <button
                     type="button"
                     disabled={!canGenerate || selectedColors.length === 0 || isGenerating}
-                    onClick={handleGenerate}
+                    onClick={() => handleGenerate(false)}
                     className={[
                       "w-full rounded-full py-5 text-lg font-black transition-all shadow-xl relative overflow-hidden",
                       !canGenerate || selectedColors.length === 0 || isGenerating
@@ -338,9 +339,24 @@ export default function StudioClientV2() {
                         AI生成中...
                       </span>
                     ) : (
-                      "デザイン生成 ＆ お見積もり"
+                      "選んだ色でデザイン生成"
                     )}
                   </button>
+
+                  <button
+                    type="button"
+                    disabled={!canGenerate || isGenerating}
+                    onClick={() => handleGenerate(true)}
+                    className={[
+                      "w-full rounded-full py-4 text-base font-bold transition-all border-2 relative overflow-hidden",
+                      !canGenerate || isGenerating
+                        ? "border-zinc-200 text-zinc-300 cursor-not-allowed"
+                        : "border-emerald-600 text-emerald-700 hover:bg-emerald-50 shadow-sm",
+                    ].join(" ")}
+                  >
+                    {isGenerating ? "AIが考え中..." : "✨ AIにおまかせで生成（色はAIが提案）"}
+                  </button>
+
                   {aiError && (
                     <p className="mt-3 text-sm text-center text-rose-500 font-bold">{aiError}</p>
                   )}

@@ -29,18 +29,34 @@ export function buildNeonPrompt({
   background,
   widthMm,
   tubeDiameter,
+  isAutoColor = false,
 }: {
   userText: string;
-  colors: NeonColor[]; // 1..5
+  colors: NeonColor[]; // used if isAutoColor is false
   background: BackgroundTemplate;
   widthMm: number; // target overall width in mm
   tubeDiameter: TubeDiameter;
+  isAutoColor?: boolean;
 }) {
   const text = userText.trim();
-  const colorList = colors
-    .slice(0, 5)
-    .map((c, i) => `- Color ${i + 1}: ${c.name} (${c.hex})`)
-    .join("\n");
+  
+  let colorInstruction = "";
+  if (isAutoColor) {
+    colorInstruction = `COLOR RULES:
+- CHOOSE the best matching colors (1 to 5 colors) for this design from the provided palette below.
+- Do NOT use colors outside of this palette.
+- Aim for a visually appealing and balanced color scheme that fits the sketch's intent.
+- PALETTE OPTIONS:
+${NEON_PALETTE_14.map(c => `- ${c.name} (${c.hex})`).join("\n")}`;
+  } else {
+    const colorList = colors
+      .slice(0, 5)
+      .map((c, i) => `- Color ${i + 1}: ${c.name} (${c.hex})`)
+      .join("\n");
+    colorInstruction = `COLOR RULES (use ONLY these colors; do not introduce any additional colors):
+${colorList}`;
+  }
+
   const targetWidth = Math.max(200, Math.min(2000, Math.round(widthMm)));
 
   // 画像生成モデル向けに、英語で「商品写真っぽさ」を強く指示（日本語だけより安定しやすい）
@@ -74,9 +90,7 @@ LIGHTING:
 - The neon tube MUST look emissive: bright luminous core + diffused outer glow.
 - IMPORTANT: Do NOT look like printed/painted lines on acrylic. It must be a real glowing tube.
 
-COLOR RULES (use ONLY these 3 colors; distribution is up to you):
-COLOR RULES (use ONLY these colors; do not introduce any additional colors):
-${colorList}
+${colorInstruction}
 
 BACKGROUND:
 - Use this wall style: ${background.name} (${background.description})

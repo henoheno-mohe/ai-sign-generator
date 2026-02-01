@@ -31,23 +31,27 @@ export async function POST(req: Request) {
     const sketchDataUrl: string | null | undefined = body?.sketchDataUrl ?? null;
     const text: string = body?.text ?? "";
     const colors: NeonColor[] = body?.colors;
+    const isAutoColor: boolean = body?.isAutoColor ?? false;
     const widthMm: number = body?.widthMm ?? 600;
     const tubeDiameter: 5 | 7 | 9 = body?.tubeDiameter ?? NEON_PROTOCOL_V1.defaultTubeDiameter;
 
-    if (!Array.isArray(colors) || colors.length < 1 || colors.length > 5) {
-      return NextResponse.json({ error: "色数の指定が不正です（1〜5色）" }, { status: 400 });
-    }
-    if (colors.some((c) => !c?.hex || !c?.name)) {
-      return NextResponse.json({ error: "色の指定が不正です" }, { status: 400 });
+    if (!isAutoColor) {
+      if (!Array.isArray(colors) || colors.length < 1 || colors.length > 5) {
+        return NextResponse.json({ error: "色数の指定が不正です（1〜5色）" }, { status: 400 });
+      }
+      if (colors.some((c) => !c?.hex || !c?.name)) {
+        return NextResponse.json({ error: "色の指定が不正です" }, { status: 400 });
+      }
     }
 
     const background = getDefaultBackground(); // MVP: 背景は1つ
     const prompt = buildNeonPrompt({
       userText: text,
-      colors,
+      colors: isAutoColor ? [] : colors,
       background,
       widthMm,
       tubeDiameter,
+      isAutoColor,
     });
 
     const parsed = sketchDataUrl ? dataUrlToBase64(sketchDataUrl) : null;
