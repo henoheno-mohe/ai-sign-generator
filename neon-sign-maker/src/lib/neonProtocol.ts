@@ -69,18 +69,17 @@ SCENE (DEFAULT):
 - The neon sign should be the main highlight light source, with soft warm room fill.
 
 PRODUCT MUST MATCH:
-- VIEWPOINT: STRICTLY FRONT VIEW (straight-on shot). ABSOLUTELY NO angled shots, NO perspective distortion, NO side views. The camera must be perfectly parallel to the sign.
-- LED neon flex / neon tube sign, single-stroke look, uniform tube thickness.
-- Tube diameter / glow width: approximately φ${tubeDiameter}mm.
-- Tube placement detail: MUST keep a clear 2mm gap between adjacent tubes. Tubes should not touch each other.
-- Tube ends: MUST have slightly rounded end-caps (round tips). ABSOLUTELY NO sharp or flat cut ends.
-- Mounted using clear acrylic panels (front + back acrylic sandwich).
-- Acrylic shape: MUST be a SINGLE, PERFECTLY FLAT RECTANGULAR PLATE. ABSOLUTELY NO contour cutting. DO NOT follow the neon tube's outline. The acrylic must be a simple, clean, non-cut rectangle with straight 90-degree corners.
-- Visible standoff hardware: STRICTLY ONLY 4 round standoff caps at the four corners of the rectangular plate. Do NOT add any extra standoffs or mounting points in the middle or other areas.
-- The acrylic panel is slightly offset from the wall with clear standoff spacers, casting subtle realistic shadows.
-- Real-world scale: the overall sign width should be approximately ${targetWidth}mm.
-- Height should be auto-determined by the design (logo/text) while keeping natural proportions.
-- Acrylic panel size should fit the design with reasonable margins (do not crop the design).
+- VIEWPOINT: STRICTLY FRONT VIEW (straight-on shot). ABSOLUTELY NO angled shots, NO perspective distortion.
+- ACRYLIC PANEL: MUST BE A SINGLE, FLAT, SIMPLE RECTANGULAR SHEET WITH STRAIGHT EDGES.
+- IMPORTANT: ABSOLUTELY NO CONTOUR CUTTING. The acrylic must NOT follow the shape of the neon tubes. It must be a simple non-cut rectangle with sharp 90-degree corners.
+- STANDOFF HARDWARE: STRICTLY AND ONLY 4 TOTAL. Place them EXACTLY at the four corners of the rectangular plate.
+- ABSOLUTELY FORBIDDEN: Do NOT add any standoffs in the middle, top-center, bottom-center, or anywhere else. Only 4 pieces at the corners.
+- TUBE STYLE: LED neon flex, single-stroke look, uniform φ${tubeDiameter}mm thickness.
+- TUBE DETAILS: Clear 2mm gap between adjacent tubes. Rounded end-caps at tips.
+- MOUNTING: Front + back acrylic sandwich. The acrylic is offset from the wall by the 4 standoffs.
+- Real-world scale: overall sign width approx ${targetWidth}mm.
+- Height: Auto-determined by design while keeping natural proportions.
+- Margin: The rectangular acrylic must be large enough to contain the design with a consistent border.
 
 LIGHTING:
 - Realistic neon glow + soft halo on the wall.
