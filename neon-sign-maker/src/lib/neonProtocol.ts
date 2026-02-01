@@ -1,5 +1,5 @@
 import type { BackgroundTemplate } from "@/lib/backgrounds";
-import type { NeonColor } from "@/lib/palette";
+import { NEON_PALETTE_14, type NeonColor } from "@/lib/palette";
 
 /**
  * Neon Sign Protocol (v1)
