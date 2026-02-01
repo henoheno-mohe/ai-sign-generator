@@ -105,7 +105,12 @@ export default function StudioClientV2() {
       <div className="sticky top-0 z-20 border-b border-white/10 bg-[#0b0f12]/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-300 to-fuchsia-300 shadow-[0_0_15px_rgba(165,243,252,0.5)]" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/logo.png" 
+              alt="ChameNeon Logo" 
+              className="h-9 w-9 rounded-full object-cover shadow-[0_0_15px_rgba(57,255,20,0.4)]" 
+            />
             <div className="text-sm font-bold tracking-wide">ChameNeon工房</div>
           </div>
           <nav className="hidden items-center gap-6 text-sm text-zinc-200 sm:flex">
