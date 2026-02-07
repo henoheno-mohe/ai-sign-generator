@@ -30,24 +30,33 @@ export default function StudioClientV2() {
   const handleOrder = () => {
     if (!aiImageDataUrl) return;
 
-    const baseContactUrl = "https://chameneon.base.shop/contact";
-    const colorNames = selectedColors.map(c => c.name).join("、");
-    const estimatedPrice = priceYenExTax ? Math.round(priceYenExTax * 1.1) : 0;
-    
-    const message = `【AI見積もり依頼】
+    const rawPrice = priceYenExTax ? Math.round(priceYenExTax * 1.1) : 0;
+    // 1,000円単位で四捨五入して丸める
+    const roundedPrice = Math.round(rawPrice / 1000) * 1000;
+
+    if (roundedPrice > 100000) {
+      // 10万円を超える場合はBASEのお問い合わせフォームへ
+      const baseContactUrl = "https://chameneon.base.shop/contact";
+      const colorNames = selectedColors.map(c => c.name).join("、");
+      const message = `【AI見積もり依頼（10万円超）】
 以下の内容で制作を検討しています。
 
 ■見積もり内容
 ・横幅: ${widthMm}mm
 ・選択色: ${colorNames}
 ・推定チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : "解析中"}cm
-・概算お見積もり: ¥${estimatedPrice.toLocaleString()}(税込)
+・概算お見積もり: ¥${roundedPrice.toLocaleString()}(税込)
 
-※AIスタジオで生成された画像を確認しました。詳細の打ち合わせをお願いします。
+※10万円を超える高額注文のため、直接詳細の打ち合わせをお願いします。
 `;
-
-    const url = `${baseContactUrl}?message=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+      const url = `${baseContactUrl}?message=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+    } else {
+      // 10万円以下の場合は、対応する金額の商品ページへ直接飛ばす
+      // ※事前にBASE側で「price-19000」などのURL（商品コード）で商品を作成しておく必要があります
+      const baseShopItemUrl = `https://chameneon.base.shop/items/price-${roundedPrice}`;
+      window.open(baseShopItemUrl, "_blank");
+    }
   };
 
   const canGenerate = Boolean(sketchDataUrl);
@@ -412,7 +421,7 @@ export default function StudioClientV2() {
                         <div className="mt-6 p-6 rounded-2xl bg-emerald-50/50 border border-emerald-100">
                           <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider">Estimated Price</p>
                           <p className="mt-2 text-4xl font-black text-[#2d7a71]">
-                            ¥{formatYen(Math.round(priceYenExTax * 1.1))}
+                            ¥{formatYen(Math.round((priceYenExTax * 1.1) / 1000) * 1000)}
                             <span className="text-sm ml-1 font-bold text-zinc-400">（税込）</span>
                           </p>
                           <div className="mt-4 pt-4 border-t border-emerald-100/50 space-y-2 text-zinc-600 font-bold">
@@ -462,16 +471,62 @@ export default function StudioClientV2() {
           </div>
         </div>
 
-        {/* Examples placeholder */}
-        <div id="examples" className="mt-20">
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-2xl font-black text-white tracking-tight">制作事例</h2>
-            <div className="h-px flex-1 bg-white/10" />
+        {/* Examples section */}
+        <div id="examples" className="mt-24">
+          <div className="flex flex-col items-center text-center mb-12">
+            <h2 className="text-3xl font-black text-white tracking-tighter">制作事例</h2>
+            <div className="mt-2 h-1.5 w-12 bg-emerald-400 rounded-full" />
+            <p className="mt-4 text-zinc-400 text-sm font-medium">手書きのラフが、ここまでリアルなネオンになります。</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="aspect-square bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center text-white/10 font-bold">SAMPLE</div>
-            ))}
+
+          <div className="grid gap-12">
+            {/* Example 1 */}
+            <div className="grid md:grid-cols-2 gap-6 items-center bg-white/5 p-6 rounded-[2.5rem] border border-white/10">
+              <div className="space-y-4">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-zinc-800 text-[10px] font-black uppercase tracking-widest text-zinc-400 border border-white/5">
+                  Step 01: Sketch
+                </span>
+                <div className="aspect-[4/3] rounded-2xl bg-white/10 flex items-center justify-center overflow-hidden border border-white/5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/examples/ex1-before.jpg" alt="Before Sketch" className="object-contain w-full h-full opacity-50 grayscale" 
+                    onError={(e) => (e.currentTarget.src = "https://placehold.jp/24/333333/ffffff/400x300.png?text=Sketch Image Here")} />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/20 text-[10px] font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/20">
+                  Step 02: AI Neon
+                </span>
+                <div className="aspect-[4/3] rounded-2xl bg-[#0b0f12] flex items-center justify-center overflow-hidden border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/examples/ex1-after.jpg" alt="After Neon" className="object-cover w-full h-full"
+                    onError={(e) => (e.currentTarget.src = "https://placehold.jp/24/10b981/ffffff/400x300.png?text=AI Generated Neon")} />
+                </div>
+              </div>
+            </div>
+
+            {/* Example 2 (Reverse) */}
+            <div className="grid md:grid-cols-2 gap-6 items-center bg-white/5 p-6 rounded-[2.5rem] border border-white/10">
+              <div className="space-y-4">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-zinc-800 text-[10px] font-black uppercase tracking-widest text-zinc-400 border border-white/5">
+                  Step 01: Sketch
+                </span>
+                <div className="aspect-[4/3] rounded-2xl bg-white/10 flex items-center justify-center overflow-hidden border border-white/5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/examples/ex2-before.jpg" alt="Before Sketch" className="object-contain w-full h-full opacity-50 grayscale"
+                    onError={(e) => (e.currentTarget.src = "https://placehold.jp/24/333333/ffffff/400x300.png?text=Sketch Image Here")} />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/20 text-[10px] font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/20">
+                  Step 02: AI Neon
+                </span>
+                <div className="aspect-[4/3] rounded-2xl bg-[#0b0f12] flex items-center justify-center overflow-hidden border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/examples/ex2-after.jpg" alt="After Neon" className="object-cover w-full h-full"
+                    onError={(e) => (e.currentTarget.src = "https://placehold.jp/24/10b981/ffffff/400x300.png?text=AI Generated Neon")} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
