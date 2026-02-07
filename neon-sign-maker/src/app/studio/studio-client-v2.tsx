@@ -9,6 +9,7 @@ import {
 } from "@/lib/quote";
 import { NEON_PROTOCOL_V1 } from "@/lib/neonProtocol";
 import { estimateTubeLengthCmFromNeonPhoto } from "@/lib/lineLength";
+import { getBaseItemUrl } from "@/lib/baseItems";
 
 export default function StudioClientV2() {
   const [sketchDataUrl, setSketchDataUrl] = React.useState<string | null>(null);
@@ -31,8 +32,9 @@ export default function StudioClientV2() {
     if (!aiImageDataUrl) return;
 
     const rawPrice = priceYenExTax ? Math.round(priceYenExTax * 1.1) : 0;
-    // 1,000円単位で四捨五入して丸める
-    const roundedPrice = Math.round(rawPrice / 1000) * 1000;
+    // 最低価格を18,000円に設定し、1,000円単位で丸める
+    const finalPrice = Math.max(rawPrice, 18000);
+    const roundedPrice = Math.round(finalPrice / 1000) * 1000;
 
     if (roundedPrice > 100000) {
       // 10万円を超える場合はBASEのお問い合わせフォームへ
@@ -53,9 +55,16 @@ export default function StudioClientV2() {
       window.open(url, "_blank");
     } else {
       // 10万円以下の場合は、対応する金額の商品ページへ直接飛ばす
-      // ※事前にBASE側で「price-19000」などのURL（商品コード）で商品を作成しておく必要があります
-      const baseShopItemUrl = `https://chameneon.base.shop/items/price-${roundedPrice}`;
-      window.open(baseShopItemUrl, "_blank");
+      const targetUrl = getBaseItemUrl(roundedPrice);
+      
+      if (targetUrl) {
+        window.open(targetUrl, "_blank");
+      } else {
+        // 対応するIDがない場合は、安全策としてお問い合わせフォームへ（メッセージ付き）
+        const baseContactUrl = "https://chameneon.base.shop/contact";
+        const message = `【購入希望】見積もり金額 ¥${roundedPrice.toLocaleString()} の決済用ページを希望します。\n(横幅: ${widthMm}mm / チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : ""}cm)`;
+        window.open(`${baseContactUrl}?message=${encodeURIComponent(message)}`, "_blank");
+      }
     }
   };
 
@@ -421,7 +430,7 @@ export default function StudioClientV2() {
                         <div className="mt-6 p-6 rounded-2xl bg-emerald-50/50 border border-emerald-100">
                           <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider">Estimated Price</p>
                           <p className="mt-2 text-4xl font-black text-[#2d7a71]">
-                            ¥{formatYen(Math.round((priceYenExTax * 1.1) / 1000) * 1000)}
+                            ¥{formatYen(Math.max(Math.round((priceYenExTax * 1.1) / 1000) * 1000, 18000))}
                             <span className="text-sm ml-1 font-bold text-zinc-400">（税込）</span>
                           </p>
                           <div className="mt-4 pt-4 border-t border-emerald-100/50 space-y-2 text-zinc-600 font-bold">
