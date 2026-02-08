@@ -367,7 +367,12 @@ export default function StudioClientV2() {
                             title={c.name}
                           >
                             {isOn && (
-                              <span className="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] font-black text-lg">
+                              <span className={[
+                                "font-black text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]",
+                                ["cool-white-8000k", "off-white-6000k", "warm-white-4000k", "lamp-orange-3000k", "lemon-yellow"].includes(c.id)
+                                  ? "text-black/80"
+                                  : "text-white"
+                              ].join(" ")}>
                                 ✓
                               </span>
                             )}
