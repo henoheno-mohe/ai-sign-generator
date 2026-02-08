@@ -27,15 +27,54 @@ export default function StudioClientV2() {
   const [aiImageDataUrl, setAiImageDataUrl] = React.useState<string | null>(null);
   const [aiError, setAiError] = React.useState<string | null>(null);
   const [tubeLengthCm, setTubeLengthCm] = React.useState<number | null>(null);
+  const [userEmail, setUserEmail] = React.useState<string>("");
 
-  const handleOrder = () => {
+  const handleDownload = () => {
+    if (!aiImageDataUrl) return;
+    const link = document.createElement("a");
+    link.href = aiImageDataUrl;
+    link.download = `ChameNeon-Design-${widthMm}mm.png`;
+    link.click();
+  };
+
+  const isEmailValid = userEmail.length > 0 && userEmail.includes("@") && userEmail.includes(".");
+
+  const handleOrder = async () => {
     if (!aiImageDataUrl) return;
 
+    if (!isEmailValid) {
+      alert("有効なメールアドレスを入力してください。\n（デザインの保存と確認メール送信に必要です）");
+      return;
+    }
+
     const rawPrice = priceYenExTax ? Math.round(priceYenExTax * 1.1) : 0;
-    // 最低価格を18,000円に設定し、1,000円単位で丸める
     const finalPrice = Math.max(rawPrice, 18000);
     const roundedPrice = Math.round(finalPrice / 1000) * 1000;
 
+    const confirmMessage = `この内容で注文（決済ページへ移動）してよろしいですか？\n\n概算金額: ¥${roundedPrice.toLocaleString()} (税込)\n\n※入力されたメールアドレスへ、このデザイン画像の保存URLをお送りします。`;
+    const ok = window.confirm(confirmMessage);
+    if (!ok) return;
+
+    // 1. サーバー側に通知（Blob保存 & メール送信）
+    try {
+      await fetch("/api/order/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imageDataUrl: aiImageDataUrl,
+          userEmail,
+          widthMm,
+          tubeLengthCm: tubeLengthCm ? Math.round(tubeLengthCm) : 0,
+          estimatedPrice: roundedPrice,
+          selectedColors,
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to notify order:", e);
+      // 通知失敗しても決済には進ませる（機会損失を防ぐ）
+    }
+
+    // 2. BASEへ遷移
     if (roundedPrice > 100000) {
       // 10万円を超える場合はBASEのお問い合わせフォームへ
       const baseContactUrl = "https://chameneon.base.shop/contact";
@@ -48,6 +87,7 @@ export default function StudioClientV2() {
 ・選択色: ${colorNames}
 ・推定チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : "解析中"}cm
 ・概算お見積もり: ¥${roundedPrice.toLocaleString()}(税込)
+・連絡先メール: ${userEmail}
 
 ※10万円を超える高額注文のため、直接詳細の打ち合わせをお願いします。
 `;
@@ -62,7 +102,7 @@ export default function StudioClientV2() {
       } else {
         // 対応するIDがない場合は、安全策としてお問い合わせフォームへ（メッセージ付き）
         const baseContactUrl = "https://chameneon.base.shop/contact";
-        const message = `【購入希望】見積もり金額 ¥${roundedPrice.toLocaleString()} の決済用ページを希望します。\n(横幅: ${widthMm}mm / チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : ""}cm)`;
+        const message = `【購入希望】見積もり金額 ¥${roundedPrice.toLocaleString()} の決済用ページを希望します。\n(横幅: ${widthMm}mm / チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : ""}cm)\n連絡先: ${userEmail}`;
         window.open(`${baseContactUrl}?message=${encodeURIComponent(message)}`, "_blank");
       }
     }
@@ -144,8 +184,9 @@ export default function StudioClientV2() {
           </nav>
           <button
             onClick={handleOrder}
-            className="rounded-full bg-emerald-200 px-4 py-2 text-sm font-bold text-black hover:bg-emerald-100 transition-colors disabled:opacity-50"
-            disabled={!aiImageDataUrl}
+            className="rounded-full bg-emerald-200 px-4 py-2 text-sm font-bold text-black hover:bg-emerald-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            disabled={!aiImageDataUrl || !isEmailValid}
+            title={!isEmailValid ? "メールアドレスを入力してください" : ""}
           >
             注文
           </button>
@@ -406,13 +447,22 @@ export default function StudioClientV2() {
                         </p>
                       </div>
                     ) : aiImageDataUrl && (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={aiImageDataUrl}
-                        alt="作成結果"
-                        className="block h-auto w-full"
-                        style={{ maxHeight: "75vh", objectFit: "contain" }}
-                      />
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={aiImageDataUrl}
+                          alt="作成結果"
+                          className="block h-auto w-full"
+                          style={{ maxHeight: "75vh", objectFit: "contain" }}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleDownload}
+                          className="absolute bottom-4 right-4 rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-bold text-white hover:bg-white/30 transition-colors"
+                        >
+                          画像を保存する
+                        </button>
+                      </>
                     )}
                   </div>
 
@@ -460,16 +510,26 @@ export default function StudioClientV2() {
                       ) : null}
                     </div>
                     
-                    <div className="mt-8">
+                    <div className="mt-8 space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-bold text-zinc-500 ml-1">メールアドレス（デザイン保存用）</label>
+                        <input
+                          type="email"
+                          placeholder="example@mail.com"
+                          value={userEmail}
+                          onChange={(e) => setUserEmail(e.target.value)}
+                          className="w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={handleOrder}
-                        disabled={isGenerating || isEstimating || !aiImageDataUrl}
-                        className="w-full rounded-2xl bg-[#2d7a71] py-5 text-base font-black text-white hover:bg-[#24635b] transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none"
+                        disabled={isGenerating || isEstimating || !aiImageDataUrl || !isEmailValid}
+                        className="w-full rounded-2xl bg-[#2d7a71] py-5 text-base font-black text-white hover:bg-[#24635b] transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none disabled:cursor-not-allowed"
                       >
-                        この内容で注文する
+                        {!isEmailValid && aiImageDataUrl ? "メールを入力して注文へ" : "この内容で注文する"}
                       </button>
-                      <p className="mt-4 text-center text-[10px] text-zinc-400 font-bold">
+                      <p className="text-center text-[10px] text-zinc-400 font-bold">
                         （外部サイトへ移動します）
                       </p>
                     </div>
