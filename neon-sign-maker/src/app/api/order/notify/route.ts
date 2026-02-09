@@ -81,7 +81,7 @@ export async function POST(req: Request) {
     // 4. カメネオン工房（管理者）へ通知メール
     await resend.emails.send({
       from: "ChameNeon工房システム <system@chameneon.jp>",
-      to: "info@chameneon.jp", // 管理者の受信アドレス
+      to: "admin@chameneon.jp", // 管理者のメインアドレス
       subject: `【新規デザイン保存】${userEmail} 様`,
       html: `
         <h3>新規のデザイン保存・見積もりがありました。</h3>

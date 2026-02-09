@@ -28,6 +28,7 @@ export default function StudioClientV2() {
   const [aiError, setAiError] = React.useState<string | null>(null);
   const [tubeLengthCm, setTubeLengthCm] = React.useState<number | null>(null);
   const [userEmail, setUserEmail] = React.useState<string>("");
+  const [isOrdering, setIsOrdering] = React.useState(false);
 
   const handleDownload = () => {
     if (!aiImageDataUrl) return;
@@ -40,7 +41,7 @@ export default function StudioClientV2() {
   const isEmailValid = userEmail.length > 0 && userEmail.includes("@") && userEmail.includes(".");
 
   const handleOrder = async () => {
-    if (!aiImageDataUrl) return;
+    if (!aiImageDataUrl || isOrdering) return;
 
     if (!isEmailValid) {
       alert("有効なメールアドレスを入力してください。\n（デザインの保存と確認メール送信に必要です）");
@@ -55,30 +56,14 @@ export default function StudioClientV2() {
     const ok = window.confirm(confirmMessage);
     if (!ok) return;
 
-    // 1. サーバー側に通知（Blob保存 & メール送信）
-    try {
-      await fetch("/api/order/notify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          imageDataUrl: aiImageDataUrl,
-          userEmail,
-          widthMm,
-          tubeLengthCm: tubeLengthCm ? Math.round(tubeLengthCm) : 0,
-          estimatedPrice: roundedPrice,
-          selectedColors,
-        }),
-      });
-    } catch (e) {
-      console.error("Failed to notify order:", e);
-      // 通知失敗しても決済には進ませる（機会損失を防ぐ）
-    }
+    setIsOrdering(true);
 
-    // 2. BASEへ遷移
+    // BASEの遷移先を先に決定
+    let targetUrl = "";
+    const colorNames = selectedColors.map(c => c.name).join("、");
+    const baseContactUrl = "https://chameneon.base.shop/contact";
+
     if (roundedPrice > 100000) {
-      // 10万円を超える場合はBASEのお問い合わせフォームへ
-      const baseContactUrl = "https://chameneon.base.shop/contact";
-      const colorNames = selectedColors.map(c => c.name).join("、");
       const message = `【AI見積もり依頼（10万円超）】
 以下の内容で制作を検討しています。
 
@@ -88,24 +73,38 @@ export default function StudioClientV2() {
 ・推定チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : "解析中"}cm
 ・概算お見積もり: ¥${roundedPrice.toLocaleString()}(税込)
 ・連絡先メール: ${userEmail}
-
-※10万円を超える高額注文のため、直接詳細の打ち合わせをお願いします。
 `;
-      const url = `${baseContactUrl}?message=${encodeURIComponent(message)}`;
-      window.open(url, "_blank");
+      targetUrl = `${baseContactUrl}?message=${encodeURIComponent(message)}`;
     } else {
-      // 10万円以下の場合は、対応する金額の商品ページへ直接飛ばす
-      const targetUrl = getBaseItemUrl(roundedPrice);
-      
-      if (targetUrl) {
-        window.open(targetUrl, "_blank");
+      const baseItemUrl = getBaseItemUrl(roundedPrice);
+      if (baseItemUrl) {
+        targetUrl = baseItemUrl;
       } else {
-        // 対応するIDがない場合は、安全策としてお問い合わせフォームへ（メッセージ付き）
-        const baseContactUrl = "https://chameneon.base.shop/contact";
         const message = `【購入希望】見積もり金額 ¥${roundedPrice.toLocaleString()} の決済用ページを希望します。\n(横幅: ${widthMm}mm / チューブ長: ${tubeLengthCm ? Math.round(tubeLengthCm) : ""}cm)\n連絡先: ${userEmail}`;
-        window.open(`${baseContactUrl}?message=${encodeURIComponent(message)}`, "_blank");
+        targetUrl = `${baseContactUrl}?message=${encodeURIComponent(message)}`;
       }
     }
+
+    // 1. サーバー側に通知（メール送信はバックグラウンドで開始し、待機しない）
+    // await を外すことで、メール送信の完了を待たずに次に進めるようにします
+    fetch("/api/order/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        imageDataUrl: aiImageDataUrl,
+        userEmail,
+        widthMm,
+        tubeLengthCm: tubeLengthCm ? Math.round(tubeLengthCm) : 0,
+        estimatedPrice: roundedPrice,
+        selectedColors,
+      }),
+    }).catch(e => console.error("Failed to notify order:", e));
+
+    // 2. 即座にBASEへ遷移（ユーザーのアクション直後に実行することでブロックを防ぐ）
+    window.open(targetUrl, "_blank");
+    
+    // 少し待ってから状態を戻す
+    setTimeout(() => setIsOrdering(false), 2000);
   };
 
   const canGenerate = Boolean(sketchDataUrl);
@@ -185,10 +184,10 @@ export default function StudioClientV2() {
           <button
             onClick={handleOrder}
             className="rounded-full bg-emerald-200 px-4 py-2 text-sm font-bold text-black hover:bg-emerald-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            disabled={!aiImageDataUrl || !isEmailValid}
+            disabled={!aiImageDataUrl || !isEmailValid || isOrdering}
             title={!isEmailValid ? "メールアドレスを入力してください" : ""}
           >
-            注文
+            {isOrdering ? "移動中..." : "注文"}
           </button>
         </div>
       </div>
@@ -529,10 +528,19 @@ export default function StudioClientV2() {
                       <button
                         type="button"
                         onClick={handleOrder}
-                        disabled={isGenerating || isEstimating || !aiImageDataUrl || !isEmailValid}
+                        disabled={isGenerating || isEstimating || !aiImageDataUrl || !isEmailValid || isOrdering}
                         className="w-full rounded-2xl bg-[#2d7a71] py-5 text-base font-black text-white hover:bg-[#24635b] transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none disabled:cursor-not-allowed"
                       >
-                        {!isEmailValid && aiImageDataUrl ? "メールを入力して注文へ" : "この内容で注文する"}
+                        {isOrdering ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            決済へ移動中...
+                          </span>
+                        ) : !isEmailValid && aiImageDataUrl ? (
+                          "メールを入力して注文へ"
+                        ) : (
+                          "この内容で注文する"
+                        )}
                       </button>
                       <p className="text-center text-[10px] text-zinc-400 font-bold">
                         （外部サイトへ移動します）
