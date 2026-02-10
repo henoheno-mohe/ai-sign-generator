@@ -61,7 +61,7 @@ export default function StudioClientV2() {
     // BASEの遷移先を先に決定
     let targetUrl = "";
     const colorNames = selectedColors.map(c => c.name).join("、");
-    const baseContactUrl = "https://chameneon.base.shop/contact";
+    const baseContactUrl = "https://thebase.com/inquiry/chameneon-base-shop";
 
     if (roundedPrice > 100000) {
       const message = `【AI見積もり依頼（10万円超）】
@@ -177,7 +177,7 @@ export default function StudioClientV2() {
             <a className="hover:text-white" href="#examples">
               制作事例
             </a>
-            <a className="hover:text-white" href="https://chameneon.base.shop/contact" target="_blank">
+            <a className="hover:text-white" href="https://thebase.com/inquiry/chameneon-base-shop" target="_blank">
               お問い合わせ
             </a>
           </nav>
@@ -334,7 +334,7 @@ export default function StudioClientV2() {
                     <p className="text-lg font-extrabold text-zinc-900 tracking-tight">色を選ぶ（最大5色まで）</p>
                     <p className="text-sm font-bold text-zinc-500">選択中：{selectedColors.length}色</p>
                   </div>
-                  <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+                  <div className="mt-6 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-4">
                     {NEON_PALETTE_14.map((c) => {
                       const isOn = selectedColors.some((x) => x.id === c.id);
                       const glowStyle = {
@@ -542,8 +542,8 @@ export default function StudioClientV2() {
                           "この内容で注文する"
                         )}
                       </button>
-                      <p className="text-center text-[10px] text-zinc-400 font-bold">
-                        （外部サイトへ移動します）
+                      <p className="text-center text-[10px] text-zinc-400 font-bold leading-relaxed">
+                        ここから先は決済のため、<br className="sm:hidden" />提携ショップ（BASE）へ移動します
                       </p>
                     </div>
                   </div>
