@@ -74,11 +74,14 @@ PRODUCT MUST MATCH:
 - IMPORTANT: ABSOLUTELY NO CONTOUR CUTTING. The acrylic must NOT follow the shape of the neon tubes. It must be a simple non-cut rectangle with sharp 90-degree corners.
 - STANDOFF HARDWARE: STRICTLY AND ONLY 4 TOTAL. Place them EXACTLY at the four corners of the rectangular plate.
 - ABSOLUTELY FORBIDDEN: Do NOT add any standoffs in the middle, top-center, bottom-center, or anywhere else. Only 4 pieces at the corners.
-- TUBE STYLE: Choose the most appropriate mapping style based on the stroke thickness of the input sketch:
+- TUBE STYLE: LED neon flex, uniform φ${tubeDiameter}mm thickness.
+- PHYSICAL BENDING LIMITS: ABSOLUTELY NO sharp angles or tiny intricate details. Minimum bend radius is approx 15mm.
+- SIMPLIFICATION RULE: If the input design has very small or complex parts (like tiny fingers, toes, or sharp spikes), SIMPLIFY them into single, smooth, continuous curves that can be physically formed with a thick LED tube.
+- TUBE RENDERING: Choose the most appropriate mapping style based on the stroke thickness of the input sketch:
   1. SINGLE-LINE STYLE: For thin lines or script fonts, the neon tube should follow the center of each stroke.
   2. OUTLINE STYLE: For bold or thick text/shapes, the neon tube should trace the OUTLINE (contour) of the shape rather than fill it.
-  - The tube itself must always maintain a uniform φ${tubeDiameter}mm thickness regardless of the style.
-- TUBE DETAILS: Clear 2mm gap between adjacent tubes. Rounded end-caps at tips.
+- SPACING: Maintain a clear 3mm+ gap between adjacent tube segments to ensure a realistic look.
+- TUBE DETAILS: Tubes must look like physical objects with volume (3D rounded cylinders), not just glowing flat lines. Rounded end-caps at tips.
 - MOUNTING: Front + back acrylic sandwich. The acrylic is offset from the wall by the 4 standoffs.
 - Real-world scale: overall sign width approx ${targetWidth}mm.
 - Height: Auto-determined by design while keeping natural proportions.
