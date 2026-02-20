@@ -18,4 +18,3 @@ export function formatYen(n: number): string {
   return new Intl.NumberFormat("ja-JP").format(Math.round(n));
 }
 
-

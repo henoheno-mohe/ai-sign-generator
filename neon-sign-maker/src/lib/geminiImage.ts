@@ -104,4 +104,3 @@ export async function generateImageWithGemini({
   throw new Error("Maximum retries reached for Gemini API.");
 }
 
-

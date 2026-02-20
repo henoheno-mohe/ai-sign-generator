@@ -483,10 +483,10 @@ export default function StudioClientV2() {
                       ) : priceYenExTax != null ? (
                         <div className="mt-6 p-6 rounded-2xl bg-emerald-50/50 border border-emerald-100">
                           <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider">Estimated Price</p>
-                        <p className="mt-2 text-4xl font-black text-[#2d7a71]">
+                          <p className="mt-2 text-4xl font-black text-[#2d7a71]">
                             ¥{formatYen(Math.max(Math.round((priceYenExTax * 1.1) / 1000) * 1000, 28000))}
                             <span className="text-sm ml-1 font-bold text-zinc-400">（税込）</span>
-                        </p>
+                          </p>
                           <div className="mt-4 pt-4 border-t border-emerald-100/50 space-y-2 text-zinc-600 font-bold">
                             <p className="text-[11px] flex justify-between">
                               <span>横幅：{widthMm}mm</span>
@@ -615,3 +615,4 @@ export default function StudioClientV2() {
     </main>
   );
 }
+
