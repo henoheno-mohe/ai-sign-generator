@@ -41,6 +41,12 @@ export async function generateImageWithGemini({
       topP: 1,
       maxOutputTokens: 4096,
     },
+    safetySettings: [
+      { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+      { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+      { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+      { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+    ],
   };
 
   let retryCount = 0;
@@ -73,6 +79,7 @@ export async function generateImageWithGemini({
       const data = await resp.json();
       const candidate = data?.candidates?.[0];
       const partsOut = candidate?.content?.parts;
+      const finishReason = candidate?.finishReason || "UNKNOWN";
 
       let textOut = "";
       if (Array.isArray(partsOut)) {
@@ -91,7 +98,9 @@ export async function generateImageWithGemini({
         }
       }
       
-      const debugInfo = textOut ? ` AI Response: "${textOut.substring(0, 100)}..."` : "";
+      // 画像がなかった理由を具体的に表示
+      const safetyInfo = data?.promptFeedback?.blockReason ? `Blocked by: ${data.promptFeedback.blockReason}` : `Reason: ${finishReason}`;
+      const debugInfo = textOut ? ` AI Response: "${textOut.substring(0, 100)}..."` : ` [${safetyInfo}]`;
       throw new Error(`Gemini API did not return image data.${debugInfo}`);
     } catch (e) {
       if (retryCount >= maxRetries) {
