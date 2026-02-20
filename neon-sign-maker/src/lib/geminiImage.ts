@@ -91,7 +91,8 @@ export async function generateImageWithGemini({
         }
       }
       
-      throw new Error("Gemini API did not return image data.");
+      const debugInfo = textOut ? ` AI Response: "${textOut.substring(0, 100)}..."` : "";
+      throw new Error(`Gemini API did not return image data.${debugInfo}`);
     } catch (e) {
       if (retryCount >= maxRetries) {
         throw e;
