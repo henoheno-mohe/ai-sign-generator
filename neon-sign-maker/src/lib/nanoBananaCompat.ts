@@ -1,5 +1,5 @@
-// 2.0が「新規ユーザー不可」とのことなので、長期サポート版の 1.5 Flash を試します
+// 2026年現在の最も安定した画像生成モデル（Gemini 3.0 Flash Image）を指定します
 export const NANO_BANANA_IMAGE_API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-image:generateContent";
 
 
