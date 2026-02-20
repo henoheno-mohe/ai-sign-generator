@@ -1,5 +1,5 @@
-// 2026年最新の画像生成モデル（Gemini 3.0 Pro Image Preview）に戻します
+// 安定性の高い Gemini 2.0 Flash に一時的に変更して様子を見ます
 export const NANO_BANANA_IMAGE_API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
 
