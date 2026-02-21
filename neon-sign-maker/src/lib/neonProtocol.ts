@@ -91,6 +91,8 @@ LIGHTING:
 - HIGH-INTENSITY EMISSIVE GLOW.
 - The neon tubes must have a very bright (almost white) luminous core and a deep, saturated, vibrant outer glow.
 - ELECTRIC BRILLIANCE: The colors must be hyper-vivid, neon-gas-like, and highly saturated.
+- COLOR CONTRAST & DISTINCTNESS: Maintain clear separation and hue distinction between different colors (e.g., Red must look distinctly deep Red, and Orange must look distinctly Orange).
+- Do NOT let the intense glow wash out the unique character of each assigned color.
 - Soft, colored halo (light spill) onto the wall texture behind the sign.
 - NO dull or muted colors. Make the light look "plugged in" and powered on.
 - IMPORTANT: Do NOT look like printed/painted lines on acrylic. It must be a real glowing, three-dimensional LED flex tube.
