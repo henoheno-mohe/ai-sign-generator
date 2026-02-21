@@ -64,9 +64,9 @@ ${colorList}`;
 Generate a photorealistic product photo of an indoor neon sign installation (NOT a mockup illustration).
 
 SCENE (DEFAULT):
-- Night-time indoor scene.
-- Warm ambient lighting (approx 2700K–3000K). Cozy warm tone.
-- The neon sign should be the main highlight light source, with soft warm room fill.
+- Night-time indoor scene with dimmed ambient lights.
+- The neon sign must be the DOMINANT light source, casting a vibrant colored glow on the surrounding wall.
+- Deep, rich shadows in the room to make the neon colors pop.
 
 PRODUCT MUST MATCH:
 - VIEWPOINT: STRICTLY FRONT VIEW (straight-on shot). ABSOLUTELY NO angled shots, NO perspective distortion.
@@ -88,12 +88,13 @@ PRODUCT MUST MATCH:
 - Margin: The rectangular acrylic must be large enough to contain the design with a consistent border.
 
 LIGHTING:
-- Realistic neon glow + soft halo on the wall.
-- NO excessive lens flare, NO fake bokeh, keep it like a clean product photo.
-- Keep colors accurate and vivid, but not oversaturated.
-- Keep the wall and room lighting warm (night warm ambience), matching the scene requirements.
-- The neon tube MUST look emissive: bright luminous core + diffused outer glow.
-- IMPORTANT: Do NOT look like printed/painted lines on acrylic. It must be a real glowing tube.
+- HIGH-INTENSITY EMISSIVE GLOW.
+- The neon tubes must have a very bright (almost white) luminous core and a deep, saturated, vibrant outer glow.
+- ELECTRIC BRILLIANCE: The colors must be hyper-vivid, neon-gas-like, and highly saturated.
+- Soft, colored halo (light spill) onto the wall texture behind the sign.
+- NO dull or muted colors. Make the light look "plugged in" and powered on.
+- IMPORTANT: Do NOT look like printed/painted lines on acrylic. It must be a real glowing, three-dimensional LED flex tube.
+- Professional product photography lighting.
 
 ${colorInstruction}
 
