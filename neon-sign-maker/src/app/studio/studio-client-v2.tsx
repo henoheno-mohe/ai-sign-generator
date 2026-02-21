@@ -13,7 +13,7 @@ import { getBaseItemUrl } from "@/lib/baseItems";
 
 export default function StudioClientV2() {
   const [sketchDataUrl, setSketchDataUrl] = React.useState<string | null>(null);
-  const [widthMm, setWidthMm] = React.useState<number>(600);
+  const [widthMm, setWidthMm] = React.useState<number>(300);
 
   const [selectedColors, setSelectedColors] = React.useState<NeonColor[]>([
     NEON_PALETTE_14[0],
@@ -304,27 +304,46 @@ export default function StudioClientV2() {
             <div className="mt-5 rounded-2xl border border-black/10 bg-white px-5 py-8 shadow-sm">
               <div className="space-y-8">
                 {/* Size slider */}
-                <div>
+                <div className="rounded-2xl bg-zinc-50 border border-zinc-100 p-6 transition-all hover:border-emerald-200">
                   <div className="flex items-end justify-between gap-4">
-                    <p className="text-lg font-extrabold text-zinc-900 tracking-tight">希望サイズ選択（全体の横幅）</p>
-                    <p className="text-base font-bold text-emerald-700">{Math.round(widthMm)}mm</p>
+                    <div>
+                      <p className="text-lg font-extrabold text-zinc-900 tracking-tight flex items-center gap-2">
+                        希望サイズ選択（全体の横幅）
+                        <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-100 text-[10px] font-black text-emerald-700 animate-pulse">
+                          ここで調整
+                        </span>
+                      </p>
+                      <p className="mt-1 text-[11px] text-zinc-500 font-bold">設置場所に合わせてサイズを選んでください。金額が自動更新されます。</p>
+                    </div>
+                    <p className="text-2xl font-black text-emerald-700 tabular-nums">{Math.round(widthMm)}<span className="text-sm ml-0.5">mm</span></p>
                   </div>
-                  <input
-                    className="mt-4 w-full accent-emerald-600 h-2 bg-zinc-100 rounded-lg appearance-none cursor-pointer"
-                    type="range"
-                    min={200}
-                    max={1200}
-                    step={10}
-                    value={widthMm}
-                    disabled={isGenerating}
-                    onChange={(e) => {
-                      setWidthMm(Number(e.target.value));
-                    }}
-                  />
-                  <div className="mt-2 flex justify-between text-[11px] text-zinc-400 font-bold">
-                    <span>200mm</span>
-                    <span>700mm</span>
-                    <span>1200mm</span>
+                  <div className="relative mt-6 px-2">
+                    <input
+                      className="w-full accent-emerald-600 h-3 bg-zinc-200 rounded-lg appearance-none cursor-pointer"
+                      type="range"
+                      min={200}
+                      max={1200}
+                      step={10}
+                      value={widthMm}
+                      disabled={isGenerating}
+                      onChange={(e) => {
+                        setWidthMm(Number(e.target.value));
+                      }}
+                    />
+                    <div className="mt-3 flex justify-between text-[11px] text-zinc-400 font-bold">
+                      <span className="flex flex-col items-center gap-1">
+                        <span className="h-1.5 w-0.5 bg-zinc-300 rounded-full" />
+                        200mm
+                      </span>
+                      <span className="flex flex-col items-center gap-1">
+                        <span className="h-1.5 w-0.5 bg-zinc-300 rounded-full" />
+                        700mm
+                      </span>
+                      <span className="flex flex-col items-center gap-1">
+                        <span className="h-1.5 w-0.5 bg-zinc-300 rounded-full" />
+                        1200mm
+                      </span>
+                    </div>
                   </div>
                 </div>
 
