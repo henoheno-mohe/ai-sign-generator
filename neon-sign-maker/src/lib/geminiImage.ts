@@ -50,8 +50,8 @@ export async function generateImageWithGemini({
   };
 
   let retryCount = 0;
-  const maxRetries = 2;
-  const retryDelayMs = 2000;
+  const maxRetries = 3; // 2 -> 3 に増加
+  const retryDelayMs = 3000; // 2000 -> 3000 に増加
 
   while (retryCount <= maxRetries) {
     try {
