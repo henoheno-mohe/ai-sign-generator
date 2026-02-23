@@ -71,6 +71,9 @@ SCENE (DEFAULT):
 PRODUCT MUST MATCH:
 - VIEWPOINT: STRAIGHT-ON FRONT VIEW. No extreme angles.
 - ACRYLIC PANEL: A single, high-clarity transparent rectangular acrylic sheet.
+- MANDATORY LED TUBE CONSTRUCTION: EVERY single element of the design (lines, text, shapes, dots) MUST be represented by physical, glowing LED neon flex tubes.
+- NO PRINTING: Absolutely NO parts of the design should be printed, painted, or etched onto the acrylic. 
+- CONTINUOUS TUBES: All glowing elements must look like physical 3D cylinders (LED flex) attached to the surface of the acrylic.
 - EDGE GLOW: The straight-cut edges of the acrylic panel must catch the neon light and glow subtly in the same color as the tubes (edge-lighting effect).
 - STANDOFFS: EXACTLY 4 cylindrical silver/chrome metal standoff bolts, one at each corner. They must look like real hardware holding the panel off the wall.
 - TUBE STYLE: Realistic LED neon flex tubes with a circular cross-section (φ${tubeDiameter}mm).
