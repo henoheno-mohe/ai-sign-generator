@@ -36,28 +36,62 @@ export function buildNeonPrompt({
   let colorInstruction = "";
   if (isAutoColor) {
     colorInstruction = `COLOR RULES:
-- CHOOSE the most vibrant and matching colors from the provided palette.
-- PALETTE: ${NEON_PALETTE_14.map(c => c.name).join(", ")}`;
+- CHOOSE the best matching colors (1 to 5 colors) for this design from the provided palette below.
+- Do NOT use colors outside of this palette.
+- Aim for a visually appealing and balanced color scheme that fits the sketch's intent.
+- PALETTE OPTIONS:
+${NEON_PALETTE_14.map(c => `- ${c.name} (${c.hex})`).join("\n")}`;
   } else {
-    colorInstruction = `COLORS TO USE: ${colors.slice(0, 5).map(c => c.name).join(", ")}`;
+    const colorList = colors
+      .slice(0, 5)
+      .map((c, i) => `- Color ${i + 1}: ${c.name} (${c.hex})`)
+      .join("\n");
+    colorInstruction = `COLOR RULES (use ONLY these colors; do not introduce any additional colors):
+${colorList}`;
   }
 
-  // AIが理解しやすいようにシンプルで強力なプロンプトに再構築
-  return `High-quality product photograph of a custom LED neon sign installed on a ${background.name}.
+  const targetWidth = Math.max(200, Math.min(2000, Math.round(widthMm)));
 
-DESIGN RULES:
-- EVERY line and shape from the input must be rendered as a physical, 3D glowing LED neon tube (flex tube).
-- NO part of the design should be printed or painted; everything must be a luminous tube.
-- The sign is mounted on a single, flat, transparent rectangular acrylic panel.
-- There are exactly 4 silver standoff bolts, one at each corner of the rectangular panel.
+  // 初期のシンプルで強力なプロトコルを復旧
+  return `CRITICAL TASK:
+Generate a photorealistic product photo of an indoor neon sign installation (NOT a mockup illustration).
 
-LIGHTING & REALISM:
-- The neon tubes must have a brilliant, saturated glow with a bright emissive core.
-- A soft, colorful light spill (halo) should radiate from the tubes onto the wall behind.
-- Straight-on front view, professional product photography lighting, realistic textures.
-- The overall look should be clean, modern, and high-end, matching the quality of a professional signage factory.
+SCENE (DEFAULT):
+- Night-time indoor scene.
+- Warm ambient lighting (approx 2700K–3000K). Cozy warm tone.
+- The neon sign should be the main highlight light source, with soft warm room fill.
+
+PRODUCT MUST MATCH:
+- VIEWPOINT: STRICTLY FRONT VIEW (straight-on shot). ABSOLUTELY NO angled shots, NO perspective distortion.
+- ACRYLIC PANEL: MUST BE A SINGLE, FLAT, SIMPLE RECTANGULAR SHEET WITH STRAIGHT EDGES.
+- IMPORTANT: ABSOLUTELY NO CONTOUR CUTTING. The acrylic must NOT follow the shape of the neon tubes. It must be a simple non-cut rectangle with sharp 90-degree corners.
+- STANDOFF HARDWARE: STRICTLY AND ONLY 4 TOTAL. Place them EXACTLY at the four corners of the rectangular plate.
+- ABSOLUTELY FORBIDDEN: Do NOT add any standoffs in the middle, top-center, bottom-center, or anywhere else. Only 4 pieces at the corners.
+- TUBE STYLE: LED neon flex, uniform φ${tubeDiameter}mm thickness.
+- PHYSICAL BENDING LIMITS: ABSOLUTELY NO sharp angles or tiny intricate details. Minimum bend radius is approx 15mm.
+- SIMPLIFICATION RULE: If the input design has very small or complex parts, SIMPLIFY them into single, smooth, continuous curves that can be physically formed with a thick LED tube.
+- TUBE RENDERING: Choose the most appropriate mapping style:
+  1. SINGLE-LINE STYLE: For thin lines, the neon tube should follow the center of each stroke.
+  2. OUTLINE STYLE: For bold text/shapes, the neon tube should trace the OUTLINE (contour) of the shape.
+- TUBE DETAILS: Tubes must look like physical objects with volume (3D rounded cylinders).
+- MOUNTING: Front + back acrylic sandwich. The acrylic is offset from the wall by the 4 standoffs.
+- Real-world scale: overall sign width approx ${targetWidth}mm.
+
+LIGHTING:
+- Realistic neon glow + soft halo on the wall.
+- The neon tube MUST look emissive: bright luminous core + diffused outer glow.
+- Keep the wall and room lighting warm (night warm ambience).
 
 ${colorInstruction}
-${text ? `\nInclude this text in the design: "${text}"` : ""}
-`.trim();
+
+BACKGROUND:
+- Use this wall style: ${background.name} (${background.description})
+
+DO NOT:
+- Do not change the content/shape provided by the input.
+- Do not add extra objects (bulbs, random decorations, unrelated logos).
+
+OUTPUT:
+- One realistic installed neon sign photo on the wall.
+${text ? `\nTEXT (optional input, keep exact):\n${text}\n` : ""}`.trim();
 }
