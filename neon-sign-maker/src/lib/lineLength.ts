@@ -155,26 +155,12 @@ function zhangSuenThinning(binary: Binary, w: number, h: number): Binary {
 }
 
 function skeletonLengthPx(skel: Binary, w: number, h: number) {
-  let length = 0;
-  const sqrt2 = Math.SQRT2;
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const idx = y * w + x;
-      if (!skel[idx]) continue;
-      // count edges to avoid double counting: right, down, down-right, down-left
-      if (x + 1 < w && skel[y * w + (x + 1)]) length += 1;
-      if (y + 1 < h && skel[(y + 1) * w + x]) length += 1;
-      if (x + 1 < w && y + 1 < h && skel[(y + 1) * w + (x + 1)]) length += sqrt2;
-      if (x - 1 >= 0 && y + 1 < h && skel[(y + 1) * w + (x - 1)]) length += sqrt2;
-    }
+  let count = 0;
+  for (let i = 0; i < skel.length; i++) {
+    if (skel[i]) count++;
   }
-  // fallback if too sparse (e.g. single pixels), approximate by count
-  if (length < 1) {
-    let cnt = 0;
-    for (let i = 0; i < skel.length; i++) cnt += skel[i];
-    length = cnt;
-  }
-  return length;
+  // 補正係数: 全てが直線（1px）ではないため、斜め要素を考慮して1.1倍程度とする
+  return count * 1.1;
 }
 
 export async function estimateTubeLengthCmFromSketch({
@@ -275,7 +261,7 @@ function toBrightMask(
 export async function estimateTubeLengthCmFromNeonPhoto({
   imageDataUrl,
   targetWidthMm,
-  brightPercentile = 0.96, // より厳しく（発光の芯だけを拾うように）
+  brightPercentile = 0.98, // より厳しく（発光の芯だけを拾うように）
   maxDim = 1024,
 }: {
   imageDataUrl: string;
@@ -310,18 +296,16 @@ export async function estimateTubeLengthCmFromNeonPhoto({
 
   const widthMm = clamp(targetWidthMm, 200, 2000);
   
-  // アクリルパネルの幅(px)を推定。
-  // AI生成画像の場合、アクリルが画像幅いっぱいに広がることが多いので、
-  // 金具検出に失敗した場合は画像幅の95%程度をアクリル幅として仮定する。
-  const estimatedPanelPx = estimatePanelWidthPxFromStandoffs(ctx, w, h);
-  const panelWidthPx = estimatedPanelPx ?? Math.round(w * 0.95);
-  
-  const mmPerPx = widthMm / Math.max(1, panelWidthPx);
+  // スケール換算のロジックを刷新：
+  // ユーザーが指定した「横幅」はアクリルパネル全体の幅を指すことが多い。
+  // AI生成画像ではデザイン（ネオン部分）はパネルの約85%程度を占めると仮定し、
+  // デザインのピクセル幅（bbox.width）を「指定幅の85%」に対応させる。
+  const designWidthMm = widthMm * 0.85;
+  const mmPerPx = designWidthMm / Math.max(1, bbox.width);
   const tubeLengthMm = lenPx * mmPerPx;
   
-  // 補正係数: 写真から抽出した線長は、細かなノイズや二重線化で過大になりやすいため、
-  // 経験的な補正（0.8倍程度）をかける。
-  const tubeLengthCm = (tubeLengthMm / 10) * 0.8;
+  // センチメートル換算（補正係数なし。プロンプト改善とアルゴリズム修正で精度を上げる）
+  const tubeLengthCm = tubeLengthMm / 10;
 
   return {
     bboxWidthPx: bbox.width,
