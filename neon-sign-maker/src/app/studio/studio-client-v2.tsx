@@ -8,7 +8,7 @@ import {
   formatYen,
 } from "@/lib/quote";
 import { NEON_PROTOCOL_V1 } from "@/lib/neonProtocol";
-import { estimateTubeLengthCmFromNeonPhoto } from "@/lib/lineLength";
+import { estimateTubeLengthCmFromSketch } from "@/lib/lineLength";
 import { getBaseItemUrl } from "@/lib/baseItems";
 
 export default function StudioClientV2() {
@@ -142,9 +142,10 @@ export default function StudioClientV2() {
       setAiImageDataUrl(data.imageDataUrl);
       setIsEstimating(true);
 
-      // 2) 生成された写真からチューブ長を推定
-      const est = await estimateTubeLengthCmFromNeonPhoto({
-        imageDataUrl: data.imageDataUrl,
+      // 2) スケッチ（元画像）からチューブ長を推定
+      // これにより、AI生成画像の揺らぎに左右されず、一貫した見積もりが可能になる
+      const est = await estimateTubeLengthCmFromSketch({
+        sketchDataUrl: sketchDataUrl, // AI画像ではなく、ユーザーの元画像を使う
         targetWidthMm: widthMm,
       });
       setTubeLengthCm(est.tubeLengthCm);
