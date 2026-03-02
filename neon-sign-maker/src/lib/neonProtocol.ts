@@ -55,7 +55,8 @@ SCENE:
 
 PRODUCT DETAILS (FACTORY STANDARD):
 - CONSTRUCTION: Made entirely of physical 3D LED neon flex tubes (circular cross-section, φ${tubeDiameter}mm).
-- ACRYLIC: Mounted on a single, high-clarity transparent RECTANGULAR acrylic sheet.
+- ACRYLIC: The tubes are mounted on a single, high-clarity transparent RECTANGULAR acrylic sheet. The acrylic is a flat background panel, NOT a frame or border around the tubes.
+- IMPORTANT: The acrylic sheet should be invisible/transparent except for its straight edges (which may catch light). Do NOT draw any acrylic outline or border around the neon tubes themselves.
 - HARDWARE: Exactly 4 silver cylindrical standoff bolts, one at each corner, reflecting the neon light.
 - MANDATORY: Every single line from the design must be a glowing tube. No printing or etching.
 - TUBES: Clean, continuous tubes with smooth, natural bends. No visible connectors or end-caps.
