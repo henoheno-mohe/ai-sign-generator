@@ -57,13 +57,15 @@ PRODUCT DETAILS (FACTORY STANDARD):
 - CONSTRUCTION: Made entirely of physical 3D LED neon flex tubes (circular cross-section, φ${tubeDiameter}mm).
 - ACRYLIC: Mounted on a single, high-clarity transparent RECTANGULAR acrylic sheet.
 - HARDWARE: Exactly 4 silver cylindrical standoff bolts, one at each corner, reflecting the neon light.
-- FINISH: Include realistic details like small black end-caps at tube terminals and smooth, natural bends.
 - MANDATORY: Every single line from the design must be a glowing tube. No printing or etching.
+- TUBES: Clean, continuous tubes with smooth, natural bends. No visible connectors or end-caps.
 
 COLOR & LIGHTING (NEON GAS STYLE):
 - TUBE LOOK: A brilliant, almost white luminous core with a hyper-vivid, saturated color halo.
-- VIBRANCY: Colors must be punchy and "electric" (like Electric Blue, Hot Pink, Lemon Yellow).
+- VIBRANCY: Colors must be EXTREMELY punchy and "electric" (like Electric Blue, Hot Pink, Lemon Yellow, Vivid Green).
+- SATURATION: Use maximum color saturation. The colors should be so vibrant they feel like they're glowing from within.
 - GLOW: The glow must feel like actual light radiating onto the wall texture, not a digital blur.
+- INTENSITY: The neon sign should be the DOMINANT light source, casting strong colored shadows and reflections.
 
 ${colorInstruction}
 ${text ? `\nInclude this text in the design: "${text}"` : ""}
