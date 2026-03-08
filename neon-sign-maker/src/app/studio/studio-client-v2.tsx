@@ -119,10 +119,27 @@ export default function StudioClientV2() {
     setAiError(null);
     setAiImageDataUrl(null);
     setTubeLengthCm(null);
-    setIsEstimating(false);
+    setIsEstimating(true); // 生成開始と同時に見積もりも開始
+
+    // 1. 先にチューブ長を計算（AI生成を待たない）
+    try {
+      const currentSketch = sketchDataUrl;
+      if (currentSketch) {
+        const est = await estimateTubeLengthCmFromSketch({
+          sketchDataUrl: currentSketch,
+          targetWidthMm: widthMm,
+        });
+        setTubeLengthCm(est.tubeLengthCm);
+      }
+    } catch (e) {
+      console.error("Length estimation failed:", e);
+      // 長さ計算に失敗してもAI生成は続行
+    } finally {
+      setIsEstimating(false);
+    }
 
     try {
-      // 1) AI生成（サーバー側API呼び出し）
+      // 2. AI生成（サーバー側API呼び出し）
       const resp = await fetch("/api/neon/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -140,20 +157,11 @@ export default function StudioClientV2() {
       if (!resp.ok) throw new Error(data?.error || "生成に失敗しました");
       
       setAiImageDataUrl(data.imageDataUrl);
-      setIsEstimating(true);
-
-      // 2) スケッチ（元画像）からチューブ長を推定
-      // これにより、AI生成画像の揺らぎに左右されず、一貫した見積もりが可能になる
-      const est = await estimateTubeLengthCmFromSketch({
-        sketchDataUrl: sketchDataUrl, // AI画像ではなく、ユーザーの元画像を使う
-        targetWidthMm: widthMm,
-      });
-      setTubeLengthCm(est.tubeLengthCm);
     } catch (e) {
       setAiError(e instanceof Error ? e.message : "生成に失敗しました");
     } finally {
       setIsGenerating(false);
-      setIsEstimating(false);
+      // setIsEstimatingは最初のブロックでfalseにしているのでここでは操作不要
     }
   };
 
