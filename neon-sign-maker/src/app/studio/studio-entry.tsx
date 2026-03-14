@@ -1,14 +1,13 @@
 'use client';
 
 import React from "react";
-import StudioClientV2 from "@/app/studio/studio-client-v2";
+import StudioClientV3 from "@/app/studio/studio-client-v3";
 
 /**
  * ChameNeon工房 - Studio Entry
- * V2をメインUIとして一本化
+ * V3 (Improvement Plan) を適用中
+ * 比較したい場合は StudioClientV2 に戻してください
  */
 export default function StudioEntry() {
-  return <StudioClientV2 />;
+  return <StudioClientV3 />;
 }
-
-

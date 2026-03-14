@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import { NEON_PROTOCOL_V1 } from "@/lib/neonProtocol";
 import { getDefaultBackground } from "@/lib/backgrounds";
 import { generateImageWithGemini } from "@/lib/geminiImage";
-import { buildNeonPrompt } from "@/lib/neonProtocol";
+import { buildNeonPromptV1, buildNeonPromptV2 } from "@/lib/neonProtocol";
 import type { NeonColor } from "@/lib/palette";
 
 function getApiKey() {
-  // 環境変数から読み込む（コードには直接書かない）
   const key = process.env.NANO_BANANA_API_KEY || process.env.NEXT_PUBLIC_NANO_BANANA_API_KEY || "";
   return key;
 }
@@ -23,7 +22,7 @@ export async function POST(req: Request) {
     const apiKey = getApiKey();
     if (!apiKey) {
       return NextResponse.json(
-        { error: "APIキーが設定されていません（環境変数 NANO_BANANA_API_KEY を設定してください）" },
+        { error: "APIキーが設定されていません" },
         { status: 400 }
       );
     }
@@ -34,18 +33,19 @@ export async function POST(req: Request) {
     const isAutoColor: boolean = body?.isAutoColor ?? false;
     const widthMm: number = body?.widthMm ?? 600;
     const tubeDiameter: 5 | 7 | 9 = body?.tubeDiameter ?? NEON_PROTOCOL_V1.defaultTubeDiameter;
+    const version: string = body?.version ?? "v1"; // デフォルトはv1
 
     if (!isAutoColor) {
       if (!Array.isArray(colors) || colors.length < 1 || colors.length > 5) {
-        return NextResponse.json({ error: "色数の指定が不正です（1〜5色）" }, { status: 400 });
-      }
-      if (colors.some((c) => !c?.hex || !c?.name)) {
-        return NextResponse.json({ error: "色の指定が不正です" }, { status: 400 });
+        return NextResponse.json({ error: "色数の指定が不正です" }, { status: 400 });
       }
     }
 
-    const background = getDefaultBackground(); // MVP: 背景は1つ
-    const prompt = buildNeonPrompt({
+    const background = getDefaultBackground();
+    
+    // バージョンに応じてプロンプトを切り替え
+    const promptBuilder = version === "v2" ? buildNeonPromptV2 : buildNeonPromptV1;
+    const prompt = promptBuilder({
       userText: text,
       colors: isAutoColor ? [] : colors,
       background,
@@ -69,5 +69,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
-
-

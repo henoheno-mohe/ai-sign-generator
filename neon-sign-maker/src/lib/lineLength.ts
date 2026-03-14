@@ -163,6 +163,29 @@ function skeletonLengthPx(skel: Binary, w: number, h: number) {
   return count * 1.1;
 }
 
+/**
+ * 4近傍エッジ検出: 塗りつぶし領域を輪郭線のみに変換する
+ * 塗りつぶされた図形の「内側」を消去し、境界ピクセルだけを残す。
+ * これにより、ネオンチューブの「アウトライン長さ」を正確に計測できる。
+ */
+function detectEdges(binary: Binary, w: number, h: number): Binary {
+  const out = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = y * w + x;
+      if (!binary[idx]) continue;
+      // 上下左右に1つでもOFFのピクセルがある = 境界ピクセル
+      const hasOffNeighbor =
+        (x > 0 && !binary[y * w + (x - 1)]) ||
+        (x < w - 1 && !binary[y * w + (x + 1)]) ||
+        (y > 0 && !binary[(y - 1) * w + x]) ||
+        (y < h - 1 && !binary[(y + 1) * w + x]);
+      if (hasOffNeighbor) out[idx] = 1;
+    }
+  }
+  return out;
+}
+
 export async function estimateTubeLengthCmFromSketch({
   sketchDataUrl,
   targetWidthMm,
@@ -199,7 +222,13 @@ export async function estimateTubeLengthCmFromSketch({
     return { bboxWidthPx: 0, bboxHeightPx: 0, skeletonLengthPx: 0, tubeLengthCm: 0 };
   }
 
-  const skel = zhangSuenThinning(bin, w, h);
+  // ① まずエッジ検出で「輪郭線のみ」に変換（塗りつぶし領域の骨格化を防ぐ）
+  // これにより、アイスクリームのような塗りつぶしデザインも
+  // チューブのアウトライン長さとして正確に計算できる
+  const edges = detectEdges(bin, w, h);
+
+  // ② エッジ画像を細線化して1ピクセル幅の骨格を得る
+  const skel = zhangSuenThinning(edges, w, h);
   const lenPx = skeletonLengthPx(skel, w, h);
 
   const widthMm = clamp(targetWidthMm, 200, 2000);
