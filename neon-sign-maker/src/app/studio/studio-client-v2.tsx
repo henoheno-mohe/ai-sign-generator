@@ -613,7 +613,7 @@ export default function StudioClientV2() {
                             </p>
                             <p className="text-[11px] flex justify-between">
                               <span>国内配送料</span>
-                              <span>込</span>
+                              <span className="text-zinc-700">¥3,000（別途）</span>
                             </p>
                             <div className="h-px bg-emerald-100/50 my-2" />
                             <p className="text-[11px] flex justify-between">
