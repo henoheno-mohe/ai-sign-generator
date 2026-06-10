@@ -5,9 +5,11 @@ import { NEON_PALETTE_14, type NeonColor } from "@/lib/palette";
 import {
   FIXED_YEN_PER_CM_TUBE,
   estimatePriceYenExTaxFromTubeLength,
+  estimateDeliveryWeeks,
   formatYen,
 } from "@/lib/quote";
-import { NEON_PROTOCOL_V1 } from "@/lib/neonProtocol";
+import { NEON_PROTOCOL_V1, FONT_STYLES } from "@/lib/neonProtocol";
+import type { FontStyle, DesignMode } from "@/lib/neonProtocol";
 import { estimateTubeLengthCmFromSketch } from "@/lib/lineLength";
 import { getBaseItemUrl } from "@/lib/baseItems";
 
@@ -22,6 +24,8 @@ export default function StudioClientV2() {
   ]);
 
   const tubeDiameter = NEON_PROTOCOL_V1.defaultTubeDiameter;
+  const [fontStyle, setFontStyle] = React.useState<FontStyle>("pacifico");
+  const [designMode, setDesignMode] = React.useState<DesignMode>("faithful");
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [isEstimating, setIsEstimating] = React.useState(false);
   const [aiImageDataUrl, setAiImageDataUrl] = React.useState<string | null>(null);
@@ -145,11 +149,13 @@ export default function StudioClientV2() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sketchDataUrl,
-          text: "", // V2では画像メインのため空
+          text: "",
           colors: isAutoColor ? [] : selectedColors,
           isAutoColor,
           widthMm,
           tubeDiameter,
+          fontStyle,
+          designMode,
         }),
       });
 
@@ -416,6 +422,78 @@ export default function StudioClientV2() {
                   </div>
                 </div>
 
+                {/* Design Mode */}
+                <div>
+                  <div className="flex items-end justify-between gap-4 border-b border-zinc-100 pb-3">
+                    <p className="text-lg font-extrabold text-zinc-900 tracking-tight">仕上げモードを選ぶ</p>
+                  </div>
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      disabled={isGenerating}
+                      onClick={() => setDesignMode("faithful")}
+                      className={[
+                        "rounded-2xl border-2 p-4 text-left transition-all disabled:opacity-50",
+                        designMode === "faithful"
+                          ? "border-emerald-500 bg-emerald-50 shadow-sm"
+                          : "border-zinc-100 bg-zinc-50 hover:border-zinc-300",
+                      ].join(" ")}
+                    >
+                      <p className={["text-sm font-extrabold", designMode === "faithful" ? "text-emerald-700" : "text-zinc-800"].join(" ")}>
+                        忠実モード
+                      </p>
+                      <p className="mt-1 text-[10px] leading-relaxed text-zinc-400">スケッチをそのままネオン化。手書きの雰囲気を残したい場合に。</p>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isGenerating}
+                      onClick={() => setDesignMode("designer")}
+                      className={[
+                        "rounded-2xl border-2 p-4 text-left transition-all disabled:opacity-50",
+                        designMode === "designer"
+                          ? "border-violet-500 bg-violet-50 shadow-sm"
+                          : "border-zinc-100 bg-zinc-50 hover:border-zinc-300",
+                      ].join(" ")}
+                    >
+                      <p className={["text-sm font-extrabold", designMode === "designer" ? "text-violet-700" : "text-zinc-800"].join(" ")}>
+                        ✨ AIデザイナー
+                      </p>
+                      <p className="mt-1 text-[10px] leading-relaxed text-zinc-400">AIが線を整えプロ風に補正。ラフなスケッチでもきれいに仕上がります。</p>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Font Style */}
+                <div>
+                  <div className="flex items-end justify-between gap-4 border-b border-zinc-100 pb-3">
+                    <p className="text-lg font-extrabold text-zinc-900 tracking-tight">文字スタイルを選ぶ</p>
+                  </div>
+                  <div className="mt-4 grid grid-cols-3 gap-3">
+                    {FONT_STYLES.map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        disabled={isGenerating}
+                        onClick={() => setFontStyle(f.id)}
+                        className={[
+                          "rounded-2xl border-2 p-4 text-left transition-all disabled:opacity-50",
+                          fontStyle === f.id
+                            ? "border-emerald-500 bg-emerald-50 shadow-sm"
+                            : "border-zinc-100 bg-zinc-50 hover:border-zinc-300",
+                        ].join(" ")}
+                      >
+                        <p className={[
+                          "text-sm font-extrabold",
+                          fontStyle === f.id ? "text-emerald-700" : "text-zinc-800",
+                        ].join(" ")}>
+                          {f.name}
+                        </p>
+                        <p className="mt-1 text-[10px] leading-relaxed text-zinc-400">{f.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* CTA */}
                 <div className="pt-4 space-y-3">
                   <button
@@ -536,6 +614,11 @@ export default function StudioClientV2() {
                             <p className="text-[11px] flex justify-between">
                               <span>国内配送料</span>
                               <span>込</span>
+                            </p>
+                            <div className="h-px bg-emerald-100/50 my-2" />
+                            <p className="text-[11px] flex justify-between">
+                              <span>お届け目安</span>
+                              <span className="font-bold text-zinc-700">{estimateDeliveryWeeks(tubeLengthCm ?? 0)}</span>
                             </p>
                           </div>
                         </div>

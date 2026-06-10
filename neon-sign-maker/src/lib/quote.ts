@@ -18,3 +18,9 @@ export function formatYen(n: number): string {
   return new Intl.NumberFormat("ja-JP").format(Math.round(n));
 }
 
+export function estimateDeliveryWeeks(tubeLengthCm: number): string {
+  if (tubeLengthCm < 150) return "約2〜3週間";
+  if (tubeLengthCm < 300) return "約3〜4週間";
+  return "約4〜6週間";
+}
+
