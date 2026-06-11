@@ -18,17 +18,13 @@ export function formatYen(n: number): string {
   return new Intl.NumberFormat("ja-JP").format(Math.round(n));
 }
 
-export function estimateDeliveryWeeks(tubeLengthCm: number): string {
-  if (tubeLengthCm < 150) return "約2〜3週間";
-  if (tubeLengthCm < 300) return "約3〜4週間";
-  return "約4〜6週間";
+export function estimateDeliveryWeeks(_tubeLengthCm: number): string {
+  return "約2週間";
 }
 
-// チューブ長から納品予定日を計算（日数は各レンジの最大値で保守的に見積もる）
-export function estimateDeliveryDate(tubeLengthCm: number): string {
-  const days = tubeLengthCm < 150 ? 21 : tubeLengthCm < 300 ? 28 : 42;
+export function estimateDeliveryDate(_tubeLengthCm: number): string {
   const date = new Date();
-  date.setDate(date.getDate() + days);
+  date.setDate(date.getDate() + 14);
   const month = date.getMonth() + 1;
   const day = date.getDate();
   return `${month}月${day}日`;
