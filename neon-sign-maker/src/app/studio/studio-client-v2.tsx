@@ -6,6 +6,7 @@ import {
   FIXED_YEN_PER_CM_TUBE,
   estimatePriceYenExTaxFromTubeLength,
   estimateDeliveryWeeks,
+  estimateDeliveryDate,
   formatYen,
 } from "@/lib/quote";
 import { NEON_PROTOCOL_V1, FONT_STYLES } from "@/lib/neonProtocol";
@@ -619,6 +620,12 @@ export default function StudioClientV2() {
                             <p className="text-[11px] flex justify-between">
                               <span>お届け目安</span>
                               <span className="font-bold text-zinc-700">{estimateDeliveryWeeks(tubeLengthCm ?? 0)}</span>
+                            </p>
+                          </div>
+                          <div className="mt-4 rounded-xl bg-emerald-600 px-4 py-3 text-center">
+                            <p className="text-[10px] font-bold text-emerald-100 uppercase tracking-wider">今注文すると</p>
+                            <p className="mt-0.5 text-lg font-black text-white">
+                              {estimateDeliveryDate(tubeLengthCm ?? 0)}頃お届け予定
                             </p>
                           </div>
                         </div>

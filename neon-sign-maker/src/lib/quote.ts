@@ -24,3 +24,13 @@ export function estimateDeliveryWeeks(tubeLengthCm: number): string {
   return "約4〜6週間";
 }
 
+// チューブ長から納品予定日を計算（日数は各レンジの最大値で保守的に見積もる）
+export function estimateDeliveryDate(tubeLengthCm: number): string {
+  const days = tubeLengthCm < 150 ? 21 : tubeLengthCm < 300 ? 28 : 42;
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${month}月${day}日`;
+}
+
