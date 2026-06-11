@@ -266,7 +266,7 @@ export default function StudioClientV3() {
                 {[
                   { icon: "🚚", text: "¥28,000〜（送料別¥3,000）" },
                   { icon: "📅", text: "最短2週間でお届け" },
-                  { icon: "🇯🇵", text: "国内製造・サポート" },
+                  { icon: "💬", text: "日本語サポート対応" },
                 ].map(item => (
                   <div key={item.text} className="flex items-center gap-1.5 text-xs font-bold text-gray-600">
                     <span>{item.icon}</span>

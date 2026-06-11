@@ -149,7 +149,7 @@ function HeroSection() {
 /* ── Trust Bar ── */
 function TrustBar() {
   const items = [
-    { icon: "🏭", text: "国内制作・品質保証" },
+    { icon: "✅", text: "品質保証" },
     { icon: "⏱️", text: "最短2週間でお届け" },
     { icon: "💬", text: "日本語サポート対応" },
   ];
