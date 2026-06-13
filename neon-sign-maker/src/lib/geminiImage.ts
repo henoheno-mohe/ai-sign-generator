@@ -81,6 +81,12 @@ export async function generateImageWithGemini({
       const partsOut = candidate?.content?.parts;
       const finishReason = candidate?.finishReason || "UNKNOWN";
 
+      // トークン使用量をログ出力
+      const usage = data?.usageMetadata;
+      if (usage) {
+        console.log(`[Gemini usage] input=${usage.promptTokenCount} output=${usage.candidatesTokenCount} total=${usage.totalTokenCount}`);
+      }
+
       let textOut = "";
       if (Array.isArray(partsOut)) {
         for (const p of partsOut) {

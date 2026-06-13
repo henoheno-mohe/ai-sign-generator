@@ -3,6 +3,7 @@ import { NEON_PROTOCOL_V1 } from "@/lib/neonProtocol";
 import { getDefaultBackground } from "@/lib/backgrounds";
 import { generateImageWithGemini } from "@/lib/geminiImage";
 import { buildNeonPromptV1, buildNeonPromptV2 } from "@/lib/neonProtocol";
+import type { FontStyle, DesignMode } from "@/lib/neonProtocol";
 import type { NeonColor } from "@/lib/palette";
 
 function getApiKey() {
@@ -33,7 +34,9 @@ export async function POST(req: Request) {
     const isAutoColor: boolean = body?.isAutoColor ?? false;
     const widthMm: number = body?.widthMm ?? 600;
     const tubeDiameter: 5 | 7 | 9 = body?.tubeDiameter ?? NEON_PROTOCOL_V1.defaultTubeDiameter;
-    const version: string = body?.version ?? "v1"; // デフォルトはv1
+    const version: string = body?.version ?? "v1";
+    const fontStyle: FontStyle | undefined = body?.fontStyle ?? undefined;
+    const designMode: DesignMode = body?.designMode ?? "faithful";
 
     if (!isAutoColor) {
       if (!Array.isArray(colors) || colors.length < 1 || colors.length > 5) {
@@ -52,6 +55,8 @@ export async function POST(req: Request) {
       widthMm,
       tubeDiameter,
       isAutoColor,
+      fontStyle,
+      designMode,
     });
 
     const parsed = sketchDataUrl ? dataUrlToBase64(sketchDataUrl) : null;
