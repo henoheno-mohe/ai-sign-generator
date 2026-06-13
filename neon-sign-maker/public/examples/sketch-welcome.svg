@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="500" height="280">
+  <rect width="500" height="280" fill="white"/>
+  <!-- Heart left -->
+  <path d="M60,110 C60,85 80,75 100,90 C120,75 140,85 140,110 C140,135 100,165 100,165 C100,165 60,135 60,110 Z" fill="none" stroke="#222" stroke-width="5" stroke-linejoin="round"/>
+  <!-- Heart right -->
+  <path d="M360,110 C360,85 380,75 400,90 C420,75 440,85 440,110 C440,135 400,165 400,165 C400,165 360,135 360,110 Z" fill="none" stroke="#222" stroke-width="5" stroke-linejoin="round"/>
+  <!-- WELCOME text -->
+  <text x="250" y="155" font-family="Arial, sans-serif" font-size="44" font-weight="bold" text-anchor="middle" fill="#222" letter-spacing="4">WELCOME</text>
+  <!-- Decorative line above -->
+  <line x1="60" y1="85" x2="440" y2="85" stroke="#222" stroke-width="2" stroke-dasharray="6,4"/>
+  <!-- Decorative line below -->
+  <line x1="60" y1="195" x2="440" y2="195" stroke="#222" stroke-width="2" stroke-dasharray="6,4"/>
+  <!-- Small stars -->
+  <text x="250" y="240" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="#222">✦ ✦ ✦</text>
+</svg>

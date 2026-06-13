@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <rect width="400" height="300" fill="#fafafa" />
+  <!-- Rough handwriting text -->
+  <text x="200" y="160" font-family="Brush Script MT, cursive, sans-serif" font-size="70" fill="none" stroke="#333" stroke-width="3" text-anchor="middle" transform="rotate(-5, 200, 150)" style="filter: url(#roughText);">Night Owl</text>
+  <path d="M 100 200 Q 200 230 300 180" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" style="filter: url(#roughText);" />
+  <defs>
+    <filter id="roughText">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>

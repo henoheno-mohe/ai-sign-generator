@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="white"/>
+  <!-- Martini glass body -->
+  <path d="M200,220 L200,145" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+  <!-- Glass base -->
+  <line x1="165" y1="220" x2="235" y2="220" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+  <!-- Glass bowl (V shape wider) -->
+  <path d="M120,75 L200,145 L280,75" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Top rim -->
+  <line x1="120" y1="75" x2="280" y2="75" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+  <!-- Olive on pick -->
+  <line x1="190" y1="75" x2="220" y2="105" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="225" cy="108" r="9" fill="none" stroke="#222" stroke-width="3"/>
+  <!-- Bubbles -->
+  <circle cx="155" cy="100" r="5" fill="none" stroke="#222" stroke-width="2.5"/>
+  <circle cx="168" cy="118" r="4" fill="none" stroke="#222" stroke-width="2.5"/>
+  <circle cx="148" cy="118" r="3" fill="none" stroke="#222" stroke-width="2"/>
+  <!-- BAR text -->
+  <text x="200" y="268" font-family="Arial, sans-serif" font-size="42" font-weight="bold" text-anchor="middle" fill="#222" letter-spacing="10">BAR</text>
+</svg>

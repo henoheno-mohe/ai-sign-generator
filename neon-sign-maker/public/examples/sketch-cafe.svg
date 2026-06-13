@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="white"/>
+  <!-- Cup body -->
+  <path d="M120,130 L140,230 L260,230 L280,130 Z" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Cup handle -->
+  <path d="M260,155 Q310,155 310,185 Q310,215 260,210" fill="none" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+  <!-- Saucer -->
+  <ellipse cx="200" cy="235" rx="100" ry="14" fill="none" stroke="#222" stroke-width="4"/>
+  <!-- Steam lines -->
+  <path d="M165,115 Q155,95 165,78 Q175,62 165,45" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <path d="M200,110 Q190,90 200,73 Q210,57 200,40" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <path d="M235,115 Q225,95 235,78 Q245,62 235,45" fill="none" stroke="#222" stroke-width="4" stroke-linecap="round"/>
+  <!-- CAFE text -->
+  <text x="200" y="192" font-family="Arial, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" fill="#222" letter-spacing="6">CAFE</text>
+</svg>
