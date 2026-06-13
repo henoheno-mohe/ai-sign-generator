@@ -427,31 +427,6 @@ const FAQ_ITEMS = [
 ];
 
 /* ── Real Product ── */
-const PRODUCT_PHOTOS = [
-  { src: "/cases/sample01/main.jpg",     caption: "暗い空間でこそ映える。部屋の雰囲気が一変します。" },
-  { src: "/cases/sample01/angle.jpg",    caption: "アクリルパネルが光を反射し、奥行きのある輝きを生み出します。" },
-  { src: "/cases/sample01/detail.jpg",   caption: "細部まで精密に再現。LEDチューブの質感は実物を見ると驚きます。" },
-  { src: "/cases/sample01/vertical.jpg", caption: "縦・横どちらの向きにも対応。設置場所に合わせてデザインします。" },
-];
-
-const PRODUCT_QA = [
-  {
-    q: "どのくらい明るいですか？",
-    a: "暗い部屋では数メートル先まで照らせるほどの明るさです。ほどよく暗い空間に置くことで最も映えます。",
-    src: "/cases/sample01/dark.jpg",
-  },
-  {
-    q: "厚みや重さはどのくらい？",
-    a: "アクリルパネルの厚みは約8mm。軽量なので壁への負担も少なく、四隅のネジ4点で固定するシンプルな構造です。",
-    src: "/cases/sample01/angle.jpg",
-  },
-  {
-    q: "電源や取り付けはどうすればいい？",
-    a: "コンセントに差すだけで点灯します。壁掛け用の金具は付属しており、工具があれば10〜15分ほどで設置できます。",
-    src: "/cases/sample01/main.jpg",
-  },
-];
-
 function RealProductSection() {
   return (
     <section id="realproduct" className="border-b border-gray-100 py-20 sm:py-24 bg-gray-950">
@@ -463,31 +438,14 @@ function RealProductSection() {
           dark
         />
 
-        {/* Photo Grid */}
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {PRODUCT_PHOTOS.map((p) => (
-            <div key={p.src} className="flex flex-col gap-2">
-              <div className="overflow-hidden rounded-xl aspect-square bg-black">
-                <img src={p.src} alt={p.caption} className="w-full h-full object-cover" />
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">{p.caption}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Q&A */}
-        <div className="mt-16 grid gap-8 sm:grid-cols-3">
-          {PRODUCT_QA.map((item) => (
-            <div key={item.q} className="flex flex-col gap-4">
-              <div className="overflow-hidden rounded-xl aspect-video bg-black">
-                <img src={item.src} alt={item.q} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p className="text-sm font-extrabold text-white">{item.q}</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-400">{item.a}</p>
-              </div>
-            </div>
-          ))}
+        <div className="mt-12 flex flex-col sm:flex-row gap-8 items-start">
+          <div className="w-full sm:w-1/2 overflow-hidden rounded-xl aspect-video bg-black">
+            <img src="/cases/sample01/dark.jpg" alt="どのくらい明るいですか？" className="w-full h-full object-cover" />
+          </div>
+          <div className="sm:w-1/2">
+            <p className="text-sm font-extrabold text-white">どのくらい明るいですか？</p>
+            <p className="mt-2 text-sm leading-relaxed text-gray-400">暗い部屋では数メートル先まで照らせるほどの明るさです。ほどよく暗い空間に置くことで最も映えます。</p>
+          </div>
         </div>
       </div>
     </section>
