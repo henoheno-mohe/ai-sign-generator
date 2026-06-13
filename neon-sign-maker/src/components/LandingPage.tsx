@@ -447,6 +447,16 @@ function RealProductSection() {
             <p className="mt-2 text-sm leading-relaxed text-gray-400">暗い部屋では数メートル先まで照らせるほどの明るさです。ほどよく暗い空間に置くことで最も映えます。</p>
           </div>
         </div>
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-8 items-start">
+          <div className="w-full sm:w-1/2 overflow-hidden rounded-xl bg-white">
+            <img src="/cases/sample01/delivery.jpg" alt="納品セット内容" className="w-full h-full object-contain" />
+          </div>
+          <div className="sm:w-1/2">
+            <p className="text-sm font-extrabold text-white">届いたらすぐ飾れる、フルセット納品</p>
+            <p className="mt-2 text-sm leading-relaxed text-gray-400">アクリルパネル・LEDチューブ・電源アダプタ・取り付け用ネジがセットになって届きます。壁に穴を開けて付属のネジで固定するだけ。コンセントに差せばその日から点灯します。</p>
+          </div>
+        </div>
       </div>
     </section>
   );
