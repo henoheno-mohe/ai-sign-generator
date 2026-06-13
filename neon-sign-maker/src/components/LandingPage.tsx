@@ -449,6 +449,16 @@ function RealProductSection() {
         </div>
 
         <div className="mt-10 flex flex-col sm:flex-row gap-8 items-start">
+          <div className="w-full sm:w-1/2 overflow-hidden rounded-xl aspect-video bg-black">
+            <img src="/cases/sample01/thickness.jpg" alt="厚みや重さはどのくらい？" className="w-full h-full object-cover" />
+          </div>
+          <div className="sm:w-1/2">
+            <p className="text-sm font-extrabold text-white">厚みや重さはどのくらい？</p>
+            <p className="mt-2 text-sm leading-relaxed text-gray-400">アクリルパネルの厚みは約8mm。軽量なので壁への負担も少なく、四隅のネジ4点で固定するシンプルな構造です。</p>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-8 items-start">
           <div className="w-full sm:w-1/2 overflow-hidden rounded-xl bg-white">
             <img src="/cases/sample01/delivery.jpg" alt="納品セット内容" className="w-full h-full object-contain" />
           </div>
