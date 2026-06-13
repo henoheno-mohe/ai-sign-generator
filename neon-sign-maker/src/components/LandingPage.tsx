@@ -17,6 +17,7 @@ export default function LandingPage() {
       <HowItWorksSection />
       <PriceSection />
       <ExamplesSection />
+      <RealProductSection />
       <FaqSection />
       <FinalCtaSection />
       <Footer />
@@ -425,6 +426,74 @@ const FAQ_ITEMS = [
   { q: "法人・複数個の注文は対応していますか？", a: "法人注文・まとめ買いにも対応しています。お問い合わせフォームからご連絡ください。" },
 ];
 
+/* ── Real Product ── */
+const PRODUCT_PHOTOS = [
+  { src: "/cases/sample01/main.jpg",     caption: "暗い空間でこそ映える。部屋の雰囲気が一変します。" },
+  { src: "/cases/sample01/angle.jpg",    caption: "アクリルパネルが光を反射し、奥行きのある輝きを生み出します。" },
+  { src: "/cases/sample01/detail.jpg",   caption: "細部まで精密に再現。LEDチューブの質感は実物を見ると驚きます。" },
+  { src: "/cases/sample01/vertical.jpg", caption: "縦・横どちらの向きにも対応。設置場所に合わせてデザインします。" },
+];
+
+const PRODUCT_QA = [
+  {
+    q: "どのくらい明るいですか？",
+    a: "暗い部屋では数メートル先まで照らせるほどの明るさです。ほどよく暗い空間に置くことで最も映えます。",
+    src: "/cases/sample01/dark.jpg",
+  },
+  {
+    q: "厚みや重さはどのくらい？",
+    a: "アクリルパネルの厚みは約8mm。軽量なので壁への負担も少なく、四隅のネジ4点で固定するシンプルな構造です。",
+    src: "/cases/sample01/angle.jpg",
+  },
+  {
+    q: "電源や取り付けはどうすればいい？",
+    a: "コンセントに差すだけで点灯します。壁掛け用の金具は付属しており、工具があれば10〜15分ほどで設置できます。",
+    src: "/cases/sample01/main.jpg",
+  },
+];
+
+function RealProductSection() {
+  return (
+    <section id="realproduct" className="border-b border-gray-100 py-20 sm:py-24 bg-gray-950">
+      <div className="mx-auto max-w-6xl px-6">
+        <SectionHeading
+          label="Real Product"
+          title="実物ってどんな感じ？"
+          sub="写真で見るより、実物はもっと輝いています。"
+          dark
+        />
+
+        {/* Photo Grid */}
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {PRODUCT_PHOTOS.map((p) => (
+            <div key={p.src} className="flex flex-col gap-2">
+              <div className="overflow-hidden rounded-xl aspect-square bg-black">
+                <img src={p.src} alt={p.caption} className="w-full h-full object-cover" />
+              </div>
+              <p className="text-xs text-gray-400 leading-relaxed">{p.caption}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Q&A */}
+        <div className="mt-16 grid gap-8 sm:grid-cols-3">
+          {PRODUCT_QA.map((item) => (
+            <div key={item.q} className="flex flex-col gap-4">
+              <div className="overflow-hidden rounded-xl aspect-video bg-black">
+                <img src={item.src} alt={item.q} className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <p className="text-sm font-extrabold text-white">{item.q}</p>
+                <p className="mt-2 text-sm leading-relaxed text-gray-400">{item.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FaqSection() {
   return (
     <section id="faq" className="border-b border-gray-100 py-20 sm:py-24 bg-white">
@@ -494,12 +563,12 @@ function Footer() {
 }
 
 /* ── Shared ── */
-function SectionHeading({ label, title, sub }: { label: string; title: string; sub: string }) {
+function SectionHeading({ label, title, sub, dark = false }: { label: string; title: string; sub: string; dark?: boolean }) {
   return (
     <div className="text-center">
       <p className="text-xs font-bold uppercase tracking-widest" style={{ color: GREEN }}>{label}</p>
-      <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">{title}</h2>
-      <p className="mt-3 text-sm text-gray-500">{sub}</p>
+      <h2 className={`mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl ${dark ? "text-white" : "text-gray-900"}`}>{title}</h2>
+      <p className={`mt-3 text-sm ${dark ? "text-gray-400" : "text-gray-500"}`}>{sub}</p>
     </div>
   );
 }
