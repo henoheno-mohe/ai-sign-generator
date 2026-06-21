@@ -196,8 +196,28 @@ export default function StudioClientV3() {
 
       const data = await resp.json();
       if (!resp.ok) throw new Error(data?.error || "生成に失敗しました");
-      
+
       setAiImageDataUrl(data.imageDataUrl);
+      setIsGenerating(false);
+      stopLoadingAnimation();
+
+      // 生成画像をGeminiに解析させてチューブ長を精密推定（グローを除いた中心線長）
+      setIsEstimating(true);
+      try {
+        const tubeResp = await fetch("/api/neon/estimate-tube", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageDataUrl: data.imageDataUrl, widthMm }),
+        });
+        const tubeData = await tubeResp.json();
+        if (typeof tubeData.tubeLengthCm === "number" && tubeData.tubeLengthCm > 0) {
+          setTubeLengthCm(tubeData.tubeLengthCm);
+        }
+      } catch (e) {
+        console.error("Gemini tube estimation failed:", e);
+      } finally {
+        setIsEstimating(false);
+      }
     } catch (e) {
       setAiError(e instanceof Error ? e.message : "生成に失敗しました");
     } finally {
