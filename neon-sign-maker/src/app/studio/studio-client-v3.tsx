@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import Link from "next/link";
 import { NEON_PALETTE_14, type NeonColor } from "@/lib/palette";
 import {
   FIXED_YEN_PER_CM_TUBE,
@@ -11,6 +12,30 @@ import { NEON_PROTOCOL_V1, FONT_STYLES } from "@/lib/neonProtocol";
 import type { FontStyle, DesignMode } from "@/lib/neonProtocol";
 import { estimateTubeLengthCmFromSketch } from "@/lib/lineLength";
 import { getBaseItemUrl } from "@/lib/baseItems";
+
+// 注文通知（画像保存＋管理者メール）をリトライ付きで送信する。
+// 全試行が失敗した場合は例外を投げ、呼び出し側でユーザーに案内する。
+async function notifyOrderWithRetry(body: unknown, maxAttempts = 3): Promise<void> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const resp = await fetch("/api/order/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (resp.ok) return;
+      lastError = new Error(`notify failed: ${resp.status}`);
+    } catch (e) {
+      lastError = e;
+    }
+    if (attempt < maxAttempts) {
+      await new Promise((r) => setTimeout(r, 1500 * attempt));
+    }
+  }
+  console.error("Order notify ultimately failed:", lastError);
+  throw lastError;
+}
 
 export default function StudioClientV3() {
   const [sketchDataUrl, setSketchDataUrl] = React.useState<string | null>(null);
@@ -34,6 +59,7 @@ export default function StudioClientV3() {
   const [tubeLengthCm, setTubeLengthCm] = React.useState<number | null>(null);
   const [userEmail, setUserEmail] = React.useState<string>("");
   const [isOrdering, setIsOrdering] = React.useState(false);
+  const [orderNotifyFailed, setOrderNotifyFailed] = React.useState(false);
   const [loadingStep, setLoadingStep] = React.useState<number>(0);
 
   // Google Fonts を一括で動的ロード
@@ -86,7 +112,7 @@ export default function StudioClientV3() {
     link.click();
   };
 
-  const isEmailValid = userEmail.length > 0 && userEmail.includes("@") && userEmail.includes(".");
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail.trim());
 
   const handleOrder = async () => {
     if (!aiImageDataUrl || isOrdering) return;
@@ -96,7 +122,14 @@ export default function StudioClientV3() {
       return;
     }
 
-    const rawPrice = priceYenExTax ? Math.round(priceYenExTax * 1.1) : 0;
+    if (priceYenExTax == null) {
+      alert("見積もり金額の計算がまだ完了していません。\n少しお待ちいただくか、もう一度デザインを生成してください。");
+      return;
+    }
+
+    setOrderNotifyFailed(false);
+
+    const rawPrice = Math.round(priceYenExTax * 1.1);
     const finalPrice = Math.max(rawPrice, 28000);
     const roundedPrice = Math.round(finalPrice / 1000) * 1000;
 
@@ -129,21 +162,24 @@ export default function StudioClientV3() {
       }
     }
 
-    fetch("/api/order/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        imageDataUrl: aiImageDataUrl,
-        userEmail,
-        widthMm,
-        tubeLengthCm: tubeLengthCm ? Math.round(tubeLengthCm) : 0,
-        estimatedPrice: roundedPrice,
-        selectedColors,
-        version: "v2-ab-test"
-      }),
-    }).catch(e => console.error("Failed to notify order:", e));
+    const notifyBody = {
+      imageDataUrl: aiImageDataUrl,
+      userEmail,
+      widthMm,
+      tubeLengthCm: tubeLengthCm ? Math.round(tubeLengthCm) : 0,
+      estimatedPrice: roundedPrice,
+      selectedColors,
+    };
 
+    // 注文先(BASE)を先に開く（ユーザー操作直後なのでポップアップブロックを回避）
     window.open(targetUrl, "_blank");
+
+    // 通知（画像保存＋管理者メール）はリトライしつつ確実に送る。
+    // 最終的に失敗した場合のみ、ユーザーに直接連絡してもらうよう案内する。
+    notifyOrderWithRetry(notifyBody).catch(() => {
+      setOrderNotifyFailed(true);
+    });
+
     setTimeout(() => setIsOrdering(false), 2000);
   };
 
@@ -231,7 +267,7 @@ export default function StudioClientV3() {
       {/* Top Nav */}
       <div className="sticky top-0 z-30 border-b border-gray-200 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <a href="/" className="flex items-center gap-2 sm:gap-3 group">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
@@ -241,7 +277,7 @@ export default function StudioClientV3() {
             <div className="text-xs sm:text-sm font-black tracking-tighter uppercase text-gray-900 group-hover:text-[#2d7a71] transition-colors">
               ChameNeon工房
             </div>
-          </a>
+          </Link>
           <div className="flex items-center gap-3">
             <a
               href="#studio"
@@ -258,7 +294,7 @@ export default function StudioClientV3() {
             <button
               onClick={handleOrder}
               className="rounded-full bg-[#2d7a71] px-5 py-2 text-xs sm:text-sm font-black text-white hover:bg-[#24635b] transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
-              disabled={!aiImageDataUrl || !isEmailValid || isOrdering}
+              disabled={!aiImageDataUrl || !isEmailValid || isOrdering || priceYenExTax == null}
             >
               {isOrdering ? "移動中..." : "注文・相談する"}
             </button>
@@ -825,7 +861,7 @@ export default function StudioClientV3() {
                       <button
                         type="button"
                         onClick={handleOrder}
-                        disabled={isGenerating || isEstimating || !aiImageDataUrl || !isEmailValid || isOrdering}
+                        disabled={isGenerating || isEstimating || !aiImageDataUrl || !isEmailValid || isOrdering || priceYenExTax == null}
                         className="w-full rounded-2xl bg-[#2d7a71] py-5 text-base font-black text-white hover:bg-[#24635b] transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none disabled:cursor-not-allowed"
                       >
                         {isOrdering ? (
@@ -842,6 +878,11 @@ export default function StudioClientV3() {
                       <p className="text-center text-[10px] text-zinc-400 font-bold leading-relaxed">
                         ここから先は決済のため、<br className="sm:hidden" />提携ショップ（BASE）へ移動します
                       </p>
+                      {orderNotifyFailed && (
+                        <p className="text-center text-[11px] text-red-500 font-bold leading-relaxed">
+                          デザインの保存通知に失敗しました。<br className="sm:hidden" />お手数ですが admin@chameneon.jp までご連絡ください。
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

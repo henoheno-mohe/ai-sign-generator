@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { Resend } from "resend";
-import ImageTracer from "imagetracerjs";
+import type { NeonColor } from "@/lib/palette";
 
 export async function POST(req: Request) {
   try {
@@ -29,24 +29,7 @@ export async function POST(req: Request) {
       contentType: "image/png",
     });
 
-    // 2. ImageTracerでベクター化 (SVG)
-    // Node.js環境でのImageTracerの簡易実行
-    // ※ImageTracerは本来ブラウザ向けだが、Node.jsでも画像データを渡せば動く
-    // ただし、本格的な画像解析にはJSのCanvas shimsが必要な場合があるため
-    // ここでは簡易的なオプションで実行。失敗した場合はSVGなしで進む。
-    let svgContent = "";
-    try {
-      // 実際にはNode.jsでImageTracerを動かすには
-      // imageData {width, height, data} の形式が必要
-      // ここではNext.jsのAPI制限やライブラリの性質を考慮し、
-      // 成功時のみ添付するようにトライアル実装
-      // (今回は簡易化のためSVG生成ロジックは最小限に留める)
-      // svgContent = ImageTracer.imageToSVG(imageDataUrl, { ltres: 1, qtres: 1, scale: 1 });
-    } catch (e) {
-      console.error("Vectorization failed:", e);
-    }
-
-    const colorNames = selectedColors.map((c: any) => c.nameJp || c.name).join("、");
+    const colorNames = (selectedColors as NeonColor[]).map((c) => c.nameJp || c.name).join("、");
 
     // 3. お客様へ確認メール
     await resend.emails.send({
