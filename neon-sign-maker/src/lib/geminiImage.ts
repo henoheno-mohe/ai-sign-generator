@@ -1,5 +1,8 @@
 import { NANO_BANANA_IMAGE_API_URL } from "./nanoBananaCompat";
 
+const GEMINI_VISION_API_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
 type GeminiImageResult = {
   imageDataUrl: string;
   text?: string;
@@ -118,5 +121,52 @@ export async function generateImageWithGemini({
   }
 
   throw new Error("Maximum retries reached for Gemini API.");
+}
+
+/**
+ * AI生成されたネオンサイン画像からGeminiにチューブ総延長(cm)を推定させる。
+ * グロー/ハロー効果を除いたチューブ中心線の長さを返す。
+ */
+export async function askGeminiForTubeLengthCm({
+  apiKey,
+  imageBase64,
+  mimeType,
+  widthMm,
+}: {
+  apiKey: string;
+  imageBase64: string;
+  mimeType: string;
+  widthMm: number;
+}): Promise<number | null> {
+  const cleanKey = cleanApiKey(apiKey);
+
+  const prompt =
+    `この画像はLEDネオンサインのデザインです。アクリルパネルの横幅は${widthMm}mmです。\n` +
+    `発光しているネオンチューブの中心線の総延長をcmで推定してください。\n` +
+    `グロー（光の広がり）は除外し、チューブの芯の長さだけを合計してください。\n` +
+    `整数のみで回答してください（例: 185）`;
+
+  const requestBody = {
+    contents: [{
+      parts: [
+        { inline_data: { mime_type: mimeType, data: imageBase64 } },
+        { text: prompt },
+      ],
+    }],
+    generationConfig: { temperature: 0.1, maxOutputTokens: 64 },
+  };
+
+  const resp = await fetch(`${GEMINI_VISION_API_URL}?key=${cleanKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!resp.ok) return null;
+
+  const data = await resp.json();
+  const text: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  const match = text.match(/\d+/);
+  return match ? parseInt(match[0], 10) : null;
 }
 
