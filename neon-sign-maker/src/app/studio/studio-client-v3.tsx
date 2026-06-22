@@ -15,6 +15,9 @@ import type { FontStyle, DesignMode } from "@/lib/neonProtocol";
 import { estimateTubeLengthCmFromSketch } from "@/lib/lineLength";
 import { getBaseItemUrl } from "@/lib/baseItems";
 
+const GREEN = "#2d7a71";
+const INK = "#111111";
+
 // 注文通知（画像保存＋管理者メール）をリトライ付きで送信する。
 // 全試行が失敗した場合は例外を投げ、呼び出し側でユーザーに案内する。
 async function notifyOrderWithRetry(body: unknown, maxAttempts = 3): Promise<void> {
@@ -265,9 +268,9 @@ export default function StudioClientV3() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-emerald-200">
+    <main className="min-h-screen bg-white text-gray-900 font-sans selection:bg-emerald-200">
       {/* Top Nav */}
-      <div className="sticky top-0 z-30 border-b border-gray-200 bg-white/90 backdrop-blur-md">
+      <div className="sticky top-0 z-30 border-b border-gray-900/10 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -276,7 +279,7 @@ export default function StudioClientV3() {
               alt="ChameNeon Logo"
               className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover"
             />
-            <div className="text-xs sm:text-sm font-black tracking-tighter uppercase text-gray-900 group-hover:text-[#2d7a71] transition-colors">
+            <div className="text-xs sm:text-sm font-black tracking-tight text-gray-900">
               ChameNeon工房
             </div>
           </Link>
@@ -295,7 +298,8 @@ export default function StudioClientV3() {
             </a>
             <button
               onClick={handleOrder}
-              className="rounded-full bg-[#2d7a71] px-5 py-2 text-xs sm:text-sm font-black text-white hover:bg-[#24635b] transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="rounded-full px-5 py-2 text-xs sm:text-sm font-bold text-white transition-all hover:shadow-lg hover:-translate-y-px active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0"
+              style={{ backgroundColor: INK }}
               disabled={!aiImageDataUrl || !isEmailValid || isOrdering || priceYenExTax == null}
             >
               {isOrdering ? "移動中..." : "注文・相談する"}
@@ -305,53 +309,42 @@ export default function StudioClientV3() {
       </div>
 
       {/* Hero Section */}
-      <section className="border-b border-gray-200 bg-white">
+      <section className="bg-gray-950">
         <div className="mx-auto max-w-6xl px-6 py-10 sm:py-14">
           <div className="flex flex-col sm:flex-row sm:items-center gap-8">
             <div className="flex-1">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#e8f5f3] px-3 py-1 text-[10px] font-bold tracking-widest text-[#2d7a71] border border-[#2d7a71]/20 mb-5 uppercase">
-                AI-Powered Custom Neon
-              </div>
-              <h1 className="text-3xl font-black leading-tight sm:text-4xl tracking-tight text-gray-900">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-bold tracking-wide text-white mb-6">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: GREEN, boxShadow: `0 0 6px ${GREEN}` }} />
+                AI ネオンサイン制作
+              </span>
+              <h1 className="text-3xl font-black leading-tight sm:text-4xl tracking-tight text-white">
                 かんたん60秒で、<br />
-                <span className="text-[#2d7a71]">ネオンサインの<br className="sm:hidden" />イメージを作成。</span>
+                <span style={{ color: GREEN }}>ネオンサインの<br className="sm:hidden" />イメージを作成。</span>
               </h1>
-              <p className="mt-4 text-sm sm:text-base text-gray-500 font-medium leading-relaxed">
+              <p className="mt-4 text-sm sm:text-base text-gray-400 font-medium leading-relaxed">
                 スケッチや文字をアップするだけ。AIがリアルな完成イメージと概算見積もりを自動生成します。
               </p>
-              {/* Trust bar */}
-              <div className="mt-6 flex flex-wrap gap-4">
-                {[
-                  { icon: "🚚", text: "¥28,000〜（送料別¥3,000）" },
-                  { icon: "📅", text: "最短2週間でお届け" },
-                  { icon: "💬", text: "日本語サポート対応" },
-                ].map(item => (
-                  <div key={item.text} className="flex items-center gap-1.5 text-xs font-bold text-gray-600">
-                    <span>{item.icon}</span>
-                    <span>{item.text}</span>
-                  </div>
-                ))}
-              </div>
+              <p className="mt-6 text-sm text-gray-500">¥28,000〜（送料別途¥3,000）</p>
             </div>
             {/* Hero Before/After */}
             <div className="shrink-0 sm:w-96 flex flex-col gap-3">
               {/* メインペア（ケーキ） */}
               <div className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-3">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-3 flex flex-col gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Before</span>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-3 flex flex-col gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Before</span>
                   <div className="flex-1 flex items-center justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/eximg/before-cake.png" alt="before" className="w-full max-h-40 object-contain" />
                   </div>
-                  <p className="text-[10px] text-gray-400 text-center">イラスト</p>
+                  <p className="text-[10px] text-gray-500 text-center">イラスト</p>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-1">
-                  <div className="rounded-full px-2 py-0.5 text-[10px] font-black text-white" style={{ backgroundColor: "#2d7a71" }}>AI</div>
-                  <svg className="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <div className="rounded-full px-2 py-0.5 text-[10px] font-black text-white" style={{ backgroundColor: GREEN }}>AI</div>
+                  <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </div>
-                <div className="rounded-2xl overflow-hidden border-2 shadow-md bg-gray-100 flex items-center justify-center" style={{ borderColor: "#2d7a71", minHeight: "168px" }}>
+                <div className="rounded-2xl overflow-hidden border-2 shadow-md bg-black/40 flex items-center justify-center" style={{ borderColor: GREEN, minHeight: "168px" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/eximg/after-cake.jpg" alt="after" className="w-full h-full object-contain" />
                 </div>
@@ -363,13 +356,13 @@ export default function StudioClientV3() {
                   { src: "/eximg/after-chameleon.jpg", label: "カメレオン" },
                   { src: "/eximg/after-shavedice.png", label: "かき氷" },
                 ].map(item => (
-                  <div key={item.label} className="rounded-xl overflow-hidden border border-gray-200">
+                  <div key={item.label} className="rounded-xl overflow-hidden border border-white/10">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={item.src} alt={item.label} className="w-full aspect-square object-cover" />
                   </div>
                 ))}
               </div>
-              <p className="text-center text-[10px] text-gray-400">どんなイラストもネオンサインに変換できます</p>
+              <p className="text-center text-[10px] text-gray-500">どんなイラストもネオンサインに変換できます</p>
             </div>
           </div>
         </div>
@@ -553,20 +546,20 @@ export default function StudioClientV3() {
                 </div>
 
                 {/* Color multi-select */}
-                <div>
-                  <div className="flex items-end justify-between gap-4 border-b border-zinc-100 pb-3">
-                    <p className="text-lg font-extrabold text-zinc-900 tracking-tight">色を選ぶ（最大5色まで）</p>
-                    <p className="text-sm font-bold text-zinc-500">選択中：{selectedColors.length}色</p>
+                <div className="rounded-2xl bg-gray-950 p-5 sm:p-6">
+                  <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-3">
+                    <p className="text-lg font-extrabold text-white tracking-tight">色を選ぶ（最大5色まで）</p>
+                    <p className="text-sm font-bold text-gray-400">選択中：{selectedColors.length}色</p>
                   </div>
                   <div className="mt-6 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-4">
                     {NEON_PALETTE_14.map((c) => {
                       const isOn = selectedColors.some((x) => x.id === c.id);
                       const glowStyle = {
                         backgroundColor: c.hex,
-                        boxShadow: isOn 
-                          ? `0 0 15px ${c.hex}cc, inset 0 0 5px rgba(255,255,255,0.8)` 
-                          : `0 2px 4px rgba(0,0,0,0.1)`,
-                        borderColor: isOn ? 'white' : 'transparent',
+                        boxShadow: isOn
+                          ? `0 0 18px ${c.hex}, inset 0 0 5px rgba(255,255,255,0.8)`
+                          : `0 0 8px ${c.hex}99`,
+                        borderColor: isOn ? 'white' : 'rgba(255,255,255,0.15)',
                       };
                       
                       return (
@@ -602,7 +595,7 @@ export default function StudioClientV3() {
                           </button>
                           <span className={[
                             "text-[10px] font-extrabold tracking-tighter transition-colors",
-                            isOn ? "text-zinc-900" : "text-zinc-400"
+                            isOn ? "text-white" : "text-gray-500"
                           ].join(" ")}>
                             {c.nameJp}
                           </span>
@@ -713,7 +706,7 @@ export default function StudioClientV3() {
                       "w-full rounded-full py-5 text-lg font-black transition-all shadow-xl relative overflow-hidden",
                       !canGenerate || selectedColors.length === 0 || isGenerating
                         ? "bg-zinc-200 text-zinc-400 cursor-not-allowed shadow-none"
-                        : "bg-[#2d7a71] text-white hover:bg-[#24635b] hover:shadow-emerald-900/30 hover:-translate-y-0.5",
+                        : "bg-gray-950 text-white hover:bg-black hover:shadow-black/30 hover:-translate-y-0.5",
                     ].join(" ")}
                   >
                     {isGenerating ? (
@@ -734,7 +727,7 @@ export default function StudioClientV3() {
                       "w-full rounded-full py-4 text-base font-bold transition-all border-2 relative overflow-hidden",
                       !canGenerate || isGenerating
                         ? "border-zinc-200 text-zinc-300 cursor-not-allowed"
-                        : "border-emerald-600 text-emerald-700 hover:bg-emerald-50 shadow-sm",
+                        : "border-gray-900 text-gray-900 hover:bg-gray-950 hover:text-white shadow-sm",
                     ].join(" ")}
                   >
                     {isGenerating ? "AIが考え中..." : "✨ AIにおまかせで生成（色はAIが提案）"}
@@ -860,7 +853,7 @@ export default function StudioClientV3() {
                         type="button"
                         onClick={handleOrder}
                         disabled={isGenerating || isEstimating || !aiImageDataUrl || !isEmailValid || isOrdering || priceYenExTax == null}
-                        className="w-full rounded-2xl bg-[#2d7a71] py-5 text-base font-black text-white hover:bg-[#24635b] transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none disabled:cursor-not-allowed"
+                        className="w-full rounded-2xl bg-gray-950 py-5 text-base font-black text-white hover:bg-black transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:bg-zinc-200 disabled:text-zinc-400 disabled:shadow-none disabled:cursor-not-allowed"
                       >
                         {isOrdering ? (
                           <span className="flex items-center justify-center gap-2">
@@ -952,10 +945,10 @@ export default function StudioClientV3() {
       </section>
 
       {/* 制作・お届けについて */}
-      <section className="bg-white border-t border-gray-200 mt-10">
+      <section className="bg-gray-950">
         <div className="mx-auto max-w-6xl px-6 py-14">
           <div className="text-center mb-10">
-            <h2 className="text-2xl font-black text-gray-900">制作・お届けについて</h2>
+            <h2 className="text-2xl font-black text-white">制作・お届けについて</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
@@ -989,13 +982,13 @@ export default function StudioClientV3() {
                 ],
               },
             ].map(section => (
-              <div key={section.title} className="bg-gray-50 rounded-2xl border border-gray-200 p-6">
+              <div key={section.title} className="bg-white/5 rounded-2xl border border-white/10 p-6">
                 <div className="text-3xl mb-3">{section.icon}</div>
-                <h3 className="font-black text-gray-900 mb-3">{section.title}</h3>
+                <h3 className="font-black text-white mb-3">{section.title}</h3>
                 <ul className="space-y-2">
                   {section.items.map(item => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="text-[#2d7a71] font-black mt-0.5">✓</span>
+                    <li key={item} className="flex items-start gap-2 text-sm text-gray-400">
+                      <span className="font-black mt-0.5" style={{ color: GREEN }}>✓</span>
                       {item}
                     </li>
                   ))}
@@ -1007,7 +1000,7 @@ export default function StudioClientV3() {
       </section>
 
       {/* ご注意事項 */}
-      <section className="bg-amber-50 border-t border-amber-100">
+      <section className="bg-white border-t border-gray-100">
         <div className="mx-auto max-w-6xl px-6 py-14">
           <div className="flex items-center gap-3 mb-8">
             <span className="text-2xl">⚠️</span>
@@ -1040,7 +1033,7 @@ export default function StudioClientV3() {
                 body: "完全オーダーメイド製品のため、製作開始後のキャンセル・変更はお受けできません。デザイン確認後の製作開始となります。",
               },
             ].map(item => (
-              <div key={item.title} className="bg-white rounded-xl border border-amber-200 p-5">
+              <div key={item.title} className="bg-gray-50 rounded-xl border border-gray-200 p-5">
                 <p className="font-extrabold text-gray-900 text-sm mb-1">{item.title}</p>
                 <p className="text-xs text-gray-500 leading-relaxed">{item.body}</p>
               </div>
@@ -1050,11 +1043,11 @@ export default function StudioClientV3() {
       </section>
 
       {/* ビフォーアフター制作事例 */}
-      <section className="bg-white border-t border-gray-200">
+      <section className="bg-gray-950">
         <div className="mx-auto max-w-6xl px-6 py-14">
           <div className="text-center mb-10">
-            <h2 className="text-2xl font-black text-gray-900">手書きスケッチ → ネオンサイン</h2>
-            <p className="mt-2 text-sm text-gray-500">ラフなスケッチでも、ここまでリアルに変換されます。</p>
+            <h2 className="text-2xl font-black text-white">手書きスケッチ → ネオンサイン</h2>
+            <p className="mt-2 text-sm text-gray-400">ラフなスケッチでも、ここまでリアルに変換されます。</p>
           </div>
           <div className="grid gap-8">
             {[
@@ -1071,24 +1064,24 @@ export default function StudioClientV3() {
                 afterLabel: "ウォームホワイト×レッド",
               },
             ].map((ex, i) => (
-              <div key={i} className="grid sm:grid-cols-[1fr_auto_1fr] gap-4 items-center bg-gray-50 rounded-2xl border border-gray-200 p-6">
+              <div key={i} className="grid sm:grid-cols-[1fr_auto_1fr] gap-4 items-center bg-white/5 rounded-2xl border border-white/10 p-6">
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Before — スケッチ</span>
-                  <p className="text-sm font-bold text-gray-700 mt-1 mb-3">{ex.beforeLabel}</p>
-                  <div className="aspect-[4/3] rounded-xl bg-white border border-gray-200 overflow-hidden flex items-center justify-center p-4">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Before — スケッチ</span>
+                  <p className="text-sm font-bold text-gray-300 mt-1 mb-3">{ex.beforeLabel}</p>
+                  <div className="aspect-[4/3] rounded-xl bg-white border border-white/10 overflow-hidden flex items-center justify-center p-4">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={ex.before} alt="Before" className="w-full h-full object-contain opacity-80 mix-blend-multiply" />
                   </div>
                 </div>
                 <div className="flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[#2d7a71]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-8 h-8" style={{ color: GREEN }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </div>
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-[#2d7a71]">After — AI Neon</span>
-                  <p className="text-sm font-bold text-gray-700 mt-1 mb-3">{ex.afterLabel}</p>
-                  <div className="aspect-[4/3] rounded-xl bg-[#0b0f12] border border-gray-300 overflow-hidden flex items-center justify-center p-4">
+                  <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: GREEN }}>After — AI Neon</span>
+                  <p className="text-sm font-bold text-gray-300 mt-1 mb-3">{ex.afterLabel}</p>
+                  <div className="aspect-[4/3] rounded-xl bg-[#0b0f12] border border-white/10 overflow-hidden flex items-center justify-center p-4">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={ex.after} alt="After" className="w-full h-full object-contain" />
                   </div>
@@ -1100,18 +1093,18 @@ export default function StudioClientV3() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white">
+      <footer className="bg-white border-t border-gray-100">
         <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="logo" className="h-8 w-8 rounded-full object-cover" />
-            <span className="text-sm font-black">ChameNeon工房</span>
+            <img src="/logo.png" alt="logo" className="h-7 w-7 rounded-full object-cover" />
+            <span className="text-sm font-bold text-gray-500">ChameNeon工房</span>
           </div>
           <div className="flex flex-wrap gap-6 text-xs text-gray-400 font-bold">
-            <a href="https://chameneon.base.shop/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">BASE ショップ</a>
-            <a href="mailto:admin@chameneon.jp" className="hover:text-white transition-colors">お問い合わせ</a>
+            <a href="https://chameneon.base.shop/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 transition-colors">BASE ショップ</a>
+            <a href="mailto:admin@chameneon.jp" className="hover:text-gray-600 transition-colors">お問い合わせ</a>
           </div>
-          <p className="text-xs text-gray-600">&copy; 2025 ChameNeon工房</p>
+          <p className="text-xs text-gray-300">&copy; 2025 ChameNeon工房</p>
         </div>
       </footer>
     </main>
