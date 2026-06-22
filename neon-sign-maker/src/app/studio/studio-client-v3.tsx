@@ -6,7 +6,9 @@ import { NEON_PALETTE_14, type NeonColor } from "@/lib/palette";
 import {
   FIXED_YEN_PER_CM_TUBE,
   estimatePriceYenExTaxFromTubeLength,
+  clampTubeLengthCm,
   formatYen,
+  estimateDeliveryDate,
 } from "@/lib/quote";
 import { NEON_PROTOCOL_V1, FONT_STYLES } from "@/lib/neonProtocol";
 import type { FontStyle, DesignMode } from "@/lib/neonProtocol";
@@ -205,7 +207,7 @@ export default function StudioClientV3() {
           sketchDataUrl: currentSketch,
           targetWidthMm: widthMm,
         });
-        setTubeLengthCm(est.tubeLengthCm);
+        setTubeLengthCm(clampTubeLengthCm(est.tubeLengthCm, widthMm));
       }
     } catch (e) {
       console.error("Length estimation failed:", e);
@@ -247,7 +249,7 @@ export default function StudioClientV3() {
         });
         const tubeData = await tubeResp.json();
         if (typeof tubeData.tubeLengthCm === "number" && tubeData.tubeLengthCm > 0) {
-          setTubeLengthCm(tubeData.tubeLengthCm);
+          setTubeLengthCm(clampTubeLengthCm(tubeData.tubeLengthCm, widthMm));
         }
       } catch (e) {
         console.error("Gemini tube estimation failed:", e);
@@ -829,15 +831,11 @@ export default function StudioClientV3() {
                               <span>推定チューブ長：{tubeLengthCm?.toFixed(0)}cm</span>
                               <span className="text-zinc-400 font-normal">AI解析値</span>
                             </p>
+                            <p className="text-[11px] flex justify-between">
+                              <span>お届け予定</span>
+                              <span>{estimateDeliveryDate(tubeLengthCm ?? 0)}頃</span>
+                            </p>
                             <div className="h-px bg-emerald-100/50 my-2" />
-                            <p className="text-[11px] flex justify-between">
-                              <span>アクリルパネル・LEDチューブ</span>
-                              <span>込</span>
-                            </p>
-                            <p className="text-[11px] flex justify-between">
-                              <span>電源アダプタ・配線一式</span>
-                              <span>込</span>
-                            </p>
                             <p className="text-[11px] flex justify-between">
                               <span>国内配送料</span>
                               <span>¥3,000（別途）</span>

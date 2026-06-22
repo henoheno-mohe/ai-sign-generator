@@ -1,18 +1,15 @@
 'use client';
 
-import Image from "next/image";
 import Link from "next/link";
 
 const GREEN = "#2d7a71";
-const GREEN_LIGHT = "#e8f5f3";
-const GREEN_DARK = "#1f5a53";
+const INK = "#111111";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900" style={{ fontFamily: "'Inter', sans-serif" }}>
       <Nav />
       <HeroSection />
-      <TrustBar />
       <UseCasesSection />
       <HowItWorksSection />
       <PriceSection />
@@ -28,14 +25,14 @@ export default function LandingPage() {
 /* ── Nav ── */
 function Nav() {
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
+    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-900/10">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="ChameNeon Logo" className="h-9 w-9 rounded-full object-cover" />
-          <span className="text-sm font-bold text-gray-900 tracking-wide">ChameNeon工房</span>
+          <img src="/logo.png" alt="ChameNeon Logo" className="h-9 w-9 rounded-full object-cover ring-1 ring-gray-900/10" />
+          <span className="text-sm font-black tracking-tight text-gray-900">ChameNeon工房</span>
         </div>
-        <nav className="hidden items-center gap-6 text-sm text-gray-500 sm:flex">
+        <nav className="hidden items-center gap-7 text-[13px] font-semibold text-gray-500 sm:flex">
           <a href="#usecases" className="hover:text-gray-900 transition-colors">用途</a>
           <a href="#howitworks" className="hover:text-gray-900 transition-colors">使い方</a>
           <a href="#price" className="hover:text-gray-900 transition-colors">価格</a>
@@ -44,8 +41,8 @@ function Nav() {
         </nav>
         <Link
           href="/studio"
-          className="rounded-full px-5 py-2.5 text-sm font-bold text-white transition-all hover:opacity-90 shadow-sm"
-          style={{ backgroundColor: GREEN }}
+          className="rounded-full px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-lg hover:-translate-y-px"
+          style={{ backgroundColor: INK }}
         >
           無料で試す
         </Link>
@@ -57,42 +54,40 @@ function Nav() {
 /* ── Hero ── */
 function HeroSection() {
   return (
-    <section className="border-b border-gray-100 bg-white">
+    <section className="bg-gray-950">
       <div className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
 
           {/* テキスト */}
           <div>
-            <span
-              className="inline-block rounded-full px-4 py-1.5 text-xs font-bold mb-5"
-              style={{ backgroundColor: GREEN_LIGHT, color: GREEN }}
-            >
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-bold tracking-wide text-white mb-6">
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: GREEN, boxShadow: `0 0 6px ${GREEN}` }} />
               AI ネオンサイン制作
             </span>
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl">
-              かんたん60秒で、
+            <h1 className="font-black leading-[1.22] tracking-[-0.02em] text-white text-[clamp(1.375rem,4.6vw,2.6rem)]">
+              イラストや写真をアップするだけ。
               <br />
-              <span style={{ color: GREEN }}>ネオンサインのイメージを作成。</span>
+              デザイン・お見積もり・お届け日が、
+              <br />
+              <span style={{ color: GREEN }}>60秒</span>でわかります。
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-gray-600 sm:text-lg">
-              ¥28,000〜（送料別途¥3,000）。スケッチや文字をアップするだけでOK。
-            </p>
+            <p className="mt-6 text-sm text-gray-500">¥28,000〜（送料別途¥3,000）</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/studio"
-                className="rounded-full px-8 py-4 text-base font-bold text-white transition-all hover:opacity-90 shadow-md"
-                style={{ backgroundColor: GREEN }}
+                className="rounded-full px-8 py-4 text-base font-bold transition-all hover:shadow-xl hover:-translate-y-0.5 shadow-lg"
+                style={{ backgroundColor: "#fff", color: INK }}
               >
                 無料でデザインを作る →
               </Link>
               <a
                 href="#examples"
-                className="rounded-full border border-gray-200 bg-white px-8 py-4 text-base font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                className="rounded-full border border-white/30 px-8 py-4 text-base font-bold text-white hover:bg-white hover:text-gray-950 transition-colors"
               >
                 制作事例を見る
               </a>
             </div>
-            <p className="mt-4 text-xs text-gray-400">登録不要・無料体験・生成後に見積もり確認</p>
+            <p className="mt-4 text-xs text-gray-500">登録不要・無料体験・生成後に見積もり確認</p>
           </div>
 
           {/* Before / After ビジュアル */}
@@ -100,7 +95,7 @@ function HeroSection() {
             {/* メインビフォーアフター（ラーメン） */}
             <div className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-3">
               {/* Before */}
-              <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 flex flex-col gap-2">
+              <div className="rounded-2xl border border-white/10 bg-gray-50 p-4 flex flex-col gap-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Before</span>
                 <div className="flex-1 flex items-center justify-center min-h-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -132,41 +127,18 @@ function HeroSection() {
                 { src: "/eximg/after-chameleon.jpg", label: "カメレオン" },
                 { src: "/eximg/after-shavedice.png", label: "かき氷" },
               ].map(item => (
-                <div key={item.label} className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                <div key={item.label} className="rounded-xl overflow-hidden border border-white/10 shadow-lg">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.src} alt={item.label} className="w-full aspect-square object-cover" />
                 </div>
               ))}
             </div>
-            <p className="text-center text-[11px] text-gray-400">↑ どんなイラストもネオンサインに変換できます</p>
+            <p className="text-center text-[11px] text-gray-500">↑ どんなイラストもネオンサインに変換できます</p>
           </div>
 
         </div>
       </div>
     </section>
-  );
-}
-
-/* ── Trust Bar ── */
-function TrustBar() {
-  const items = [
-    { icon: "✅", text: "品質保証" },
-    { icon: "⏱️", text: "最短2週間でお届け" },
-    { icon: "💬", text: "日本語サポート対応" },
-  ];
-  return (
-    <div className="border-b border-gray-100 bg-gray-50 py-4">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-          {items.map((item) => (
-            <div key={item.text} className="flex items-center gap-2">
-              <span className="text-base">{item.icon}</span>
-              <span className="text-xs font-bold text-gray-600">{item.text}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -180,16 +152,16 @@ const USE_CASES = [
 
 function UseCasesSection() {
   return (
-    <section id="usecases" className="border-b border-gray-100 py-20 sm:py-24">
+    <section id="usecases" className="border-b border-gray-100 py-20 sm:py-24 bg-white">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading label="Use Cases" title="こんな用途に使われています" sub="飲食店から個人ギフトまで、幅広いシーンで活用されています。" />
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {USE_CASES.map((c) => (
-            <div key={c.title} className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md hover:border-gray-200 transition-all">
+            <div key={c.title} className="rounded-2xl border border-gray-100 bg-gray-50 p-6 shadow-sm hover:shadow-md hover:border-gray-200 transition-all">
               <div className="text-3xl">{c.icon}</div>
               <div className="mt-3 flex items-start justify-between gap-2">
                 <p className="text-base font-bold text-gray-900">{c.title}</p>
-                <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold" style={{ backgroundColor: GREEN_LIGHT, color: GREEN }}>
+                <span className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold text-gray-950" style={{ backgroundColor: GREEN }}>
                   {c.tag}
                 </span>
               </div>
@@ -211,20 +183,20 @@ const STEPS = [
 
 function HowItWorksSection() {
   return (
-    <section id="howitworks" className="border-b border-gray-100 py-20 sm:py-24" style={{ backgroundColor: GREEN_LIGHT }}>
+    <section id="howitworks" className="border-b border-gray-100 py-20 sm:py-24 bg-gray-50">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading label="How It Works" title="たった3ステップで注文完了" sub="スケッチのアップロードから注文まで、最短5分で完結します。" />
         <div className="mt-12 grid gap-5 sm:grid-cols-3">
           {STEPS.map((s) => (
             <div key={s.num} className="rounded-2xl bg-white border border-gray-100 p-7 shadow-sm">
-              <span className="text-4xl font-black tabular-nums" style={{ color: `${GREEN}50` }}>{s.num}</span>
+              <span className="text-4xl font-black tabular-nums" style={{ color: `${GREEN}` }}>{s.num}</span>
               <p className="mt-3 text-base font-bold text-gray-900">{s.title}</p>
               <p className="mt-2 text-sm leading-relaxed text-gray-500">{s.desc}</p>
             </div>
           ))}
         </div>
         <div className="mt-10 text-center">
-          <Link href="/studio" className="inline-block rounded-full px-10 py-4 text-base font-bold text-white shadow-md hover:opacity-90 transition-all" style={{ backgroundColor: GREEN }}>
+          <Link href="/studio" className="inline-block rounded-full px-10 py-4 text-base font-bold text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all" style={{ backgroundColor: INK }}>
             さっそく試してみる →
           </Link>
         </div>
@@ -244,30 +216,30 @@ const PRICE_ITEMS = [
 
 function PriceSection() {
   return (
-    <section id="price" className="border-b border-gray-100 py-20 sm:py-24 bg-white">
+    <section id="price" className="py-20 sm:py-24 bg-gray-950">
       <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading label="Price" title="シンプルな価格体系" sub="チューブの長さで価格が決まります。AIが自動で計算するので複雑な計算は不要です。" />
+        <SectionHeading label="Price" title="シンプルな価格体系" sub="チューブの長さで価格が決まります。AIが自動で計算するので複雑な計算は不要です。" dark />
         <div className="mt-12 grid gap-5 sm:grid-cols-3">
           <PriceCard size="S" width="〜400mm" price="¥18,000〜" note="卓上・棚置き向け" highlight={false} />
           <PriceCard size="M" width="400〜700mm" price="¥30,000〜" note="壁掛け・店内装飾向け" highlight={true} />
           <PriceCard size="L" width="700〜1200mm" price="¥50,000〜" note="大型看板・結婚式ステージ向け" highlight={false} />
         </div>
-        <div className="mt-8 rounded-2xl border border-gray-100 bg-gray-50 p-6">
-          <p className="text-sm font-bold text-gray-700 mb-4">価格に含まれるもの</p>
+        <div className="mt-8 rounded-2xl border border-white/10 bg-gray-900 p-6">
+          <p className="text-sm font-bold text-gray-200 mb-4">価格に含まれるもの</p>
           <ul className="grid gap-2 sm:grid-cols-2">
             {PRICE_ITEMS.map((item) => (
               <li key={item.label} className="flex items-start gap-3 text-sm">
-                <span className="font-bold mt-0.5" style={{ color: item.included ? GREEN : "#d1d5db" }}>
+                <span className="font-bold mt-0.5" style={{ color: item.included ? GREEN : "#6b7280" }}>
                   {item.included ? "✓" : "✗"}
                 </span>
-                <span className={item.included ? "text-gray-700" : "text-gray-400"}>
+                <span className={item.included ? "text-gray-300" : "text-gray-500"}>
                   {item.label}
-                  {item.note && <span className="block text-xs text-gray-400">{item.note}</span>}
+                  {item.note && <span className="block text-xs text-gray-500">{item.note}</span>}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs text-gray-400">※ 価格は概算です。確定金額はご注文前に表示されます。</p>
+          <p className="mt-4 text-xs text-gray-500">※ 価格は概算です。確定金額はご注文前に表示されます。</p>
         </div>
       </div>
     </section>
@@ -278,20 +250,20 @@ function PriceCard({ size, width, price, note, highlight }: { size: string; widt
   return (
     <div className={[
       "rounded-2xl border p-7 transition-all",
-      highlight ? "shadow-md" : "border-gray-100 bg-white shadow-sm",
+      highlight ? "shadow-xl" : "border-white/10 bg-gray-900 shadow-lg",
     ].join(" ")}
-      style={highlight ? { borderColor: `${GREEN}60`, backgroundColor: GREEN_LIGHT } : {}}
+      style={highlight ? { borderColor: GREEN, backgroundColor: "rgba(45,122,113,0.12)" } : {}}
     >
       {highlight && (
-        <span className="mb-3 inline-block rounded-full px-3 py-1 text-[10px] font-bold" style={{ backgroundColor: GREEN, color: "#fff" }}>
+        <span className="mb-3 inline-block rounded-full px-3 py-1 text-[10px] font-bold text-gray-950" style={{ backgroundColor: GREEN }}>
           人気
         </span>
       )}
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Size {size}</p>
-      <p className="mt-1 text-sm text-gray-500">{width}</p>
-      <p className="mt-3 text-3xl font-extrabold text-gray-900">{price}</p>
-      <p className="text-xs text-gray-400 mt-0.5">税込・送料別</p>
-      <p className="mt-4 text-xs text-gray-500 leading-relaxed">{note}</p>
+      <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Size {size}</p>
+      <p className="mt-1 text-sm text-gray-400">{width}</p>
+      <p className="mt-3 text-3xl font-extrabold text-white">{price}</p>
+      <p className="text-xs text-gray-500 mt-0.5">税込・送料別</p>
+      <p className="mt-4 text-xs text-gray-400 leading-relaxed">{note}</p>
     </div>
   );
 }
@@ -336,7 +308,7 @@ const GALLERY_EXAMPLES = [
 
 function ExamplesSection() {
   return (
-    <section id="examples" className="border-b border-gray-100 py-20 sm:py-24 bg-gray-50">
+    <section id="examples" className="border-b border-gray-100 py-20 sm:py-24 bg-white">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading label="Examples" title="制作事例" sub="イラストや手書きスケッチが、ここまでリアルなネオンになります。" />
 
@@ -355,13 +327,13 @@ function ExamplesSection() {
               {/* Arrow */}
               <div className="flex items-center justify-center gap-2 py-1">
                 <div className="h-px flex-1 bg-gray-100 ml-4" />
-                <span className="text-xs font-black px-2 py-0.5 rounded-full" style={{ backgroundColor: GREEN_LIGHT, color: GREEN }}>AIでネオン化</span>
+                <span className="text-xs font-black px-2 py-0.5 rounded-full text-gray-950" style={{ backgroundColor: GREEN }}>AIでネオン化</span>
                 <div className="h-px flex-1 bg-gray-100 mr-4" />
               </div>
               {/* After */}
               <div className="p-4 pt-2">
-                <span className="inline-block rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest mb-3" style={{ backgroundColor: GREEN_LIGHT, color: GREEN }}>After — 完成イメージ</span>
-                <div className="aspect-square rounded-xl overflow-hidden bg-gray-100">
+                <span className="inline-block rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest mb-3 text-gray-950" style={{ backgroundColor: GREEN }}>After — 完成イメージ</span>
+                <div className="aspect-square rounded-xl overflow-hidden bg-gray-950">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={ex.afterSrc} alt="ネオン完成イメージ" className="h-full w-full object-cover" />
                 </div>
@@ -389,7 +361,7 @@ function ExamplesSection() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {GALLERY_EXAMPLES.map((item) => (
               <div key={item.title} className="group rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all">
-                <div className="aspect-square overflow-hidden bg-gray-100">
+                <div className="aspect-square overflow-hidden bg-gray-950">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.src} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
@@ -405,8 +377,8 @@ function ExamplesSection() {
         <div className="mt-10 text-center">
           <Link
             href="/studio"
-            className="inline-block rounded-full px-8 py-4 text-sm font-bold text-white shadow-sm hover:opacity-90 transition-all"
-            style={{ backgroundColor: GREEN }}
+            className="inline-block rounded-full px-8 py-4 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-xl shadow-lg"
+            style={{ backgroundColor: INK }}
           >
             あなたのデザインも試してみる →
           </Link>
@@ -496,24 +468,24 @@ function FaqSection() {
 /* ── Final CTA ── */
 function FinalCtaSection() {
   return (
-    <section className="border-b border-gray-100 py-20 sm:py-28" style={{ backgroundColor: GREEN_LIGHT }}>
+    <section className="py-20 sm:py-28 bg-gray-950">
       <div className="mx-auto max-w-3xl px-6 text-center">
         <p className="text-xs font-bold uppercase tracking-widest" style={{ color: GREEN }}>無料・登録不要</p>
-        <h2 className="mt-4 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl">
+        <h2 className="mt-4 text-3xl font-extrabold leading-tight text-white sm:text-4xl">
           まずは無料で、<br />あなたのデザインを試してみてください。
         </h2>
-        <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+        <p className="mt-4 text-gray-400 text-sm sm:text-base leading-relaxed">
           スケッチをアップロードして生成するだけ。<br />
           気に入ったらそのまま注文、気に入らなければ何度でも無料で試せます。
         </p>
         <Link
           href="/studio"
-          className="mt-8 inline-block rounded-full px-12 py-5 text-lg font-bold text-white shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5"
-          style={{ backgroundColor: GREEN }}
+          className="mt-8 inline-block rounded-full px-12 py-5 text-lg font-bold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+          style={{ backgroundColor: "#fff", color: INK }}
         >
           無料でデザインを作る →
         </Link>
-        <p className="mt-3 text-xs text-gray-400">登録不要 ・ AIデザイン生成 ・ 即時見積もり</p>
+        <p className="mt-3 text-xs text-gray-500">登録不要 ・ AIデザイン生成 ・ 即時見積もり</p>
       </div>
     </section>
   );
@@ -522,7 +494,7 @@ function FinalCtaSection() {
 /* ── Footer ── */
 function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-gray-100 py-10 px-6">
+    <footer className="bg-white border-t border-gray-100 py-10 px-6">
       <div className="mx-auto max-w-6xl flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}

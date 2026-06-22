@@ -281,7 +281,15 @@ ${fontDef ? `LETTERING: ${fontDef.prompt}` : ""}` : `NO TEXT — DO NOT ADD ANY 
 - The user provided NO text. Do NOT invent or add any words, letters, labels, or captions.
 - If the sketch contains text, reproduce it faithfully. Do NOT add anything extra.`}
 
-${designMode === "designer" ? `DESIGNER MODE: Polish the sketch into a professional neon sign design. Clean lines, balanced proportions, simplified for tube production. Maintain the original concept.` : `FAITHFUL MODE: Reproduce the sketch accurately as neon tubes. Do not change the design.`}`.trim();
+${designMode === "designer" ? `DESIGNER MODE — THIS OVERRIDES ANY INSTRUCTION TO COPY THE SKETCH EXACTLY:
+- Act as a top professional neon-sign designer. Treat the input only as a rough concept brief, NOT as artwork to trace.
+- Substantially REDRAW and ELEVATE the design: elegant flowing single-stroke tube paths, refined proportions, confident balanced composition, generous negative space.
+- Remove rough/sketchy/wobbly strokes and redundant lines. Simplify busy areas into clean continuous tube runs suited for real production.
+- The output MUST look noticeably more polished, stylish and professional than the input — clearly the work of a designer, not a faithful copy.
+- Keep the same subject, core motif and any text, but you may restyle line weight, curvature and layout freely.` : `FAITHFUL MODE:
+- Reproduce the input sketch as accurately as possible in neon tubes.
+- Preserve the exact shapes, proportions, line positions and composition of the sketch.
+- Do NOT beautify, restyle, simplify, add, or remove design elements. Stay true to the original.`}`.trim();
 }
 
 // 互換性のために現行の関数名も残す（内部でV2を呼ぶように変更も可能）

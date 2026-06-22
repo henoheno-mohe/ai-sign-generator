@@ -14,6 +14,18 @@ export function estimatePriceYenExTaxFromTubeLength(
   return Math.round(safeLen * safeUnit);
 }
 
+/**
+ * 推定チューブ長を物理的にありえない範囲でクランプする安全網。
+ * パネル横幅に対し、最小0.8倍〜最大7倍の範囲に収める。
+ * （スケッチ推定/Gemini推定のどちらが暴走しても過大見積もりを防ぐ）
+ */
+export function clampTubeLengthCm(tubeLengthCm: number, widthMm: number): number {
+  const widthCm = widthMm / 10;
+  const min = widthCm * 0.8;
+  const max = widthCm * 7;
+  return Math.round(Math.max(min, Math.min(max, tubeLengthCm)));
+}
+
 export function formatYen(n: number): string {
   return new Intl.NumberFormat("ja-JP").format(Math.round(n));
 }
