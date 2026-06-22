@@ -3,16 +3,24 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ChameNeon工房 | オーダーネオンサイン制作・AIプレビュー見積もり",
-  description: "手書きスケッチやロゴをネオンサインに変換。AIが完成イメージと価格（¥28,000〜）をその場で生成。納期2〜4週間。店舗・カフェ・バー・ウェルカムボードに対応。",
-  keywords: ["ネオンサイン", "オーダーメイド", "カスタムネオン", "店舗サイン", "AIデザイン", "ネオンサイン 制作", "ネオンサイン 価格"],
+  metadataBase: new URL("https://www.chameneon.jp"),
+  title: "ChameNeon工房 | オーダーネオンサイン制作・無料AIプレビュー",
+  description: "手書きスケッチやロゴをネオンサインに。AIが完成イメージと価格（¥28,000〜）を無料でその場生成。約2週間で全国にお届け。早い・安い・カッコいいオーダーネオン。店舗・カフェ・バー・ウェルカムボードに対応。",
+  keywords: ["ネオンサイン", "オーダーメイド", "カスタムネオン", "店舗サイン", "AIデザイン", "ネオンサイン 制作", "ネオンサイン 価格", "ネオンサイン 安い", "ネオンサイン 早い"],
   openGraph: {
-    title: "ChameNeon工房 | オーダーネオンサイン制作",
-    description: "AIがネオンサインの完成イメージと見積もりをその場で生成。¥28,000〜、納期2〜4週間。",
+    title: "ChameNeon工房 | 早い・安い・カッコいいオーダーネオン",
+    description: "AIがネオンサインの完成イメージと見積もりを無料でその場生成。¥28,000〜、約2週間でお届け。",
     url: "https://www.chameneon.jp",
     siteName: "ChameNeon工房",
     locale: "ja_JP",
     type: "website",
+    images: [{ url: "/eximg/after-cake.jpg", width: 1200, height: 1200, alt: "ChameNeon工房のオーダーネオンサイン" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChameNeon工房 | 早い・安い・カッコいいオーダーネオン",
+    description: "AIがネオンサインの完成イメージと見積もりを無料でその場生成。¥28,000〜、約2週間でお届け。",
+    images: ["/eximg/after-cake.jpg"],
   },
 };
 
@@ -24,7 +32,8 @@ const jsonLd = {
       "@id": "https://www.chameneon.jp",
       name: "ChameNeon工房",
       url: "https://www.chameneon.jp",
-      description: "AIを使ったオーダーネオンサイン制作サービス。手書きスケッチやロゴから完成イメージと価格見積もりをその場で生成。",
+      description: "AIを使ったオーダーネオンサイン制作サービス。手書きスケッチやロゴから完成イメージと価格見積もりを無料でその場生成。早い・安い・カッコいいをコンセプトに、約2週間で全国にお届け。",
+      slogan: "早い・安い・カッコいい オーダーネオン",
       priceRange: "¥28,000〜",
       areaServed: "JP",
       availableLanguage: "Japanese",
@@ -42,9 +51,9 @@ const jsonLd = {
           },
           {
             "@type": "Offer",
-            name: "AIプレビュー・見積もり",
-            description: "注文前にAIで完成イメージ画像と価格見積もりを確認できるサービス。",
-            price: "500",
+            name: "AIプレビュー・見積もり（無料）",
+            description: "注文前にAIで完成イメージ画像と価格見積もりを無料で確認できるサービス。",
+            price: "0",
             priceCurrency: "JPY",
           },
         ],
@@ -66,7 +75,7 @@ const jsonLd = {
           name: "納期はどのくらいですか？",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "デザインの複雑さによって異なりますが、シンプルなデザインで約2〜3週間、中程度で約3〜4週間、複雑なデザインで約4〜6週間が目安です。",
+            text: "ご注文確定後、約2週間で全国にお届けします。お急ぎの場合はご相談ください。",
           },
         },
         {
@@ -82,7 +91,7 @@ const jsonLd = {
           name: "注文前に完成イメージを確認できますか？",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "はい、AIスタジオ（chameneon.jp/studio）でスケッチやロゴをアップロードすると、リアルな完成イメージ画像と概算価格をその場で確認できます。",
+            text: "はい、AIスタジオ（chameneon.jp/studio）でスケッチやロゴをアップロードすると、リアルな完成イメージ画像と概算価格を無料でその場で確認できます。会員登録も不要です。",
           },
         },
         {
